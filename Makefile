@@ -95,7 +95,9 @@ release: DEBUGFLAGS := $(OPTIMIZEFLAGS)
 release: clean
 release: all
 
-client: $(o_files)
+client: client.out
+
+client.out: $(o_files)
 	@if [ -z "$(o_files)" ]; \
 	then \
 		echo "No hay archivos de entrada para el cliente (archivos client*.$(extension))."; \
