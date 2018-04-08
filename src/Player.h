@@ -15,7 +15,8 @@ private:
     double velX;
     double velY;
     PlayerState state;
-    SDL_RendererFlip flipmode;
+    //SDL_RendererFlip flipmode; ahora se usa el angulo!
+	double angle;
     const int MAX_VEL_X;
     const int MAX_VEL_Y;
 public:

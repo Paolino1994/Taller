@@ -21,6 +21,7 @@ private:
     //
     int presentFrame;
     int frameWidth;
+	SDL_Point rotationCentre;
 public:
     Animation(Texture& texture, int frames, int fps);
     Animation(Texture& texture, const sprite_info_t& sprite_info);
@@ -37,7 +38,8 @@ public:
     
     //Renders corresponding animation texture at given point
     void render(int x, int y); //only specify point
-    void render(int x, int y, double angle = 0.0, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE);
+	void render(int x, int y, double angle); //center va a ser centro de imagen actual, flip = NONE
+    void render(int x, int y, double angle, SDL_Point* centre, SDL_RendererFlip flip);
     
     int getWidth();
     int getHeight();

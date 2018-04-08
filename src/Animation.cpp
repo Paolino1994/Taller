@@ -18,7 +18,8 @@ Animation::Animation(Texture& texture, const sprite_info_t& sprite_info):
     frames(sprite_info.frames),
     frametime(1.0 / sprite_info.frames_per_second),
     presentFrame(0),
-    frameWidth(texture.getWidth() / frames) //assert(width % frames == 0)
+    frameWidth(texture.getWidth() / frames), //assert(width % frames == 0)
+	rotationCentre({ sprite_info.width / 2, sprite_info.height / 2}) //rotacion es sobre el destino
 {    
 	mTexture.setScaling(sprite_info.width, sprite_info.height);
 }
@@ -45,9 +46,15 @@ void Animation::render(int x, int y){ //only specify point
     mTexture.render(x,y);
 }
 
-void Animation::render(int x, int y, double angle, SDL_Point* center, SDL_RendererFlip flip){
+void Animation::render(int x, int y, double angle)
+{
+	mTexture.setSrcRect(presentFrame * frameWidth, 0, frameWidth, mTexture.getHeight());
+	mTexture.render(x, y, angle, &rotationCentre, SDL_FLIP_NONE);
+}
+
+void Animation::render(int x, int y, double angle, SDL_Point* centre, SDL_RendererFlip flip){
     mTexture.setSrcRect(presentFrame * frameWidth, 0, frameWidth, mTexture.getHeight());
-    mTexture.render(x,y, angle, center, flip);
+    mTexture.render(x,y, angle, centre, flip);
 }
 
 int Animation::getWidth()

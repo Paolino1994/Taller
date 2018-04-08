@@ -1,13 +1,15 @@
 #include "Player.h"
 
 #include "SDL.h"
+#include <cmath>
+#include <iostream>
 
 Player::Player(std::map<const std::string, Animation>& animationMapper, const player_data_t player_data, double initial_x, double initial_y):
     Entity(initial_x, initial_y),
     velX(0),
     velY(0),
     state(STILL),
-    flipmode(SDL_FLIP_NONE),
+	angle(0.0),
     MAX_VEL_X(player_data.X_VELOCITY),
     MAX_VEL_Y(player_data.Y_VELOCITY)
 {
@@ -42,22 +44,22 @@ void Player::handleEvent( SDL_Event& e )
         {
             case SDLK_UP:{
 				velY -= MAX_VEL_Y;
-				flipmode = SDL_FLIP_NONE;
+				//flipmode = SDL_FLIP_NONE;
                 break;
             }
 			case SDLK_DOWN: {
 				velY += MAX_VEL_Y; 
-				flipmode = static_cast<SDL_RendererFlip>(flipmode | SDL_FLIP_VERTICAL); // ver como aplicar (en general) a todos los setFlipModes
+				//flipmode = static_cast<SDL_RendererFlip>(flipmode | SDL_FLIP_VERTICAL); // ver como aplicar (en general) a todos los setFlipModes
 				break;
 			}
             case SDLK_LEFT:{
                 velX -= MAX_VEL_X;
-                flipmode = SDL_FLIP_HORIZONTAL; //ver si tiene sentido cuando se use con el angulo
+                //flipmode = SDL_FLIP_HORIZONTAL; //ver si tiene sentido cuando se use con el angulo
                 break;
             }
             case SDLK_RIGHT:{
                 velX += MAX_VEL_X;
-                flipmode = SDL_FLIP_NONE;
+                //flipmode = SDL_FLIP_NONE;
                 break;
             }
         }
@@ -101,9 +103,12 @@ void Player::update(double dt, int x_limit, int y_limit){
     
 	if (velX == 0.0 && velY == 0.0) {
 		this->state = STILL;
+		// mantenemos el angulo anterior
 	}
 	else {
 		this->state = RUNNING;
+		// angle con 0 apunta para arriba, 180 abajo, 360 arriba, lo pasado de 360 o 0 lo modulea SDL2
+		this->angle = (atan2(this->velY, this->velX) * 180 / M_PI) + 90;
 	}
     
     if (old_state != this->state) mAnimations[this->state].reset();
@@ -112,6 +117,6 @@ void Player::update(double dt, int x_limit, int y_limit){
 
 void Player::render(int screen_x, int screen_y)
 {
-    mAnimations[this->state].render(screen_x, screen_y, 0, NULL, this->flipmode);
+	mAnimations[this->state].render(screen_x, screen_y, this->angle);
 }
 
