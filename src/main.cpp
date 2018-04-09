@@ -115,14 +115,6 @@ int main( int argc, char* args[] )
             Log::initialize(LOG_DEBUG);
         }
 
-        Log* log = Log::get_instance();
-        log->error("Hola 1");
-        log->debug("Hola 2");
-        log->info("Hola 3");
-
-        Log* log2 = Log::get_instance();
-        log2->error("Hola log2 1");
-
         // CARGAR La configuracion del YAML y de constantes nuestras:
 		// TODO
 
