@@ -17,37 +17,13 @@
 class YAMLReader {
 
 public:
+
+
     void setFile(char *string);
 
-    const char *archivo;
-
-    std::string getNombreEquipo(int i);
-
+    std::map<std::string, std::string> getEverything(int equipo);
 
     void destroy();
-
-    bool esNombre(char *stream);
-
-    char *getNombre(char *stream);
-
-
-
-    std::string getSpritesEquipo(int i);
-
-    void printType(yaml_token_type_t e);
-
-
-
-    void printAll();
-
-
-    void printAll(int arch);
-
-    std::string getFormacion(int equipo);
-
-    void readAll(int arch);
-
-    std::map<std::string, std::string> getEverything(int equipo);
 
 private:
 
@@ -73,6 +49,35 @@ private:
     std::string findJugador(std::string basic_string, int equipo);
 
     std::string findnext(int equipo);
+
+    const char *archivo;
+
+    std::string getNombreEquipo(int i);
+
+
+    bool esNombre(char *stream);
+
+    char *getNombre(char *stream);
+
+
+
+    std::string getSpritesEquipo(int i);
+
+    void printType(yaml_token_type_t e);
+
+
+
+    void printAll();
+
+    std::string getJugadorEquipo(int Equipo, int numJugador);
+
+
+    void printAll(int arch);
+
+    std::string getFormacion(int equipo);
+
+    void readAll(int arch);
+
 };
 
 
