@@ -1,0 +1,16 @@
+- Nombre: Mojarritas
+  - Formacion: "3-2-0"
+  - Sprite: "img/sprite_mojarritas.png"
+  - Jugadores:
+      - Jugador1:
+          -Nombre: "Marco"
+      - Jugador2:
+          -Nombre: "Daniel"
+      - Jugador3:
+          -Nombre: "Fernando"
+      - Jugador4:
+          -Nombre: "Damian"
+      - Jugador5:
+          -Nombre: "Sebastian"
+      - Jugador6:
+          -Nombre: "Merlin"

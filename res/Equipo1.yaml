@@ -1,0 +1,22 @@
+- Nombre: "Tiburones"
+  - Formacion: "3-1-2"
+  - Sprite: "img/sprite_tiburones.png"
+  - Jugadores:
+      - Jugador1:
+          -Nombre: "Jorge"
+      - Jugador2:
+          -Nombre: "Pedro"
+      - Jugador3:
+          -Nombre: "Humberto"
+      - Jugador4:
+          -Nombre: "Carlos"
+      - Jugador5:
+          -Nombre: "Jose"
+      - Jugador6:
+          -Nombre: "Roberto"
+
+
+
+
+
+

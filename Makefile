@@ -60,6 +60,7 @@ SDL_LD_FLAGS = $(shell pkg-config --libs sdl2)
 SDL_LD_FLAGS += $(shell pkg-config --libs SDL2_image)
 SDL_LD_FLAGS += $(shell pkg-config --libs SDL2_mixer)
 SDL_LD_FLAGS += $(shell pkg-config --libs SDL2_ttf)
+SDL_LD_FLAGS += -lyaml
 LDFLAGS += $(sort $(SDL_LD_FLAGS)) # para eliminar duplicados
 endif
 
@@ -120,4 +121,4 @@ clean:
 
 $(o_files) : $(OBJDIR)/%.o : $(SRCDIR)/$$(subst _,/,%).$(extension) | $(OBJDIR) $(DEPDIR)
 	@echo "  DEP $(@:$(OBJDIR)%.o=$(DEPDIR)%.d)"; $(ocxx) $(CXXFLAGS) $(DEBUGFLAGS) -MM -MT $@ -MF $(@:$(OBJDIR)%.o=$(DEPDIR)%.d) -I$(INCLDIR) $<
-	$(CXX) $(CXXFLAGS) $(DEBUGFLAGS) -I$(INCLDIR) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(DEBUGFLAGS) -I$(INCLDIR) -c $< -o $@ -lyaml
