@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include "GameConstants.h"
 #include "Player.h"
+#include "Log.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
@@ -83,7 +84,7 @@ bool init_SDL()
 //Frees media and shuts down SDL
 void close()
 {
-    //Destroy window	
+    //Destroy window
     SDL_DestroyRenderer( gRenderer );
     SDL_DestroyWindow( gWindow );
     gWindow = NULL;
@@ -98,12 +99,30 @@ typedef std::chrono::steady_clock Clock;
 
 int main( int argc, char* args[] )
 {
-    //Start up SDL and create window  
+    //Start up SDL and create window
     if ( !init_SDL() ) {
         std::cout << "Failed to initialize!\n" << std::endl;
     } else {
         std::map<const std::string, Animation> animMapper;
-        
+
+        // Inicializar log con parametro de line de comando
+        for (int i = 1; i+1 < argc; i++) {
+            if (strcmp(args[i],"-lg") == 0) {
+                Log::initialize(args[i + 1]);
+            }
+        }
+        if (!Log::is_initialized()) {
+            Log::initialize(LOG_DEBUG);
+        }
+
+        Log* log = Log::get_instance();
+        log->error("Hola 1");
+        log->debug("Hola 2");
+        log->info("Hola 3");
+
+        Log* log2 = Log::get_instance();
+        log2->error("Hola log2 1");
+
         // CARGAR La configuracion del YAML y de constantes nuestras:
 		// TODO
 
@@ -123,18 +142,18 @@ int main( int argc, char* args[] )
 		// Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
         animMapper.emplace(std::make_pair(YAML::PlayerRun.spriteid, Animation(runT, YAML::PlayerRun)));
         animMapper.emplace(std::make_pair(YAML::PlayerStill.spriteid, Animation(stillT, YAML::PlayerStill)));
-        
+
         //Creo objetos del juego:
         Player player(animMapper, DEFAULT_PLAYER, SCREEN_WIDTH/2, SCREEN_HEIGHT - YAML::PlayerStill.height);
-        
+
         World world(background.getWidth(), background.getHeight(), &background);
         world.addEntity(&player);
-        
+
         Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT);
         camera.follow(&player);
-        
+
         if (true)
-        {	
+        {
             //Main loop flag
             bool quit = false;
 
@@ -157,9 +176,9 @@ int main( int argc, char* args[] )
                 milli = std::chrono::duration_cast<std::chrono::milliseconds>(newTime - currentTime);
                 currentTime = newTime;
                 frametime = milli.count()/1000.0;
-                
+
                 accumulator += frametime;
-                
+
                 //Handle events on queue
                 while( SDL_PollEvent( &e ) != 0)
                 {
@@ -168,10 +187,10 @@ int main( int argc, char* args[] )
                     {
                         quit = true;
                     }
-                    
+
                     player.handleEvent(e);
                 }
-                
+
                 //Cuando el tiempo pasado es mayor a nuestro tiempo de actualizacion
                 while ( accumulator >= fixed_dt )
                 {
