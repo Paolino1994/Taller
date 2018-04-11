@@ -145,7 +145,7 @@ int main( int argc, char* args[] )
 
         //Creo objetos del juego:
         PlayerModel playerModel(DEFAULT_PLAYER,0,0);
-        PlayerView playerView(animMapper,DEFAULT_PLAYER,playerModel);
+        PlayerView playerView(animMapper,DEFAULT_PLAYER,&playerModel);
         PlayerController playerController(&playerModel,&playerView);
         //Player player(animMapper, DEFAULT_PLAYER, 0, 0);
         //Player player(animMapper, DEFAULT_PLAYER, SCREEN_WIDTH*2/5, SCREEN_HEIGHT - YAML::PlayerStill.height);
@@ -157,10 +157,12 @@ int main( int argc, char* args[] )
 
 
         World world(background.getWidth(), background.getHeight(), &background);
-        world.addEntity(&player);
+        world.addEntity(&playerModel);
+        world.addPlayerController(&playerController);
+
 
         Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT);
-        camera.follow(&player);
+        camera.follow(&playerModel);
 
         if (true)
         {

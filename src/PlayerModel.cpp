@@ -20,7 +20,7 @@ PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, doub
 
 void PlayerModel::update(double dt, int x_limit, int y_limit){
     using namespace std;
-    PlayerState old_state = this->state;
+    //PlayerState old_state = this->state;
     // Actualizar x:
     x += velX * dt;
     // Actualizar y:

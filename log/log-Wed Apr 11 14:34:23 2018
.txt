@@ -1,0 +1,10 @@
+<Wed Apr 11 14:34:23 2018> info: Intento abrir Archivo de Configuracion General
+<Wed Apr 11 14:34:23 2018> info: Abierto Archivo de Configuracion General
+<Wed Apr 11 14:34:23 2018> info: Intento abrir Archivo de Equipo
+<Wed Apr 11 14:34:23 2018> info: Abierto Archivo de Equipo
+<Wed Apr 11 14:34:23 2018> info: ntento abrir Archivo de Equipo
+<Wed Apr 11 14:34:23 2018> info: bierto Archivo de Equipo
+<Wed Apr 11 14:34:23 2018> info: Intento destruir archivo de configuracion general
+<Wed Apr 11 14:34:23 2018> info: Destrui archivo de configuracion general
+<Wed Apr 11 14:34:23 2018> info: Intento leer archivos de configuracion de equipos
+<Wed Apr 11 14:34:23 2018> info: Lei archivos de configuracion de equipos

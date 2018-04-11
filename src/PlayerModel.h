@@ -16,9 +16,6 @@ public:
 
     PlayerModel(const player_data_t player_data, double initial_x, double initial_y);
 
-    //PlayerModel();
-
-
     double getAngle();
 
     PlayerState getState();

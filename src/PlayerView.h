@@ -15,7 +15,7 @@ class PlayerView {
 
 public:
     PlayerView(std::map<const std::string, Animation> &animationMapper, const player_data_t player_data,
-                   PlayerModel model);
+                   PlayerModel* model);
 
     PlayerView(std::map<const std::string, Animation> map, PlayerModel model);
 
@@ -25,7 +25,7 @@ public:
 private:
     std::vector<Animation> mAnimations;
 
-    PlayerModel playerModel;
+    PlayerModel* playerModel;
 };
 
 

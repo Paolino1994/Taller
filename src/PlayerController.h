@@ -12,7 +12,17 @@
 class PlayerController {
 
 public:
-    PlayerController(PlayerModel* model, PlayerView* view);
+    PlayerController(PlayerModel* model, PlayerView* view):
+    	playerModel(model),
+		playerView(view){};
+
+    Entity* getEntity() {
+    	return playerModel;
+    }
+
+    PlayerView* getView() {
+       	return playerView;
+    }
 
     void handleEvent(SDL_Event &e);
 

@@ -7,7 +7,7 @@
 #include "PlayerModel.h"
 
 
-PlayerView::PlayerView(std::map<const std::string, Animation>& animationMapper, const player_data_t player_data,  const PlayerModel model){
+PlayerView::PlayerView(std::map<const std::string, Animation>& animationMapper, const player_data_t player_data, PlayerModel *model){
     this->mAnimations.reserve(_LENGTH_);
     playerModel=model;
     for(int i=0; i<PlayerState::_LENGTH_; i++){
@@ -18,7 +18,7 @@ PlayerView::PlayerView(std::map<const std::string, Animation>& animationMapper, 
 
 void PlayerView::render(int screen_x, int screen_y)
 {
-    mAnimations[playerModel.getState()].render(screen_x, screen_y, playerModel.getAngle());
+    mAnimations[playerModel->getState()].render(screen_x, screen_y, playerModel->getAngle());
 }
 
 

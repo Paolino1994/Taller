@@ -15,7 +15,7 @@ Camera::Camera(World& world, int width, int height):
 Camera::~Camera()
 {}
     
-void Camera::follow(Player* gameObj){ //Entity
+void Camera::follow(Entity* gameObj){ //Entity
     followed = gameObj;
 }
     
@@ -49,19 +49,21 @@ void Camera::update(double dt){
 void Camera::render(World& world){
 	auto background = world.getBackground();
 	auto entities = world.getEntities();
+	auto pControllers = world.getPlayerControllers();
+
 
 	// renderizamos el background (la cancha)
 	background->setScaling(this->width, this->height);
 	background->setSrcRect(this->x, this->y, this->width, this->height);
 	background->render(0, 0);
 
-	for (auto entity : entities)
+	for (auto player : pControllers)
 	{
-		int screen_x = entity->getX() - this->x;
-		int screen_y = entity->getY() - this->y;
+		int screen_x = player->getEntity()->getX() - this->x;
+		int screen_y = player->getEntity()->getY() - this->y;
 		//TODO: check screen_x/_y esten en mi ancho/alto
 		//no dibujar lo que no veo!
-		entity->render(screen_x, screen_y);
+		player->getView()->render(screen_x, screen_y);
 	}
 }
 

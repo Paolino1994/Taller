@@ -4,11 +4,6 @@
 
 #include "PlayerController.h"
 
-PlayerController::PlayerController(PlayerModel* model, PlayerView* view){
-    playerModel=model;
-    playerView=view;
-}
-
 void PlayerController::handleEvent( SDL_Event& e )
 {
     double velX=playerModel->getVelX();
