@@ -17,47 +17,46 @@
 class YAMLReader {
 
 public:
-
-
-    void setFile(char *string);
+    YAMLReader(std::string string);
 
     std::map<std::string, std::string> getEverything(int equipo);
 
     void destroy();
 
+    std::string getNombre(int equipo);
+
+    std::string getSpriteStill(int equipo);
+
+    std::string getSpriteRunning(int equipo);
+
+    std::string getNombreJugador(int equipo, int jugador);
+
 private:
+    std::map<std::string,std::string> infoEquipo[2];
 
     yaml_token_t token;
 
     yaml_document_t document[4];
 
     yaml_parser_t parser[4];
-    yaml_parser_t parser2;
 
-    FILE *equipo1;
+    yaml_parser_t parser2;
 
     FILE* files[4];
 
-    FILE *startEquipo(char *equipo, int arch);
+    FILE *startEquipo(std::string equipo, int arch);
 
     std::string find(std::string string, int equipo);
 
-
     void destroyFile(int i);
-
 
     std::string findJugador(std::string basic_string, int equipo);
 
     std::string findnext(int equipo);
 
-    const char *archivo;
-
-    std::string getNombreEquipo(int i);
 
 
-    bool esNombre(char *stream);
 
-    char *getNombre(char *stream);
 
 
 
@@ -67,9 +66,7 @@ private:
 
 
 
-    void printAll();
 
-    std::string getJugadorEquipo(int Equipo, int numJugador);
 
 
     void printAll(int arch);
@@ -78,6 +75,9 @@ private:
 
     void readAll(int arch);
 
+    void readArchives();
+
+    static YAMLReader *instance;
 };
 
 

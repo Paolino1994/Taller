@@ -15,6 +15,10 @@
 #include "GameConstants.h"
 #include "Player.h"
 #include "Log.h"
+#include "YAMLReader.h"
+#include "PlayerModel.h"
+#include "PlayerView.h"
+#include "PlayerController.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
@@ -131,12 +135,26 @@ int main( int argc, char* args[] )
         Texture stillT(gRenderer, stillS);
         stillT.setScaling(YAML::PlayerStill.width, YAML::PlayerStill.height);
 
+        YAMLReader reader("GeneralConfig.yaml");
+        //YAML::PlayerRun.file_path=reader.getSpriteRunning(EQUIPO1);
+        //YAML::PlayerStill.file_path=reader.getSpriteStill(EQUIPO1);
+
 		// Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
         animMapper.emplace(std::make_pair(YAML::PlayerRun.spriteid, Animation(runT, YAML::PlayerRun)));
         animMapper.emplace(std::make_pair(YAML::PlayerStill.spriteid, Animation(stillT, YAML::PlayerStill)));
 
         //Creo objetos del juego:
-        Player player(animMapper, DEFAULT_PLAYER, SCREEN_WIDTH/2, SCREEN_HEIGHT - YAML::PlayerStill.height);
+        PlayerModel playerModel(DEFAULT_PLAYER,0,0);
+        PlayerView playerView(animMapper,DEFAULT_PLAYER,playerModel);
+        PlayerController playerController(&playerModel,&playerView);
+        //Player player(animMapper, DEFAULT_PLAYER, 0, 0);
+        //Player player(animMapper, DEFAULT_PLAYER, SCREEN_WIDTH*2/5, SCREEN_HEIGHT - YAML::PlayerStill.height);
+        //Player player2(animMapper, DEFAULT_PLAYER, 0, 50);
+        //Player player3(animMapper, DEFAULT_PLAYER, SCREEN_WIDTH*4/5, SCREEN_HEIGHT - YAML::PlayerStill.height);
+        //Player player4(animMapper, DEFAULT_PLAYER, SCREEN_WIDTH/2, SCREEN_HEIGHT - YAML::PlayerStill.height);
+        //Player player5(animMapper, DEFAULT_PLAYER, SCREEN_WIDTH*1/3, SCREEN_HEIGHT - YAML::PlayerStill.height);
+        //Player player6(animMapper, DEFAULT_PLAYER, SCREEN_WIDTH*2/3, SCREEN_HEIGHT - YAML::PlayerStill.height);
+
 
         World world(background.getWidth(), background.getHeight(), &background);
         world.addEntity(&player);
@@ -180,14 +198,14 @@ int main( int argc, char* args[] )
                         quit = true;
                     }
 
-                    player.handleEvent(e);
+                    playerController.handleEvent(e);
                 }
 
                 //Cuando el tiempo pasado es mayor a nuestro tiempo de actualizacion
                 while ( accumulator >= fixed_dt )
                 {
                     //Calculate movement/physics:
-                    player.update(fixed_dt, world.getWidth(), world.getHeight());
+                    playerModel.update(fixed_dt, world.getWidth(), world.getHeight());
                     camera.update(fixed_dt);
                     accumulator -= fixed_dt;
                 }

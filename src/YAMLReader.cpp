@@ -5,6 +5,7 @@
 
 #include <assert.h>
 #include "YAMLReader.h"
+#include "Log.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -13,19 +14,60 @@
 
 void readToken(yaml_token_t e);
 
-void YAMLReader::setFile(char *string) {
+
+
+YAMLReader::YAMLReader(std::string string) {
+    Log::initialize(LOG_INFO);
+    Log* log=Log::get_instance();
+    log->info("Intento abrir Archivo de Configuracion General");
     files[3]=startEquipo(string,3);
+    log->info("Abierto Archivo de Configuracion General");
+    log->info("Intento abrir Archivo de Equipo"+EQUIPO1);
     files[EQUIPO1]= startEquipo(const_cast<char *>(find("Equipo1", 3).c_str()), EQUIPO1);
+    log->info("Abierto Archivo de Equipo"+EQUIPO1);
+    log->info("Intento abrir Archivo de Equipo"+EQUIPO2);
     files[EQUIPO2]= startEquipo(const_cast<char *>(find("Equipo2", 3).c_str()), EQUIPO2);
-
+    log->info("Abierto Archivo de Equipo"+EQUIPO2);
+    log->info("Intento destruir archivo de configuracion general");
     destroyFile(3);
-
-
+    log->info("Destrui archivo de configuracion general");
+    log->info("Intento leer archivos de configuracion de equipos");
+    readArchives();
+    log->info("Lei archivos de configuracion de equipos");
+    destroy();
 }
 
-std::string YAMLReader::getNombreEquipo(int equipo) {
-    return find("Nombre",equipo);
+std::string YAMLReader::getNombre(int equipo){
+    return infoEquipo[equipo]["Nombre"];
 }
+
+std::string YAMLReader::getFormacion(int equipo){
+    return infoEquipo[equipo]["Formacion"];
+}
+
+
+std::string YAMLReader::getSpriteStill(int equipo){
+    return infoEquipo[equipo]["SpriteStill"];
+}
+
+
+std::string YAMLReader::getSpriteRunning(int equipo){
+    return infoEquipo[equipo]["SpriteRunning"];
+}
+
+std::string YAMLReader::getNombreJugador(int equipo, int jugador){
+    return infoEquipo[equipo]["Jugador" + jugador];
+}
+
+
+
+
+void YAMLReader::readArchives() {
+    infoEquipo[EQUIPO1]=getEverything(EQUIPO1);
+    infoEquipo[EQUIPO2]=getEverything(EQUIPO2);
+}
+
+
 
 void YAMLReader::destroy() {
     for(int i=0;i<2;i++){
@@ -120,8 +162,8 @@ void readToken(yaml_token_t tok) {
 
 
 
-FILE * YAMLReader::startEquipo(char* equipo, int arch) {
-    std::string ruta="../res/";
+FILE * YAMLReader::startEquipo(std::string equipo, int arch) {
+    std::string ruta="res/";
     std::string rutaEquipo= ruta + equipo;
     //std::cout<<asd<<std::endl;
     files[arch]=fopen(rutaEquipo.c_str(), "r");
@@ -170,19 +212,17 @@ std::string YAMLReader::find(std::string string, int equipo) {
     return NULL;
 }
 
-std:: string YAMLReader::getFormacion(int equipo) {
-    return find("Formacion",equipo);
-}
+
 
 std::map<std::string, std::string> YAMLReader::getEverything(int equipo) {
     std::map<std::string,std::string> mapa;
-    std::vector<std::string> keys={"Nombre","Formacion","Sprite","Jugador1","Jugador2","Jugador3","Jugador4","Jugador5","Jugador6"};
+    std::vector<std::string> keys={"Nombre","Formacion","SpriteStill","SpriteRunning","Jugador1","Jugador2","Jugador3","Jugador4","Jugador5","Jugador6"};
     //std::cout<<"HOLAsad"<<std::endl;
     int i=0;
-    for(i=0;i<3;i++){
+    for(i=0;i<4;i++){
         mapa[keys[i]]=find(keys[i], equipo);
     }
-    for(i=3;i<9;i++){
+    for(i=4;i<10;i++){
         mapa[keys[i]]=findJugador(keys[i], equipo);
     }
 
@@ -220,7 +260,6 @@ std::string YAMLReader::findnext(int equipo) {
 
 
 }
-
 
 
 

@@ -24,7 +24,7 @@ public:
     virtual int getHeight() = 0;
 
     // render: screen_x and screen_y
-    virtual void render(int screen_x, int screen_y) = 0;
+    //virtual void render(int screen_x, int screen_y) = 0;
     
 };
 
