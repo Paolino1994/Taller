@@ -62,6 +62,9 @@ void Player::handleEvent( SDL_Event& e )
                 //flipmode = SDL_FLIP_NONE;
                 break;
             }
+            case SDLK_SPACE:
+            	this->state = SWEEPING;
+				break;
         }
     }
     //If a key was released
@@ -105,11 +108,12 @@ void Player::update(double dt, int x_limit, int y_limit){
 		this->state = STILL;
 		// mantenemos el angulo anterior
 	}
-	else {
+	// TODO- revisar estado al barrer
+	 else if(this->state != SWEEPING) {
 		this->state = RUNNING;
+	   }
 		// angle con 0 apunta para arriba, 180 abajo, 360 arriba, lo pasado de 360 o 0 lo modulea SDL2
 		this->angle = (atan2(this->velY, this->velX) * 180 / M_PI) + 90;
-	}
     
     if (old_state != this->state) mAnimations[this->state].reset();
     mAnimations[this->state].update(dt);

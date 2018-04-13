@@ -35,6 +35,16 @@ namespace YAML {
         3
     };
 
+// TODO-buscar un mejor sprite
+    const sprite_info_t PlayerSweep = {
+            "sweep",
+            "res/player_sweep.png",
+            60,
+            64,
+            4,
+            12
+        };
+
 }
 
 // YAML se traduce y se cargan las texturas en un map {sprite_id: Texture/Animation}
@@ -42,6 +52,7 @@ namespace YAML {
 enum PlayerState {
     STILL = 0,
     RUNNING,
+    SWEEPING,
     _LENGTH_
 };
 
@@ -63,8 +74,9 @@ const player_data_t DEFAULT_PLAYER = {
     // Asignar los estados a sus respectivos sprites
     // sprite_ids[Player::State] -> sprite_id
     /*sprite_ids =*/ { //usando designators
-        [PlayerState::STILL] = YAML::PlayerStill.spriteid,
-        [PlayerState::RUNNING] = YAML::PlayerRun.spriteid
+    	[PlayerState::STILL] = YAML::PlayerStill.spriteid,
+		[PlayerState::RUNNING] = YAML::PlayerRun.spriteid,
+		[PlayerState::SWEEPING] = YAML::PlayerSweep.spriteid,
     },
     
     // pixeles (logicos) por segundo

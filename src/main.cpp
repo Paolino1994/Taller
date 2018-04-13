@@ -131,10 +131,16 @@ int main( int argc, char* args[] )
 		runS.setColorKey(126, 130, 56); //cargar desde constantes
         Texture runT(gRenderer, runS);
         runT.setScaling(YAML::PlayerRun.width, YAML::PlayerRun.height);
+
 		Surface stillS(YAML::PlayerStill.file_path);
 		stillS.setColorKey(126, 130, 56); //cargar desde constantes
         Texture stillT(gRenderer, stillS);
         stillT.setScaling(YAML::PlayerStill.width, YAML::PlayerStill.height);
+
+        Surface sweepS(YAML::PlayerSweep.file_path);
+        sweepS.setColorKey(126, 130, 56); //cargar desde constantes
+		Texture sweepT(gRenderer, sweepS);
+		sweepT.setScaling(YAML::PlayerSweep.width, YAML::PlayerSweep.height);
 
         YAMLReader reader("GeneralConfig.yaml");
         //YAML::PlayerRun.file_path=reader.getSpriteRunning(EQUIPO1);
@@ -143,6 +149,7 @@ int main( int argc, char* args[] )
 		// Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
         animMapper.emplace(std::make_pair(YAML::PlayerRun.spriteid, Animation(runT, YAML::PlayerRun)));
         animMapper.emplace(std::make_pair(YAML::PlayerStill.spriteid, Animation(stillT, YAML::PlayerStill)));
+        animMapper.emplace(std::make_pair(YAML::PlayerSweep.spriteid, Animation(sweepT, YAML::PlayerSweep)));
 
         // Creo jugadores:
 		TeamFactory* tfactory = new TeamFactory();
