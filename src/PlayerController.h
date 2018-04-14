@@ -12,19 +12,24 @@
 class PlayerController {
 
 public:
-    PlayerController(PlayerModel* model, PlayerView* view):
-    	playerModel(model),
-		playerView(view){};
+	PlayerController(PlayerModel* model, PlayerView* view) :
+		playerModel(model),
+		playerView(view),
+		pressingUP(false),
+		pressingDOWN(false),
+		pressingLEFT(false),
+		pressingRIGHT(false)
+	{};
 
-    Entity* getEntity() {
-    	return playerModel;
-    }
+	Entity* getEntity() {
+		return playerModel;
+	}
 
-    PlayerView* getView() {
-       	return playerView;
-    }
+	PlayerView* getView() {
+		return playerView;
+	}
 
-    void handleEvent(SDL_Event &e);
+	void handleEvent(SDL_Event &e);
 
 	void update(double dt, int x_limit, int y_limit);
 
@@ -34,6 +39,10 @@ private:
 
 	PlayerModel * playerModel;
 	PlayerView *playerView;
+	bool pressingUP;
+	bool pressingDOWN;
+	bool pressingLEFT;
+	bool pressingRIGHT;
 
 };
 

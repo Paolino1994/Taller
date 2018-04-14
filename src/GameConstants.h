@@ -63,6 +63,7 @@ struct player_data {
     //const Animation&[Player::_LENGTH_] animation_ids;        <-
     const int X_VELOCITY;
     const int Y_VELOCITY;
+	const double SWEEP_DURATION;
 };
 
 typedef struct player_data player_data_t;
@@ -82,4 +83,5 @@ const player_data_t DEFAULT_PLAYER = {
     // pixeles (logicos) por segundo
     /*X_VELOCITY =*/ 250,
     /*Y_VELOCITY =*/ 250,
+	/*SWEEP_DURATION*/ (1.0 / YAML::PlayerSweep.frames_per_second) * YAML::PlayerSweep.frames
 };

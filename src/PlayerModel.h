@@ -28,9 +28,14 @@ public:
 
     double getMaxVelX();
 
+	void changeVelY(double d);
+	void changeVelX(double d);
+
     void setVelY(double d);
 
     void setVelX(double d);
+
+	void sweep();
 
     void update(double dt, int x_limit, int y_limit);
 
@@ -41,6 +46,11 @@ private:
     double angle;
     const int MAX_VEL_X;
     const int MAX_VEL_Y;
+	// Todo esto de aca para abajo seria para una clase SweepState (ponele) que implemente PlayerState
+	const double sweepDuration;
+	double sweepTime;
+	double sweepVelX; // para saber que velX poner cuando termina el sweep
+	double sweepVelY; // para saber que velY poner cuando termina el sweep
 
     int getWidth();
 

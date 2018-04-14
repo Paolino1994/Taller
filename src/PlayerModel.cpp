@@ -13,44 +13,67 @@ PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, doub
         state(STILL),
         angle(0.0),
         MAX_VEL_X(player_data.X_VELOCITY),
-        MAX_VEL_Y(player_data.Y_VELOCITY)
+        MAX_VEL_Y(player_data.Y_VELOCITY),
+		sweepDuration(player_data.SWEEP_DURATION),
+		sweepTime(0.0),
+		sweepVelX(0.0),
+		sweepVelY(0.0)
 {
 
 }
 
+// IMPORTANYE: Proximamente manejar mejor esto con patron State 
 void PlayerModel::update(double dt, int x_limit, int y_limit){
     using namespace std;
-    //PlayerState old_state = this->state;
-    // Actualizar x:
-    x += velX * dt;
-    // Actualizar y:
-    y += velY * dt;
+
+	//PlayerState old_state = this->state;
+	// Actualizar x:
+	x += velX * dt;
+	// Actualizar y:
+	y += velY * dt;
 
 
-    if((y + this->getHeight()) > y_limit ) { //limite de abajo
-        y = y_limit - this->getHeight();
-    }
-    else if (this->y < 0) { // limite de arriba
-        this->y = 0;
-    }
+	if ((y + this->getHeight()) > y_limit) { //limite de abajo
+		y = y_limit - this->getHeight();
+	}
+	else if (this->y < 0) { // limite de arriba
+		this->y = 0;
+	}
 
-    if ((x + this->getWidth()) > x_limit) { //limite de abajo
-        x = x_limit - this->getWidth();
-    }
-    else if (this->x < 0) { // limite de arriba
-        this->x = 0;
-    }
+	if ((x + this->getWidth()) > x_limit) { //limite de abajo
+		x = x_limit - this->getWidth();
+	}
+	else if (this->x < 0) { // limite de arriba
+		this->x = 0;
+	}
 
-    if (velX == 0.0 && velY == 0.0) {
-        this->state = STILL;
-        // mantenemos el angulo anterior
-    }
-    else {
-        this->state = RUNNING;
-        // angle con 0 apunta para arriba, 180 abajo, 360 arriba, lo pasado de 360 o 0 lo modulea SDL2
-        this->angle = (atan2(this->velY, this->velX) * 180 / M_PI) + 90;
-    }
+	bool isSweepEnd = false;
 
+	if (this->state == PlayerState::SWEEPING) {
+		this->sweepTime += dt;
+		if (this->sweepTime > this->sweepDuration) {
+			this->state = PlayerState::STILL;
+			isSweepEnd = true;
+		}
+	}
+
+	if (this->state != PlayerState::SWEEPING) {
+
+		if (velX == 0.0 && velY == 0.0) {
+			this->state = STILL;
+			// mantenemos el angulo anterior
+		}
+		else {
+			this->state = RUNNING;
+			// angle con 0 apunta para arriba, 180 abajo, 360 arriba, lo pasado de 360 o 0 lo modulea SDL2
+			this->angle = (atan2(this->velY, this->velX) * 180 / M_PI) + 90;
+		}
+	}
+
+	if (isSweepEnd) { //seteo las velocidades que me estuve guardando!
+		this->velX = sweepVelX;
+		this->velY = sweepVelY;
+	}
 
 }
 
@@ -91,26 +114,61 @@ double PlayerModel::getMaxVelY() {
 }
 
 double PlayerModel::getMaxVelX() {
-    return MAX_VEL_X;
+	return MAX_VEL_X;
 }
 
+// Proximamente manejar mejor esto con patron State
+void PlayerModel::changeVelY(double d)
+{
+	if (this->state == SWEEPING) {
+		sweepVelY += d;
+	}
+	else {
+		velY += d;
+	}
+}
+
+// Proximamente manejar mejor esto con patron State
+void PlayerModel::changeVelX(double d)
+{
+	if (this->state == SWEEPING) {
+		sweepVelX += d;
+	}
+	else {
+		velX += d;
+	}
+}
+
+// Proximamente manejar mejor esto con patron State
+// Tratar de no usar esto (quizas solo para el controller que devuelva al jugador a su lugar)
 void PlayerModel::setVelY(double d) {
-    velY=d;
+	if (this->state == SWEEPING) {
+		sweepVelY = d;
+	}
+	else {
+		velY = d;
+	}
 }
 
+// Proximamente manejar mejor esto con patron State
+// Tratar de no usar esto (quizas solo para el controller que devuelva al jugador a su lugar)
 void PlayerModel::setVelX(double d) {
-    velX=d;
+	if (this->state == SWEEPING) {
+		sweepVelX = d;
+	}
+	else {
+		velX = d;
+	}
 }
 
-PlayerModel::PlayerModel():
-        Entity(0, 0),
-        velX(0),
-        velY(0),
-        state(STILL),
-        angle(0.0),
-        MAX_VEL_X(0),
-        MAX_VEL_Y(0) {
-
+// Proximamente manejar mejor esto con patron State
+void PlayerModel::sweep()
+{
+	if (this->state != SWEEPING) {
+		this->state = SWEEPING;
+		this->sweepTime = 0.0;
+		this->sweepVelX = velX;
+		this->sweepVelY = velY;
+	}
 }
-
 

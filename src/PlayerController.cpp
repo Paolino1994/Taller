@@ -6,10 +6,10 @@
 
 void PlayerController::handleEvent( SDL_Event& e )
 {
-    double velX=playerModel->getVelX();
-    double velY=playerModel->getVelY();
-    double MAX_VEL_X=playerModel->getMaxVelX();
-    double MAX_VEL_Y=playerModel->getMaxVelY();
+    //double velX=playerModel->getVelX();
+    //double velY=playerModel->getVelY();
+    const double MAX_VEL_X=playerModel->getMaxVelX();
+    const double MAX_VEL_Y=playerModel->getMaxVelY();
 
     //If a key was pressed
     if( e.type == SDL_KEYDOWN && e.key.repeat == 0 )
@@ -18,54 +18,57 @@ void PlayerController::handleEvent( SDL_Event& e )
         switch( e.key.keysym.sym )
         {
             case SDLK_UP:{
-                velY -= MAX_VEL_Y;
-                playerModel->setVelY(velY);
-                //flipmode = SDL_FLIP_NONE;
+				this->pressingUP = true;
+                //velY -= MAX_VEL_Y;
+                playerModel->changeVelY(-MAX_VEL_Y);
                 break;
             }
             case SDLK_DOWN: {
-                velY += MAX_VEL_Y;
-                playerModel->setVelY(velY);
-                //flipmode = static_cast<SDL_RendererFlip>(flipmode | SDL_FLIP_VERTICAL); // ver como aplicar (en general) a todos los setFlipModes
+				this->pressingDOWN = true;
+                //velY += MAX_VEL_Y;
+                playerModel->changeVelY(MAX_VEL_Y);
                 break;
             }
             case SDLK_LEFT:{
-                velX -= MAX_VEL_X;
-                playerModel->setVelX(velX);
-                //flipmode = SDL_FLIP_HORIZONTAL; //ver si tiene sentido cuando se use con el angulo
+				this->pressingLEFT = true;
+                //velX -= MAX_VEL_X;
+                playerModel->changeVelX(-MAX_VEL_X);
                 break;
             }
             case SDLK_RIGHT:{
-                velX += MAX_VEL_X;
-                playerModel->setVelX(velX);
-                //flipmode = SDL_FLIP_NONE;
+				this->pressingRIGHT = true;
+                //velX += MAX_VEL_X;
+                playerModel->changeVelX(MAX_VEL_X);
                 break;
             }
+			case SDLK_SPACE:
+				playerModel->sweep();
+				break;
         }
     }
-        //If a key was released
+	
+	//If a key was released
     else if( e.type == SDL_KEYUP && e.key.repeat == 0 )
     {
         //Adjust the velocity
-        switch( e.key.keysym.sym )
-        {
-            case SDLK_UP:
-                velY += MAX_VEL_Y;
-                playerModel->setVelY(velY);
-                break;
-            case SDLK_DOWN:
-                velY -= MAX_VEL_Y;
-                playerModel->setVelY(velY);
-                break;
-            case SDLK_LEFT:
-                velX += MAX_VEL_X;
-                playerModel->setVelX(velX);
-                break;
-            case SDLK_RIGHT:
-                velX -= MAX_VEL_X;
-                playerModel->setVelX(velX);
-                break;
-        }
+
+		if (e.key.keysym.sym == SDLK_UP && this->pressingUP) {
+			//velY += MAX_VEL_Y;
+			playerModel->changeVelY(MAX_VEL_Y);
+		}
+		else if (e.key.keysym.sym == SDLK_DOWN && this->pressingDOWN) {
+			//velY -= MAX_VEL_Y;
+			playerModel->changeVelY(-MAX_VEL_Y);
+		}
+		else if (e.key.keysym.sym == SDLK_LEFT && this->pressingLEFT) {
+			//velX += MAX_VEL_X;
+			playerModel->changeVelX(MAX_VEL_X);
+		}
+		else if (e.key.keysym.sym == SDLK_RIGHT && this->pressingRIGHT) {
+			//velX -= MAX_VEL_X;
+			playerModel->changeVelX(-MAX_VEL_X);
+		}
+
     }
 }
 
@@ -85,11 +88,9 @@ void PlayerController::swap(PlayerController * otherController)
 	this->playerView = otherController->playerView;
 	otherController->playerView = tempView;
 
-	//TEMPORAL, corregir
-	//reset por las dudas los movimientos TEMPORAL
-	//va a depender del estado del jugador, por ejemplo si estoy barriendo esto no sirve
-	otherController->playerModel->setVelY(0);
-	otherController->playerModel->setVelX(0);
-	this->playerModel->setVelY(0);
-	this->playerModel->setVelX(0);
+	//Reset de lo que tecleabamos porque no aplica al nuevo jugador
+	this->pressingUP = false;
+	this->pressingDOWN = false;
+	this->pressingLEFT = false;
+	this->pressingRIGHT = false;
 }
