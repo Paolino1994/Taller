@@ -19,6 +19,7 @@
 #include "PlayerModel.h"
 #include "PlayerView.h"
 #include "PlayerController.h"
+#include "TeamFactory.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
@@ -144,25 +145,35 @@ int main( int argc, char* args[] )
         animMapper.emplace(std::make_pair(YAML::PlayerStill.spriteid, Animation(stillT, YAML::PlayerStill)));
 
         //Creo objetos del juego:
-        PlayerModel playerModel(DEFAULT_PLAYER,0,0);
-        PlayerView playerView(animMapper,DEFAULT_PLAYER,&playerModel);
-        PlayerController playerController(&playerModel,&playerView);
+        //PlayerModel playerModel(DEFAULT_PLAYER,background.getWidth() * 2 / 3, background.getHeight() / 2);
+        //PlayerView playerView(animMapper,DEFAULT_PLAYER,&playerModel);
+        //PlayerController playerController(&playerModel,&playerView);
         //Player player(animMapper, DEFAULT_PLAYER, 0, 0);
         //Player player(animMapper, DEFAULT_PLAYER, SCREEN_WIDTH*2/5, SCREEN_HEIGHT - YAML::PlayerStill.height);
-        //Player player2(animMapper, DEFAULT_PLAYER, 0, 50);
+        //PlayerModel player2(DEFAULT_PLAYER,background.getWidth() / 3, background.getHeight() / 3);
+		//PlayerView player2View(animMapper, DEFAULT_PLAYER, &playerModel);
+		//PlayerController player2Controller(&player2,&player2View);
         //Player player3(animMapper, DEFAULT_PLAYER, SCREEN_WIDTH*4/5, SCREEN_HEIGHT - YAML::PlayerStill.height);
         //Player player4(animMapper, DEFAULT_PLAYER, SCREEN_WIDTH/2, SCREEN_HEIGHT - YAML::PlayerStill.height);
         //Player player5(animMapper, DEFAULT_PLAYER, SCREEN_WIDTH*1/3, SCREEN_HEIGHT - YAML::PlayerStill.height);
         //Player player6(animMapper, DEFAULT_PLAYER, SCREEN_WIDTH*2/3, SCREEN_HEIGHT - YAML::PlayerStill.height);
-
+		TeamFactory* tfactory = new TeamFactory();
+		tfactory->create(3, 2, 1, LEFT_GOAL, background.getWidth(), background.getHeight());
+		tfactory->add_view(animMapper);
 
         World world(background.getWidth(), background.getHeight(), &background);
-        world.addEntity(&playerModel);
-        world.addPlayerController(&playerController);
+		tfactory->add_to_world(world);
+        //world.addEntity(&playerModel);
+        //world.addEntity(&player2);
+        //world.addPlayerController(&playerController);
+		//world.addPlayerController(&player2Controller);
 
+		player p = ((tfactory->get_team()).back());
+		PlayerModel* playerModel = p.model;
+		PlayerController* playerController = p.controller;
 
         Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT);
-        camera.follow(&playerModel);
+        camera.follow(playerModel);
 
         if (true)
         {
@@ -200,14 +211,14 @@ int main( int argc, char* args[] )
                         quit = true;
                     }
 
-                    playerController.handleEvent(e);
+                    playerController->handleEvent(e);
                 }
 
                 //Cuando el tiempo pasado es mayor a nuestro tiempo de actualizacion
                 while ( accumulator >= fixed_dt )
                 {
                     //Calculate movement/physics:
-                    playerModel.update(fixed_dt, world.getWidth(), world.getHeight());
+                    playerModel->update(fixed_dt, world.getWidth(), world.getHeight());
                     camera.update(fixed_dt);
                     accumulator -= fixed_dt;
                 }
