@@ -147,6 +147,13 @@ int main( int argc, char* args[] )
         PlayerModel playerModel(DEFAULT_PLAYER,0,0);
         PlayerView playerView(animMapper,DEFAULT_PLAYER,&playerModel);
         PlayerController playerController(&playerModel,&playerView);
+
+		PlayerModel playerModel2(DEFAULT_PLAYER, 100, 100);
+		PlayerView playerView2(animMapper, DEFAULT_PLAYER, &playerModel2);
+		PlayerController playerController2(&playerModel2, &playerView2); //TODO: este seria un pseudo AI-Controller que vuelve solo a su posicion
+
+		PlayerController* controlled = &playerController;
+
         //Player player(animMapper, DEFAULT_PLAYER, 0, 0);
         //Player player(animMapper, DEFAULT_PLAYER, SCREEN_WIDTH*2/5, SCREEN_HEIGHT - YAML::PlayerStill.height);
         //Player player2(animMapper, DEFAULT_PLAYER, 0, 50);
@@ -159,6 +166,7 @@ int main( int argc, char* args[] )
         World world(background.getWidth(), background.getHeight(), &background);
         world.addEntity(&playerModel);
         world.addPlayerController(&playerController);
+		world.addPlayerController(&playerController2);
 
 
         Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -200,14 +208,20 @@ int main( int argc, char* args[] )
                         quit = true;
                     }
 
-                    playerController.handleEvent(e);
+					if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_q) {
+
+						controlled->swap(&playerController2);
+						camera.follow(controlled->getEntity());
+					}
+
+                    controlled->handleEvent(e);
                 }
 
                 //Cuando el tiempo pasado es mayor a nuestro tiempo de actualizacion
                 while ( accumulator >= fixed_dt )
                 {
                     //Calculate movement/physics:
-                    playerModel.update(fixed_dt, world.getWidth(), world.getHeight());
+					world.update(fixed_dt); //Update de todos los players (y otras entidades proximamente?)
                     camera.update(fixed_dt);
                     accumulator -= fixed_dt;
                 }

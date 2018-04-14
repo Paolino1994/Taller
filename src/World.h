@@ -34,6 +34,8 @@ public:
     std::vector<Entity*>& getEntities() ;
     std::vector<PlayerController*>& getPlayerControllers() ;
 
+	void update(double dt);
+
     
     int getWidth();
     int getHeight();

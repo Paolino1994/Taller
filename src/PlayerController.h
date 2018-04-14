@@ -26,10 +26,15 @@ public:
 
     void handleEvent(SDL_Event &e);
 
+	void update(double dt, int x_limit, int y_limit);
+
+	void swap(PlayerController* otherController);
+
 private:
 
-    PlayerModel *playerModel;
-    PlayerView *playerView;
+	PlayerModel * playerModel;
+	PlayerView *playerView;
+
 };
 
 
