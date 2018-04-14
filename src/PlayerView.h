@@ -20,12 +20,14 @@ public:
     PlayerView(std::map<const std::string, Animation> map, PlayerModel model);
 
     PlayerView();
-
+	void update(double dt);
     void render(int screen_x, int screen_y);
 private:
     std::vector<Animation> mAnimations;
 
     PlayerModel* playerModel;
+
+	PlayerState playerState; // el state actual
 };
 
 

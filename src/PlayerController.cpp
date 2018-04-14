@@ -68,3 +68,28 @@ void PlayerController::handleEvent( SDL_Event& e )
         }
     }
 }
+
+void PlayerController::update(double dt, int x_limit, int y_limit)
+{
+	this->playerModel->update(dt, x_limit, y_limit);
+	this->playerView->update(dt);
+}
+
+void PlayerController::swap(PlayerController * otherController)
+{
+	auto temp = this->playerModel;
+	this->playerModel = otherController->playerModel;
+	otherController->playerModel = temp;
+
+	auto tempView = this->playerView;
+	this->playerView = otherController->playerView;
+	otherController->playerView = tempView;
+
+	//TEMPORAL, corregir
+	//reset por las dudas los movimientos TEMPORAL
+	//va a depender del estado del jugador, por ejemplo si estoy barriendo esto no sirve
+	otherController->playerModel->setVelY(0);
+	otherController->playerModel->setVelX(0);
+	this->playerModel->setVelY(0);
+	this->playerModel->setVelX(0);
+}

@@ -33,6 +33,13 @@ std::vector<PlayerController*>& World::getPlayerControllers() {
     return pControllers;
 }
 
+void World::update(double dt)
+{
+	for (auto player : pControllers) {
+		player->update(dt, this->getWidth(), this->getHeight());
+	}
+}
+
 int World::getWidth(){
     return width;
 }
