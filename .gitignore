@@ -35,3 +35,11 @@
 # Build dirs
 obj/*
 dep/*
+
+# Log dirs
+log/*
+
+# Visual Studio files
+.vs/*
+*.sln
+*.vcxproj*
