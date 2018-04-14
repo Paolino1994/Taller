@@ -64,6 +64,7 @@ struct player_data {
     const int X_VELOCITY;
     const int Y_VELOCITY;
 	const double SWEEP_DURATION;
+	const double SPRINT_VELOCITY_MULTIPLIER;
 };
 
 typedef struct player_data player_data_t;
@@ -71,17 +72,18 @@ typedef struct player_data player_data_t;
 
 //ejemplo instanciacion player data especifico:
 const player_data_t DEFAULT_PLAYER = {
-    
-    // Asignar los estados a sus respectivos sprites
-    // sprite_ids[Player::State] -> sprite_id
-    /*sprite_ids =*/ { //usando designators
-    	[PlayerState::STILL] = YAML::PlayerStill.spriteid,
+
+	// Asignar los estados a sus respectivos sprites
+	// sprite_ids[Player::State] -> sprite_id
+	/*sprite_ids =*/ { //usando designators
+		[PlayerState::STILL] = YAML::PlayerStill.spriteid,
 		[PlayerState::RUNNING] = YAML::PlayerRun.spriteid,
 		[PlayerState::SWEEPING] = YAML::PlayerSweep.spriteid,
-    },
-    
-    // pixeles (logicos) por segundo
-    /*X_VELOCITY =*/ 250,
-    /*Y_VELOCITY =*/ 250,
-	/*SWEEP_DURATION*/ (1.0 / YAML::PlayerSweep.frames_per_second) * YAML::PlayerSweep.frames
+	},
+
+	// pixeles (logicos) por segundo
+	/*X_VELOCITY =*/ 200,
+	/*Y_VELOCITY =*/ 200,
+	/*SWEEP_DURATION*/ (1.0 / YAML::PlayerSweep.frames_per_second) * YAML::PlayerSweep.frames,
+	/*SPRINT_VEL_MULT*/ 1.5
 };

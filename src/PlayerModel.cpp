@@ -6,18 +6,20 @@
 #include <cmath>
 
 
-PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y):
-        Entity(initial_x, initial_y),
-        velX(0),
-        velY(0),
-        state(STILL),
-        angle(0.0),
-        MAX_VEL_X(player_data.X_VELOCITY),
-        MAX_VEL_Y(player_data.Y_VELOCITY),
-		sweepDuration(player_data.SWEEP_DURATION),
-		sweepTime(0.0),
-		sweepVelX(0.0),
-		sweepVelY(0.0)
+PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y) :
+	Entity(initial_x, initial_y),
+	velX(0),
+	velY(0),
+	state(STILL),
+	angle(0.0),
+	MAX_VEL_X(player_data.X_VELOCITY),
+	MAX_VEL_Y(player_data.Y_VELOCITY),
+	sweepDuration(player_data.SWEEP_DURATION),
+	sweepTime(0.0),
+	sweepVelX(0.0),
+	sweepVelY(0.0),
+	sprintVelocityMultiplier(player_data.SPRINT_VELOCITY_MULTIPLIER),
+	velocityMultiplier(1.0)
 {
 
 }
@@ -28,9 +30,9 @@ void PlayerModel::update(double dt, int x_limit, int y_limit){
 
 	//PlayerState old_state = this->state;
 	// Actualizar x:
-	x += velX * dt;
+	x += velX * velocityMultiplier * dt;
 	// Actualizar y:
-	y += velY * dt;
+	y += velY * velocityMultiplier * dt;
 
 
 	if ((y + this->getHeight()) > y_limit) { //limite de abajo
@@ -170,5 +172,15 @@ void PlayerModel::sweep()
 		this->sweepVelX = velX;
 		this->sweepVelY = velY;
 	}
+}
+
+void PlayerModel::sprint()
+{
+	this->velocityMultiplier = this->sprintVelocityMultiplier;
+}
+
+void PlayerModel::stopSprinting()
+{
+	this->velocityMultiplier = 1.0;
 }
 

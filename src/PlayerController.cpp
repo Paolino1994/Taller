@@ -41,9 +41,14 @@ void PlayerController::handleEvent( SDL_Event& e )
                 playerModel->changeVelX(MAX_VEL_X);
                 break;
             }
-			case SDLK_SPACE:
+			case SDLK_SPACE: {
 				playerModel->sweep();
 				break;
+			}
+			case SDLK_r: {
+				playerModel->sprint();
+				break;
+			}
         }
     }
 	
@@ -67,6 +72,9 @@ void PlayerController::handleEvent( SDL_Event& e )
 		else if (e.key.keysym.sym == SDLK_RIGHT && this->pressingRIGHT) {
 			//velX -= MAX_VEL_X;
 			playerModel->changeVelX(-MAX_VEL_X);
+		}
+		else if (e.key.keysym.sym == SDLK_r) {
+			playerModel->stopSprinting();
 		}
 
     }

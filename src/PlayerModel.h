@@ -37,6 +37,9 @@ public:
 
 	void sweep();
 
+	void sprint();
+	void stopSprinting();
+
     void update(double dt, int x_limit, int y_limit);
 
 private:
@@ -51,6 +54,9 @@ private:
 	double sweepTime;
 	double sweepVelX; // para saber que velX poner cuando termina el sweep
 	double sweepVelY; // para saber que velY poner cuando termina el sweep
+	// Sprint
+	const double sprintVelocityMultiplier;
+	double velocityMultiplier;
 
     int getWidth();
 
