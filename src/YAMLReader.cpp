@@ -12,7 +12,8 @@
 #include <map>
 
 
-void readToken(yaml_token_t e);
+YAMLReader* YAMLReader::instance = 0;
+
 
 
 
@@ -37,7 +38,17 @@ YAMLReader::YAMLReader(std::string string) {
     destroy();
 }
 
+YAMLReader* YAMLReader::get_instance() {
+    if (!(instance != 0)){
+        instance= new YAMLReader("GeneralConfig.yaml");
+    }
+    return instance;
+}
+
+
 std::string YAMLReader::getNombre(int equipo){
+
+
     return infoEquipo[equipo]["Nombre"];
 }
 
@@ -55,9 +66,18 @@ std::string YAMLReader::getSpriteRunning(int equipo){
     return infoEquipo[equipo]["SpriteRunning"];
 }
 
+std::string YAMLReader::getSpriteKicking(int equipo){
+    return infoEquipo[equipo]["SpriteKicking"];
+}
+
 std::string YAMLReader::getNombreJugador(int equipo, int jugador){
     return infoEquipo[equipo]["Jugador" + jugador];
 }
+
+std::string YAMLReader::getSpriteSweeping(int equipo) {
+    return infoEquipo[equipo]["SpriteSweeping"];
+}
+
 
 
 
@@ -90,22 +110,21 @@ std::string YAMLReader::getSpritesEquipo(int equipo) {
 void YAMLReader::printType(yaml_token_type_t e) {
     switch(e)
     {
-        /* Stream start/end */
-        case YAML_STREAM_START_TOKEN: puts("STREAM START"); break;
-        case YAML_STREAM_END_TOKEN:   puts("STREAM END");   break;
-            /* Token types (read before actual token) */
-        case YAML_KEY_TOKEN:   printf("(Key token)   "); break;
-        case YAML_VALUE_TOKEN: printf("(Value token) "); break;
-            /* Block delimeters */
-        case YAML_BLOCK_SEQUENCE_START_TOKEN: puts("<b>Start Block (Sequence)</b>"); break;
-        case YAML_BLOCK_ENTRY_TOKEN:          puts("<b>Start Block (Entry)</b>");    break;
-        case YAML_BLOCK_END_TOKEN:            puts("<b>End block</b>");              break;
-            /* Data */
-        case YAML_BLOCK_MAPPING_START_TOKEN:  puts("[Block mapping]");            break;
-        case YAML_SCALAR_TOKEN:  printf("scalar %s \n", token.data.scalar.value); break;
-            /* Others */
+        case YAML_STREAM_START_TOKEN: puts("STREAM Inicio"); break;
+        case YAML_STREAM_END_TOKEN:   puts("STREAM Fin");   break;
+
+        case YAML_KEY_TOKEN:   printf("Key   "); break;
+        case YAML_VALUE_TOKEN: printf("Value "); break;
+
+        case YAML_BLOCK_SEQUENCE_START_TOKEN: puts("<b>Bloque secuencia</b>"); break;
+        case YAML_BLOCK_ENTRY_TOKEN:          puts("<b>Bloque Entrada</b>");    break;
+        case YAML_BLOCK_END_TOKEN:            puts("<b>Fin de Bloque</b>");              break;
+
+        case YAML_BLOCK_MAPPING_START_TOKEN:  puts("Mapeo de bloque");            break;
+        case YAML_SCALAR_TOKEN:  printf("Valor %s \n", token.data.scalar.value); break;
+
         default:
-            printf("Got token of type %d\n", token.type);
+            printf("Token tipo  %d\n", token.type);
     }
 
 
@@ -125,6 +144,29 @@ void YAMLReader::printAll(int arch) {
     yaml_token_delete(&token);
 }
 
+void readToken(yaml_token_t tok) {
+    yaml_token_type_t e=tok.type;
+    switch(e)
+    {
+        case YAML_STREAM_START_TOKEN: puts("STREAM Inicio"); break;
+        case YAML_STREAM_END_TOKEN:   puts("STREAM Fin");   break;
+
+        case YAML_KEY_TOKEN:   printf("Key   "); break;
+        case YAML_VALUE_TOKEN: printf("Value "); break;
+
+        case YAML_BLOCK_SEQUENCE_START_TOKEN: puts("<b>Bloque secuencia</b>"); break;
+        case YAML_BLOCK_ENTRY_TOKEN:          puts("<b>Bloque Entrada</b>");    break;
+        case YAML_BLOCK_END_TOKEN:            puts("<b>Fin de Bloque</b>");              break;
+
+        case YAML_BLOCK_MAPPING_START_TOKEN:  puts("Mapeo de bloque");            break;
+        case YAML_SCALAR_TOKEN:  printf("Valor %s \n", tok.data.scalar.value); break;
+
+        default:
+            printf("Token tipo  %d\n", tok.type);
+    }
+
+}
+
 void YAMLReader::readAll(int arch) {
     do {
         yaml_parser_scan(&parser[arch], &token);
@@ -135,46 +177,15 @@ void YAMLReader::readAll(int arch) {
     yaml_token_delete(&token);
 }
 
-void readToken(yaml_token_t tok) {
-    yaml_token_type_t e=tok.type;
-    switch(e)
-    {
-        /* Stream start/end */
-        case YAML_STREAM_START_TOKEN: puts("STREAM START"); break;
-        case YAML_STREAM_END_TOKEN:   puts("STREAM END");   break;
-            /* Token types (read before actual token) */
-        case YAML_KEY_TOKEN:   printf("(Key token)   "); break;
-        case YAML_VALUE_TOKEN: printf("(Value token) "); break;
-            /* Block delimeters */
-        case YAML_BLOCK_SEQUENCE_START_TOKEN: puts("<b>Start Block (Sequence)</b>"); break;
-        case YAML_BLOCK_ENTRY_TOKEN:          puts("<b>Start Block (Entry)</b>");    break;
-        case YAML_BLOCK_END_TOKEN:            puts("<b>End block</b>");              break;
-            /* Data */
-        case YAML_BLOCK_MAPPING_START_TOKEN:  puts("[Block mapping]");            break;
-        case YAML_SCALAR_TOKEN:  printf("scalar %s \n", tok.data.scalar.value); break;
-            /* Others */
-        default:
-            printf("Got token of type %d\n", tok.type);
-    }
-
-}
-
-
-
 
 FILE * YAMLReader::startEquipo(std::string equipo, int arch) {
     std::string ruta="res/";
     std::string rutaEquipo= ruta + equipo;
-    //std::cout<<asd<<std::endl;
     files[arch]=fopen(rutaEquipo.c_str(), "r");
-    /* Initialize parser */
     if(!yaml_parser_initialize(&(parser[arch])))
-        fputs("Failed to initialize parser!\n", stderr);
-
+        fputs("Error de parser\n", stderr);
     if(files[arch] == NULL)
-        fputs("Failed to open file!\n", stderr);
-
-    /* Set input file */
+        fputs("Error al abrir un archivo!\n", stderr);
     yaml_parser_set_input_file(&(parser[arch]), files[arch]);
     return files[arch];
 
@@ -216,18 +227,14 @@ std::string YAMLReader::find(std::string string, int equipo) {
 
 std::map<std::string, std::string> YAMLReader::getEverything(int equipo) {
     std::map<std::string,std::string> mapa;
-    std::vector<std::string> keys={"Nombre","Formacion","SpriteStill","SpriteRunning","Jugador1","Jugador2","Jugador3","Jugador4","Jugador5","Jugador6"};
-    //std::cout<<"HOLAsad"<<std::endl;
+    std::vector<std::string> keys={"Nombre","Formacion","SpriteStill","SpriteRunning","SpriteSweeping","SpriteKicking","Jugador1","Jugador2","Jugador3","Jugador4","Jugador5","Jugador6"};
     int i=0;
-    for(i=0;i<4;i++){
+    for(i=0;i<6;i++){
         mapa[keys[i]]=find(keys[i], equipo);
     }
-    for(i=4;i<10;i++){
+    for(i=6;i<12;i++){
         mapa[keys[i]]=findJugador(keys[i], equipo);
     }
-
-
-
     return mapa;
 
 }
@@ -260,6 +267,7 @@ std::string YAMLReader::findnext(int equipo) {
 
 
 }
+
 
 
 

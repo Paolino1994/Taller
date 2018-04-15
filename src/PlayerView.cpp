@@ -5,6 +5,9 @@
 
 #include "PlayerView.h"
 #include "PlayerModel.h"
+#include <iostream>
+#include <string>
+#include <stdio.h>
 
 
 PlayerView::PlayerView(std::map<const std::string, Animation>& animationMapper, const player_data_t player_data, PlayerModel *model):

@@ -17,7 +17,7 @@
 class YAMLReader {
 
 public:
-    YAMLReader(std::string string);
+    static YAMLReader *get_instance();
 
     std::map<std::string, std::string> getEverything(int equipo);
 
@@ -31,7 +31,15 @@ public:
 
     std::string getNombreJugador(int equipo, int jugador);
 
+    std::string getSpriteSweeping(int equipo);
+
+    std::string getSpriteKicking(int equipo);
+
+
 private:
+
+    YAMLReader(std::string string);
+
     std::map<std::string,std::string> infoEquipo[2];
 
     yaml_token_t token;
@@ -55,18 +63,9 @@ private:
     std::string findnext(int equipo);
 
 
-
-
-
-
-
     std::string getSpritesEquipo(int i);
 
     void printType(yaml_token_type_t e);
-
-
-
-
 
 
     void printAll(int arch);
@@ -78,6 +77,8 @@ private:
     void readArchives();
 
     static YAMLReader *instance;
+
+
 };
 
 

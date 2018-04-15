@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "YAMLReader.h"
 
 typedef struct sprite_info {
     std::string spriteid;
@@ -21,7 +22,7 @@ namespace YAML {
     
     const sprite_info_t PlayerRun = {
         "run",
-        "res/player_run.png",
+        YAMLReader::get_instance()->getSpriteRunning(EQUIPO1),
         60,
         64,
         4,
@@ -30,7 +31,7 @@ namespace YAML {
     
     const sprite_info_t PlayerStill = {
         "still",
-        "res/player_still.png",
+		YAMLReader::get_instance()->getSpriteStill(EQUIPO1),
         68,
         34,
         1,
@@ -39,13 +40,22 @@ namespace YAML {
 
 // TODO-buscar un mejor sprite
     const sprite_info_t PlayerSweep = {
-            "sweep",
-            "res/player_sweep.png",
-            60,
-            64,
-            4,
-            12
-        };
+        "sweep",
+        YAMLReader::get_instance()->getSpriteSweeping(EQUIPO1),
+        60,
+        64,
+        4,
+        12
+    };
+
+    const sprite_info_t PlayerKick = {
+        "kick",
+        YAMLReader::get_instance()->getSpriteKicking(EQUIPO1),
+        60,
+        64,
+        4,
+        12
+    };
 
 }
 
@@ -55,6 +65,7 @@ enum PlayerState {
     STILL = 0,
     RUNNING,
     SWEEPING,
+    KICKING,
     _LENGTH_
 };
 
@@ -67,7 +78,8 @@ struct player_data {
 	const int heights[PlayerState::_LENGTH_];
     const int X_VELOCITY;
     const int Y_VELOCITY;
-	const double SWEEP_DURATION;
+    const double SWEEP_DURATION;
+	const double KICK_DURATION;
 	const double SPRINT_VELOCITY_MULTIPLIER;
 };
 
@@ -83,6 +95,8 @@ const player_data_t DEFAULT_PLAYER = {
 		[PlayerState::STILL] = YAML::PlayerStill.spriteid,
 		[PlayerState::RUNNING] = YAML::PlayerRun.spriteid,
 		[PlayerState::SWEEPING] = YAML::PlayerSweep.spriteid,
+        [PlayerState::KICKING] = YAML::PlayerKick.spriteid,
+
 	},
 
 	/*WIDTHS*/  {
@@ -99,6 +113,7 @@ const player_data_t DEFAULT_PLAYER = {
 	// pixeles (logicos) por segundo
 	/*X_VELOCITY =*/ 200,
 	/*Y_VELOCITY =*/ 200,
-	/*SWEEP_DURATION*/ (1.0 / YAML::PlayerSweep.frames_per_second) * YAML::PlayerSweep.frames,
+    /*SWEEP_DURATION =*/ (1.0 / YAML::PlayerSweep.frames_per_second) * YAML::PlayerSweep.frames,
+    /*KICK_DURATION =*/ (1.0 / YAML::PlayerKick.frames_per_second) * YAML::PlayerKick.frames,
 	/*SPRINT_VEL_MULT*/ 1.5
 };
