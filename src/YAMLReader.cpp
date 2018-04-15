@@ -66,6 +66,10 @@ std::string YAMLReader::getSpriteRunning(int equipo){
     return infoEquipo[equipo]["SpriteRunning"];
 }
 
+std::string YAMLReader::getSpriteKicking(int equipo){
+    return infoEquipo[equipo]["SpriteKicking"];
+}
+
 std::string YAMLReader::getNombreJugador(int equipo, int jugador){
     return infoEquipo[equipo]["Jugador" + jugador];
 }
@@ -223,18 +227,14 @@ std::string YAMLReader::find(std::string string, int equipo) {
 
 std::map<std::string, std::string> YAMLReader::getEverything(int equipo) {
     std::map<std::string,std::string> mapa;
-    std::vector<std::string> keys={"Nombre","Formacion","SpriteStill","SpriteRunning","SpriteSweeping","Jugador1","Jugador2","Jugador3","Jugador4","Jugador5","Jugador6"};
-    //std::cout<<"HOLAsad"<<std::endl;
+    std::vector<std::string> keys={"Nombre","Formacion","SpriteStill","SpriteRunning","SpriteSweeping","SpriteKicking","Jugador1","Jugador2","Jugador3","Jugador4","Jugador5","Jugador6"};
     int i=0;
-    for(i=0;i<5;i++){
+    for(i=0;i<6;i++){
         mapa[keys[i]]=find(keys[i], equipo);
     }
-    for(i=5;i<11;i++){
+    for(i=6;i<12;i++){
         mapa[keys[i]]=findJugador(keys[i], equipo);
     }
-
-
-
     return mapa;
 
 }

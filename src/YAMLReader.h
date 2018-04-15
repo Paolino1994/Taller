@@ -33,6 +33,9 @@ public:
 
     std::string getSpriteSweeping(int equipo);
 
+    std::string getSpriteKicking(int equipo);
+
+
 private:
 
     YAMLReader(std::string string);

@@ -38,13 +38,22 @@ namespace YAML {
 
 // TODO-buscar un mejor sprite
     const sprite_info_t PlayerSweep = {
-            "sweep",
-            YAMLReader::get_instance()->getSpriteSweeping(EQUIPO1),
-            60,
-            64,
-            4,
-            12
-        };
+        "sweep",
+        YAMLReader::get_instance()->getSpriteSweeping(EQUIPO1),
+        60,
+        64,
+        4,
+        12
+    };
+
+    const sprite_info_t PlayerKick = {
+        "kick",
+        YAMLReader::get_instance()->getSpriteKicking(EQUIPO1),
+        60,
+        64,
+        4,
+        12
+    };
 
 }
 
@@ -54,6 +63,7 @@ enum PlayerState {
     STILL = 0,
     RUNNING,
     SWEEPING,
+    KICKING,
     _LENGTH_
 };
 
@@ -64,7 +74,8 @@ struct player_data {
     //const Animation&[Player::_LENGTH_] animation_ids;        <-
     const int X_VELOCITY;
     const int Y_VELOCITY;
-	const double SWEEP_DURATION;
+    const double SWEEP_DURATION;
+	const double KICK_DURATION;
 	const double SPRINT_VELOCITY_MULTIPLIER;
 };
 
@@ -80,11 +91,14 @@ const player_data_t DEFAULT_PLAYER = {
 		[PlayerState::STILL] = YAML::PlayerStill.spriteid,
 		[PlayerState::RUNNING] = YAML::PlayerRun.spriteid,
 		[PlayerState::SWEEPING] = YAML::PlayerSweep.spriteid,
+        [PlayerState::KICKING] = YAML::PlayerKick.spriteid,
+
 	},
 
 	// pixeles (logicos) por segundo
 	/*X_VELOCITY =*/ 200,
 	/*Y_VELOCITY =*/ 200,
-	/*SWEEP_DURATION*/ (1.0 / YAML::PlayerSweep.frames_per_second) * YAML::PlayerSweep.frames,
+    /*SWEEP_DURATION =*/ (1.0 / YAML::PlayerSweep.frames_per_second) * YAML::PlayerSweep.frames,
+    /*KICK_DURATION =*/ (1.0 / YAML::PlayerKick.frames_per_second) * YAML::PlayerKick.frames,
 	/*SPRINT_VEL_MULT*/ 1.5
 };

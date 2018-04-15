@@ -144,6 +144,11 @@ int main( int argc, char* args[] )
 		Texture sweepT(gRenderer, sweepS);
 		sweepT.setScaling(YAML::PlayerSweep.width, YAML::PlayerSweep.height);
 
+        Surface kickS(YAML::PlayerKick.file_path);
+        kickS.setColorKey(126, 130, 56); //cargar desde constantes
+        Texture kickT(gRenderer, kickS);
+        kickT.setScaling(YAML::PlayerKick.width, YAML::PlayerKick.height);
+
         //YAMLReader reader("GeneralConfig.yaml");
         //YAML::PlayerRun.file_path=reader.getSpriteRunning(EQUIPO1);
         //YAML::PlayerStill.file_path=reader.getSpriteStill(EQUIPO1);
@@ -152,6 +157,7 @@ int main( int argc, char* args[] )
         animMapper.emplace(std::make_pair(YAML::PlayerRun.spriteid, Animation(runT, YAML::PlayerRun)));
         animMapper.emplace(std::make_pair(YAML::PlayerStill.spriteid, Animation(stillT, YAML::PlayerStill)));
         animMapper.emplace(std::make_pair(YAML::PlayerSweep.spriteid, Animation(sweepT, YAML::PlayerSweep)));
+        animMapper.emplace(std::make_pair(YAML::PlayerKick.spriteid, Animation(kickT, YAML::PlayerKick)));
 
         // Creo jugadores:
 		TeamFactory* tfactory = new TeamFactory();

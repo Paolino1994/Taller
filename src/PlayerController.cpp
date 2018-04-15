@@ -49,6 +49,10 @@ void PlayerController::handleEvent( SDL_Event& e )
 				playerModel->sprint();
 				break;
 			}
+			case SDLK_RETURN: {
+				playerModel->kick();
+				break;
+			}
         }
     }
 	

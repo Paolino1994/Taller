@@ -37,6 +37,8 @@ public:
 
 	void sweep();
 
+    void kick();
+
 	void sprint();
 	void stopSprinting();
 
@@ -51,9 +53,13 @@ private:
     const int MAX_VEL_Y;
 	// Todo esto de aca para abajo seria para una clase SweepState (ponele) que implemente PlayerState
 	const double sweepDuration;
-	double sweepTime;
-	double sweepVelX; // para saber que velX poner cuando termina el sweep
-	double sweepVelY; // para saber que velY poner cuando termina el sweep
+    double sweepTime;
+    double sweepVelX; // para saber que velX poner cuando termina el sweep
+    double sweepVelY; 
+    const double kickDuration;
+    double kickTime;
+	double kickVelX; // para saber que velX poner cuando termina el kick
+	double kickVelY; // para saber que velY poner cuando termina el kick
 	// Sprint
 	const double sprintVelocityMultiplier;
 	double velocityMultiplier;

@@ -18,6 +18,10 @@ PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, doub
 	sweepTime(0.0),
 	sweepVelX(0.0),
 	sweepVelY(0.0),
+	kickDuration(player_data.KICK_DURATION),
+	kickTime(0.0),
+	kickVelX(0.0),
+	kickVelY(0.0),
 	sprintVelocityMultiplier(player_data.SPRINT_VELOCITY_MULTIPLIER),
 	velocityMultiplier(1.0)
 {
@@ -50,6 +54,7 @@ void PlayerModel::update(double dt, int x_limit, int y_limit){
 	}
 
 	bool isSweepEnd = false;
+	bool isKickEnd = false;
 
 	if (this->state == PlayerState::SWEEPING) {
 		this->sweepTime += dt;
@@ -58,9 +63,16 @@ void PlayerModel::update(double dt, int x_limit, int y_limit){
 			isSweepEnd = true;
 		}
 	}
+	
+	if (this->state == PlayerState::KICKING) {
+		this->kickTime += dt;
+		if (this->kickTime > this->kickDuration) {
+			this->state = PlayerState::STILL;
+			isKickEnd = true;
+		}
+	}
 
-	if (this->state != PlayerState::SWEEPING) {
-
+	if (this->state != PlayerState::SWEEPING and this->state != PlayerState::KICKING) {
 		if (velX == 0.0 && velY == 0.0) {
 			this->state = STILL;
 			// mantenemos el angulo anterior
@@ -75,6 +87,11 @@ void PlayerModel::update(double dt, int x_limit, int y_limit){
 	if (isSweepEnd) { //seteo las velocidades que me estuve guardando!
 		this->velX = sweepVelX;
 		this->velY = sweepVelY;
+	}
+
+	if (isKickEnd) { //seteo las velocidades que me estuve guardando!
+		this->velX = kickVelX;
+		this->velY = kickVelY;
 	}
 
 }
@@ -122,8 +139,9 @@ double PlayerModel::getMaxVelX() {
 // Proximamente manejar mejor esto con patron State
 void PlayerModel::changeVelY(double d)
 {
-	if (this->state == SWEEPING) {
+	if (this->state == SWEEPING or this->state == KICKING) {
 		sweepVelY += d;
+		kickVelY += d;
 	}
 	else {
 		velY += d;
@@ -133,8 +151,9 @@ void PlayerModel::changeVelY(double d)
 // Proximamente manejar mejor esto con patron State
 void PlayerModel::changeVelX(double d)
 {
-	if (this->state == SWEEPING) {
+	if (this->state == SWEEPING or this->state == KICKING) {
 		sweepVelX += d;
+		kickVelX += d;
 	}
 	else {
 		velX += d;
@@ -144,8 +163,9 @@ void PlayerModel::changeVelX(double d)
 // Proximamente manejar mejor esto con patron State
 // Tratar de no usar esto (quizas solo para el controller que devuelva al jugador a su lugar)
 void PlayerModel::setVelY(double d) {
-	if (this->state == SWEEPING) {
+	if (this->state == SWEEPING or this->state == KICKING) {
 		sweepVelY = d;
+		kickVelX = d;
 	}
 	else {
 		velY = d;
@@ -155,8 +175,9 @@ void PlayerModel::setVelY(double d) {
 // Proximamente manejar mejor esto con patron State
 // Tratar de no usar esto (quizas solo para el controller que devuelva al jugador a su lugar)
 void PlayerModel::setVelX(double d) {
-	if (this->state == SWEEPING) {
+	if (this->state == SWEEPING or this->state == KICKING) {
 		sweepVelX = d;
+		kickVelX = d;
 	}
 	else {
 		velX = d;
@@ -171,6 +192,17 @@ void PlayerModel::sweep()
 		this->sweepTime = 0.0;
 		this->sweepVelX = velX;
 		this->sweepVelY = velY;
+	}
+}
+
+// Proximamente manejar mejor esto con patron State
+void PlayerModel::kick()
+{
+	if (this->state != KICKING) {
+		this->state = KICKING;
+		this->kickTime = 0.0;
+		this->kickVelX = velX;
+		this->kickVelY = velY;
 	}
 }
 
