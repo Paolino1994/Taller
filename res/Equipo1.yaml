@@ -1,5 +1,5 @@
 - Nombre: "Tiburones"
-  - Formacion: "3-1-2"
+  - Formacion: "2-3-0"
   - SpriteStill: "res/player_still.png"
   - SpriteRunning: "res/player_run.png"
   - SpriteSweeping: "res/player_sweep.png"
