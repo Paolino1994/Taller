@@ -15,11 +15,11 @@
 #include "GameConstants.h"
 #include "Player.h"
 #include "Log.h"
-#include "YAMLReader.h"
 #include "PlayerModel.h"
 #include "PlayerView.h"
 #include "PlayerController.h"
 #include "TeamFactory.h"
+#include "YAMLReader.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
@@ -30,6 +30,8 @@ SDL_Window* gWindow = NULL;
 
 //The window renderer
 SDL_Renderer* gRenderer = NULL;
+
+void setPlayerRun(YAMLReader reader);
 
 //Starts up SDL and creates window
 bool init_SDL()
@@ -142,7 +144,7 @@ int main( int argc, char* args[] )
 		Texture sweepT(gRenderer, sweepS);
 		sweepT.setScaling(YAML::PlayerSweep.width, YAML::PlayerSweep.height);
 
-        YAMLReader reader("GeneralConfig.yaml");
+        //YAMLReader reader("GeneralConfig.yaml");
         //YAML::PlayerRun.file_path=reader.getSpriteRunning(EQUIPO1);
         //YAML::PlayerStill.file_path=reader.getSpriteStill(EQUIPO1);
 
@@ -240,3 +242,5 @@ int main( int argc, char* args[] )
 
     return 0;
 }
+
+

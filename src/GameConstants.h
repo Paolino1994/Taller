@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "YAMLReader.h"
 
 typedef struct sprite_info {
     std::string spriteid;
@@ -19,7 +20,7 @@ namespace YAML {
     
     const sprite_info_t PlayerRun = {
         "run",
-        "res/player_run.png",
+        YAMLReader::get_instance()->getSpriteRunning(EQUIPO1),
         60,
         64,
         4,
@@ -28,7 +29,7 @@ namespace YAML {
     
     const sprite_info_t PlayerStill = {
         "still",
-        "res/player_still.png",
+		YAMLReader::get_instance()->getSpriteStill(EQUIPO1),
         68,
         34,
         1,
@@ -38,7 +39,7 @@ namespace YAML {
 // TODO-buscar un mejor sprite
     const sprite_info_t PlayerSweep = {
             "sweep",
-            "res/player_sweep.png",
+            YAMLReader::get_instance()->getSpriteSweeping(EQUIPO1),
             60,
             64,
             4,
