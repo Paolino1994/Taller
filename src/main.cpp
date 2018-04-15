@@ -161,12 +161,11 @@ int main( int argc, char* args[] )
 		tfactory->add_to_world(world);
 
 		// Asigno jugador a ser controlado
-		player p = ((tfactory->get_team()).back());
-		PlayerModel* playerModel = p.model;
-		PlayerController* controlled = p.controller;
+		std::vector<player>::iterator teamIterator = std::prev(tfactory->get_team().end());
+		PlayerController* controlled = teamIterator->controller;
 
-        Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT);
-        camera.follow(playerModel);
+        Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
+        camera.follow(teamIterator->model);
 
         if (true)
         {
@@ -205,9 +204,24 @@ int main( int argc, char* args[] )
                     }
 
 					if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_q) {
+						// sabemos que el iterador apunta al controlled actual
+						player& controlledPlayer = *teamIterator;
+						do
+						{ // en el peor caso volvemos a el que estabamos controlando recien
+							++teamIterator;
+							if (teamIterator == tfactory->get_team().end()) {
+								teamIterator = tfactory->get_team().begin();
+							}
 
-						controlled->swap((tfactory->get_team())[5].controller);
-						camera.follow(controlled->getEntity());
+						} while (teamIterator->controller != controlled && !camera.isWithinScrollBoundaries(teamIterator->model));
+						
+						if (teamIterator->controller != controlled) {
+							controlled->swap(teamIterator->controller);
+							camera.follow(controlled->getEntity());
+							// esto es un parche medio feo por los lios del swap, TODO mejorar
+							controlledPlayer.controller = teamIterator->controller;
+							teamIterator->controller = controlled;
+						}
 					}
 
                     controlled->handleEvent(e);
@@ -227,7 +241,7 @@ int main( int argc, char* args[] )
                 SDL_RenderClear( gRenderer );
 
                 //Render current frame
-                camera.render(world);
+                camera.render(world);	
 
                 //Update screen
                 SDL_RenderPresent( gRenderer );

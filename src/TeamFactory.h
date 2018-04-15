@@ -67,7 +67,7 @@ public:
 	/**
 		@POS: retorna el equipo en el estado que esta, si no se creo estara vacio
 	*/
-	std::vector<player> get_team();
+	std::vector<player>& get_team();
 };
 
 #endif

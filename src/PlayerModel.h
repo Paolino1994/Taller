@@ -5,6 +5,7 @@
 #ifndef UNTITLED1_PLAYERMODEL_H
 #define UNTITLED1_PLAYERMODEL_H
 
+#include <vector>
 
 #include "GameConstants.h"
 #include "Entity.h"
@@ -15,6 +16,10 @@ public:
     PlayerModel();
 
     PlayerModel(const player_data_t player_data, double initial_x, double initial_y);
+
+	virtual int getWidth();
+
+	virtual int getHeight();
 
     double getAngle();
 
@@ -43,6 +48,8 @@ public:
     void update(double dt, int x_limit, int y_limit);
 
 private:
+	const std::vector<int> widths;
+	const std::vector<int> heights;
     double velX;
     double velY;
     PlayerState state;
@@ -57,10 +64,6 @@ private:
 	// Sprint
 	const double sprintVelocityMultiplier;
 	double velocityMultiplier;
-
-    int getWidth();
-
-    int getHeight();
 };
 
 

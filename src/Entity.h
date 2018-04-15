@@ -19,6 +19,10 @@ public:
     
     int getX() {return (int)x;}; //redondear?
     int getY() {return (int)y;}; //redondear?
+
+	int getCenterX() { return getX() + (getWidth() / 2); };
+	int getCenterY() { return getY() + (getHeight() / 2); };
+
     
     virtual int getWidth() = 0;
     virtual int getHeight() = 0;

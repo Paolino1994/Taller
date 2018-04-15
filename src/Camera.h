@@ -7,8 +7,10 @@
 class Camera
 {
 	World& world;
-    int width;
-    int height;
+    const int width;
+    const int height;
+	const int widthScrollOffset;
+	const int heightScrollOffset;
     int x; //real world x, using 2d screen coordinates
     int y; //real world y , idem
     int x_update_offset; // el offset con respecto al estado anterior
@@ -16,10 +18,12 @@ class Camera
     Entity* followed; //std::vector<GameObject*> o Entities
     
 public:
-    Camera(World& world, int width, int height);
+    Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset);
     ~Camera();
     
     void follow(Entity* gameObj); //Entity
+
+	bool isWithinScrollBoundaries(Entity* entity);
     
     void update(double dt);
     

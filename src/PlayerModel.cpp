@@ -8,6 +8,8 @@
 
 PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y) :
 	Entity(initial_x, initial_y),
+	widths(player_data.widths, std::end(player_data.widths)),
+	heights(player_data.heights, std::end(player_data.heights)),
 	velX(0),
 	velY(0),
 	state(STILL),
@@ -81,14 +83,18 @@ void PlayerModel::update(double dt, int x_limit, int y_limit){
 
 int PlayerModel::getWidth()
 {
-    //return mAnimations[this->state].getDestinationWidth();
-    return 20;
+	// Esto esta pendiente de mejoras, dependiendo para que se usa esto
+	// el tamaño del modelo no es necesariamente igual a un rectangulo como la imagen
+	// y no estamos considerando el angulo
+	return this->widths[this->state];
 }
 
 int PlayerModel::getHeight()
 {
-    //return mAnimations[this->state].getDestinationHeight();
-    return 20;
+	// Esto esta pendiente de mejoras, dependiendo para que se usa esto
+	// el tamaño del modelo no es necesariamente igual a un rectangulo como la imagen
+	// y no estamos considerando el angulo
+	return this->heights[this->state];
 }
 
 double PlayerModel::getAngle() {

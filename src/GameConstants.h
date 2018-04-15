@@ -14,8 +14,10 @@ typedef struct sprite_info {
 namespace YAML {
     const int SCREEN_WIDTH = 800;
     const int SCREEN_HEIGHT = 600;
+	const int SCREEN_WIDTH_SCROLL_OFFSET = SCREEN_WIDTH / 6;
+	const int SCREEN_HEIGHT_SCROLL_OFFSET = SCREEN_HEIGHT / 6;
     
-    const std::string background_path = "res/fondo.jpg";
+    const std::string background_path = "res/soccer_field_1.6.png";
     
     const sprite_info_t PlayerRun = {
         "run",
@@ -61,6 +63,8 @@ enum PlayerState {
 struct player_data {
     const std::string sprite_ids[PlayerState::_LENGTH_]; //o directamente texturas?
     //const Animation&[Player::_LENGTH_] animation_ids;        <-
+	const int widths[PlayerState::_LENGTH_];
+	const int heights[PlayerState::_LENGTH_];
     const int X_VELOCITY;
     const int Y_VELOCITY;
 	const double SWEEP_DURATION;
@@ -79,6 +83,17 @@ const player_data_t DEFAULT_PLAYER = {
 		[PlayerState::STILL] = YAML::PlayerStill.spriteid,
 		[PlayerState::RUNNING] = YAML::PlayerRun.spriteid,
 		[PlayerState::SWEEPING] = YAML::PlayerSweep.spriteid,
+	},
+
+	/*WIDTHS*/  {
+		[PlayerState::STILL] = YAML::PlayerStill.width,
+		[PlayerState::RUNNING] = YAML::PlayerRun.width,
+		[PlayerState::SWEEPING] = YAML::PlayerSweep.width,
+	},
+	/*HEIGHTS*/  {
+		[PlayerState::STILL] = YAML::PlayerStill.height,
+		[PlayerState::RUNNING] = YAML::PlayerRun.height,
+		[PlayerState::SWEEPING] = YAML::PlayerSweep.height,
 	},
 
 	// pixeles (logicos) por segundo

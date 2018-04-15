@@ -172,6 +172,6 @@ bool TeamFactory::add_to_world(World& world){
 	return true;
 }
 
-std::vector<player> TeamFactory::get_team(){
+std::vector<player>& TeamFactory::get_team(){
 	return team;
 }
