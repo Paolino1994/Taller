@@ -35,7 +35,6 @@ namespace YAML {
         3
     };
 
-// TODO-buscar un mejor sprite
     const sprite_info_t PlayerSweep = {
             "sweep",
             "res/player_sweep.png",
