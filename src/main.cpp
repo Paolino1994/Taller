@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <string>
 #include <iostream>
 #include <chrono>
@@ -20,6 +21,7 @@
 #include "PlayerControllerHuman.h"
 #include "TeamFactory.h"
 #include "YAMLReader.h"
+#include "Texto.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
@@ -86,6 +88,10 @@ bool init_SDL()
             }
         }
     }
+    if(TTF_Init() < 0){
+        printf( "TTF could not initialize! SDL Error: %s\n", SDL_GetError() );
+        success = false;
+    }
 
     return success;
 }
@@ -102,6 +108,7 @@ void close()
     //Quit SDL subsystems
     IMG_Quit();
     SDL_Quit();
+    TTF_Quit();
 }
 
 typedef std::chrono::steady_clock Clock;
@@ -177,6 +184,9 @@ int main( int argc, char* args[] )
 		delete teamIterator->controller;
 		teamIterator->controller = controlled;
 
+        // Agrego mensaje para salir del juego
+        log->info("Cargar Mensaje salida de juego");
+        Texto quiereSalirTexto(gRenderer, "res/Tehkan World Cup.ttf",36, "SALIR DEL JUEGO? S/N", {255,255,0,0});
 
 		// Agrego jugadores al mundo
         log->info("Agrego Jugadores al Juego");
@@ -204,6 +214,7 @@ int main( int argc, char* args[] )
             const double fixed_dt = 0.01; //10 milliseconds
             double accumulator = 0;
             double frametime;
+            bool salirJuego = false;
 
             //While application is running
             while( !quit )
@@ -244,6 +255,10 @@ int main( int argc, char* args[] )
 							teamIterator->controller = controlled;
 						}
 					}
+                    if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+                        salirJuego = true;
+                    }
+
 
                     controlled->handleEvent(e);
                 }
@@ -262,10 +277,27 @@ int main( int argc, char* args[] )
                 SDL_RenderClear( gRenderer );
 
                 //Render current frame
-                camera.render(world);	
+                camera.render(world);
 
-                //Update screen
-                SDL_RenderPresent( gRenderer );
+                // Si seleciono la tecla escape entonces pregunto si quiere salir
+                if(salirJuego){
+                    int w, h;
+                    quiereSalirTexto.getTextureDimensions(&w,&h); // pregunto el tamanio para el centrado
+                    quiereSalirTexto.display((SCREEN_WIDTH - w) / 2, (SCREEN_HEIGHT - h) / 2); // muestro la pregunta centrada
+                    SDL_RenderPresent( gRenderer ); // renderizo la pantalla con la pregunta
+                    while(salirJuego && SDL_WaitEvent(&e) != 0){ // mientras no haya seleccionado s o n el juego esta parado
+                       if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_s) { // Con s sale del juego
+                        quit = true; 
+                        salirJuego = false;
+                        }
+                        if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_n) { // Con n vuelve al juego
+                        salirJuego = false;
+                        } 
+                    }       
+                } else {
+                    //Update screen
+                    SDL_RenderPresent( gRenderer );
+                }
             }
         }
     }

@@ -79,7 +79,6 @@ void Camera::render(World& world){
 	auto entities = world.getEntities();
 	auto pControllers = world.getPlayerControllers();
 
-
 	// renderizamos el background (la cancha)
 	background->setScaling(this->width, this->height);
 	background->setSrcRect(this->x, this->y, this->width, this->height);

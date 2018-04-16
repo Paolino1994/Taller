@@ -4,7 +4,6 @@
 
 #include "Texture.h"
 #include "Entity.h"
-
 #include "PlayerController.h"
 
 //Por ahora esto solo es un juntadero de objetos del juego:
