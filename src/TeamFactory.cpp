@@ -1,5 +1,7 @@
 #include "TeamFactory.h"
 
+#include "PlayerControllerAI.h"
+
 bool TeamFactory::add_goalkeeper(int goal, int field_length, int field_width){
 	PlayerModel* model;
 
@@ -156,7 +158,7 @@ bool TeamFactory::create(int defenders, int midfielders, int goal, int field_len
 void TeamFactory::add_view(std::map<const std::string, Animation> animMapper){
 	for (player& p: team) {
 		p.view = new PlayerView(animMapper, DEFAULT_PLAYER, p.model);
-		p.controller = new PlayerController(p.model, p.view);
+		p.controller = new PlayerControllerAI(p.model, p.view);
 	}
 }
 

@@ -13,7 +13,6 @@
 class PlayerModel: public Entity {
 
 public:
-    PlayerModel();
 
     PlayerModel(const player_data_t player_data, double initial_x, double initial_y);
 
@@ -49,7 +48,11 @@ public:
 
     void update(double dt, int x_limit, int y_limit);
 
+	const int initial_x;
+	const int initial_y;
+
 private:
+	
 	const std::vector<int> widths;
 	const std::vector<int> heights;
     double velX;

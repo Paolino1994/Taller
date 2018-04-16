@@ -17,7 +17,7 @@
 #include "Log.h"
 #include "PlayerModel.h"
 #include "PlayerView.h"
-#include "PlayerController.h"
+#include "PlayerControllerHuman.h"
 #include "TeamFactory.h"
 #include "YAMLReader.h"
 
@@ -164,13 +164,19 @@ int main( int argc, char* args[] )
 		tfactory->create(3, 2, 1, LEFT_GOAL, background.getWidth(), background.getHeight());
 		tfactory->add_view(animMapper);
 
+		// Iterador de jugadores en el switcheo
+		std::vector<player>::iterator teamIterator = std::prev(tfactory->get_team().end());
+
+		// Inyecto un jugador controlado por un humano
+		PlayerControllerHuman* controlled = new PlayerControllerHuman(teamIterator->model, teamIterator->view);
+		delete teamIterator->controller;
+		teamIterator->controller = controlled;
+
+
 		// Agrego jugadores al mundo
         World world(background.getWidth(), background.getHeight(), &background);
 		tfactory->add_to_world(world);
-
-		// Asigno jugador a ser controlado
-		std::vector<player>::iterator teamIterator = std::prev(tfactory->get_team().end());
-		PlayerController* controlled = teamIterator->controller;
+		
 
         Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
         camera.follow(teamIterator->model);

@@ -8,6 +8,8 @@
 
 PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y) :
 	Entity(initial_x, initial_y),
+	initial_x(initial_x),
+	initial_y(initial_y),
 	widths(player_data.widths, std::end(player_data.widths)),
 	heights(player_data.heights, std::end(player_data.heights)),
 	velX(0),
