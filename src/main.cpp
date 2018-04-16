@@ -33,6 +33,8 @@ SDL_Renderer* gRenderer = NULL;
 
 void setPlayerRun(YAMLReader reader);
 
+std::string getLogType(char *string);
+
 //Starts up SDL and creates window
 bool init_SDL()
 {
@@ -115,11 +117,12 @@ int main( int argc, char* args[] )
         // Inicializar log con parametro de line de comando
         for (int i = 1; i+1 < argc; i++) {
             if (strcmp(args[i],"-lg") == 0) {
-                Log::initialize(args[i + 1]);
+                std::string logType=getLogType(args[i+1]);
+                Log::initialize(logType);
             }
         }
         if (!Log::is_initialized()) {
-            Log::initialize(LOG_DEBUG);
+            Log::initialize(LOG_INFO);
         }
 
         // CARGAR La configuracion del YAML y de constantes nuestras:
@@ -127,8 +130,9 @@ int main( int argc, char* args[] )
 
         //Background:
         Texture background(gRenderer, YAML::background_path);
-
+        Log* log=Log::get_instance();
         //Las texturas:
+        log->info("Cargando Texturas");
 		Surface runS(YAML::PlayerRun.file_path);
 		runS.setColorKey(126, 130, 56); //cargar desde constantes
         Texture runT(gRenderer, runS);
@@ -149,17 +153,17 @@ int main( int argc, char* args[] )
         Texture kickT(gRenderer, kickS);
         kickT.setScaling(YAML::PlayerKick.width, YAML::PlayerKick.height);
 
-        //YAMLReader reader("GeneralConfig.yaml");
-        //YAML::PlayerRun.file_path=reader.getSpriteRunning(EQUIPO1);
-        //YAML::PlayerStill.file_path=reader.getSpriteStill(EQUIPO1);
+
 
 		// Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
+        log->info("Crear Animaciones");
         animMapper.emplace(std::make_pair(YAML::PlayerRun.spriteid, Animation(runT, YAML::PlayerRun)));
         animMapper.emplace(std::make_pair(YAML::PlayerStill.spriteid, Animation(stillT, YAML::PlayerStill)));
         animMapper.emplace(std::make_pair(YAML::PlayerSweep.spriteid, Animation(sweepT, YAML::PlayerSweep)));
         animMapper.emplace(std::make_pair(YAML::PlayerKick.spriteid, Animation(kickT, YAML::PlayerKick)));
 
         // Creo jugadores:
+        log->info("Cread Jugadores");
 		TeamFactory* tfactory = new TeamFactory();
 		tfactory->create(3, 2, 1, LEFT_GOAL, background.getWidth(), background.getHeight());
 		tfactory->add_view(animMapper);
@@ -168,15 +172,18 @@ int main( int argc, char* args[] )
 		std::vector<player>::iterator teamIterator = std::prev(tfactory->get_team().end());
 
 		// Inyecto un jugador controlado por un humano
+        log->info("Cargar Controlladores");
 		PlayerControllerHuman* controlled = new PlayerControllerHuman(teamIterator->model, teamIterator->view);
 		delete teamIterator->controller;
 		teamIterator->controller = controlled;
 
 
 		// Agrego jugadores al mundo
+        log->info("Agrego Jugadores al Juego");
         World world(background.getWidth(), background.getHeight(), &background);
 		tfactory->add_to_world(world);
-		
+
+        log->info("Agrego la camara");
 
         Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
         camera.follow(teamIterator->model);
@@ -267,6 +274,14 @@ int main( int argc, char* args[] )
     close();
 
     return 0;
+}
+
+std::string getLogType(char *cadena) {
+    std::string string(cadena);
+    if( string.compare(LOG_ERROR)==0 || string.compare(LOG_DEBUG)==0 || string.compare(LOG_INFO)==0){
+        return string;
+    }
+    return LOG_INFO;
 }
 
 

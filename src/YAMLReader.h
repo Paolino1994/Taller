@@ -13,6 +13,7 @@
 #define UNTITLED_YAMLREADER_H
 #include <yaml.h>
 #include <map>
+#include <vector>
 
 class YAMLReader {
 
@@ -78,7 +79,9 @@ private:
 
     static YAMLReader *instance;
 
+    std::map<std::string, std::string> cargarDefault();
 
+    bool mapIsValid(std::map<std::string, std::string> map, std::vector<std::string> vector);
 };
 
 

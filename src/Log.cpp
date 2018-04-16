@@ -7,16 +7,16 @@ Log::Log(std::string t){
 	time_t now;
 	time(&now);
 	std::stringstream file_name;
-	file_name << "log/log-" << ctime(&now) << ".txt";
+	file_name << "log/log-" << ctime(&now) << "-"<<t<<".txt";
 	file.open(file_name.str(), std::ofstream::out);
 }
 
 void Log::initialize(std::string t) {
-	if (instance == 0) {
-		if (t.compare(LOG_DEBUG) == 0 || t.compare(LOG_INFO) == 0 || t.compare(LOG_ERROR) == 0){
-			instance = new Log(t);
-		}
-	}
+    if(instance == 0){
+        if (t.compare(LOG_DEBUG) == 0 || t.compare(LOG_INFO) == 0 || t.compare(LOG_ERROR) == 0){
+            instance = new Log(t);
+        }
+    }
 }
 
 bool Log::is_initialized() {
