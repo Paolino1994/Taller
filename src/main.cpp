@@ -135,7 +135,9 @@ int main( int argc, char* args[] )
             }
         }
         if (!Log::is_initialized()) {
-            Log::initialize(LOG_INFO);
+            std::string logType=getLogType((char *) YAMLReader::get_instance()->getLogLevel().c_str());
+            Log::initialize(logType);//No anda porque el Reader necesita Logear :(
+            //Log::initialize(LOG_INFO);
         }
 
         // CARGAR La configuracion del YAML y de constantes nuestras:
@@ -145,28 +147,29 @@ int main( int argc, char* args[] )
         Texture background(gRenderer, YAML::background_path);
         Log* log=Log::get_instance();
         //Las texturas:
-
         log->info("Cargando Texturas");
-        log->info(YAMLReader::get_instance()->getSpriteRunning(EQUIPO1));
-        sprite_info PlayerRun={"run",YAMLReader::get_instance()->getSpriteRunning(EQUIPO1),60, 64,4,12};
+        int equipo=YAMLReader::get_instance()->getEquipo();
+
+        log->info(YAMLReader::get_instance()->getSpriteRunning(equipo));
+        sprite_info PlayerRun={"run",YAMLReader::get_instance()->getSpriteRunning(equipo),60, 64,4,12};
 		Surface runS(PlayerRun.file_path);
 		runS.setColorKey(126, 130, 56); //cargar desde constantes
         Texture runT(gRenderer, runS);
         runT.setScaling(PlayerRun.width, PlayerRun.height);
 
-        sprite_info PlayerStill={"still",YAMLReader::get_instance()->getSpriteStill(EQUIPO1),68, 34,1,3};
+        sprite_info PlayerStill={"still",YAMLReader::get_instance()->getSpriteStill(equipo),68, 34,1,3};
 		Surface stillS(PlayerStill.file_path);
 		stillS.setColorKey(126, 130, 56); //cargar desde constantes
         Texture stillT(gRenderer, stillS);
         stillT.setScaling(PlayerStill.width, PlayerStill.height);
 
-        sprite_info PlayerSweep={"sweep",YAMLReader::get_instance()->getSpriteSweeping(EQUIPO1),60, 64,4,12};
+        sprite_info PlayerSweep={"sweep",YAMLReader::get_instance()->getSpriteSweeping(equipo),60, 64,4,12};
         Surface sweepS(PlayerSweep.file_path);
         sweepS.setColorKey(126, 130, 56); //cargar desde constantes
 		Texture sweepT(gRenderer, sweepS);
 		sweepT.setScaling(PlayerSweep.width, PlayerSweep.height);
 
-        sprite_info PlayerKick={"kick",YAMLReader::get_instance()->getSpriteKicking(EQUIPO1),60, 64,4,12};
+        sprite_info PlayerKick={"kick",YAMLReader::get_instance()->getSpriteKicking(equipo),60, 64,4,12};
         Surface kickS(PlayerKick.file_path);
         kickS.setColorKey(126, 130, 56); //cargar desde constantes
         Texture kickT(gRenderer, kickS);
@@ -186,9 +189,9 @@ int main( int argc, char* args[] )
         player_data_t defaultPlayer=crearDefaultPlayer(PlayerStill,PlayerRun,PlayerSweep,PlayerKick);
         log->info("Crear Jugadores");
 		TeamFactory* tfactory = new TeamFactory(defaultPlayer);
-        int defensores=YAMLReader::get_instance()->getDefensores(EQUIPO1);
-        int mediocampistas=YAMLReader::get_instance()->getMediocampistas(EQUIPO1);
-        int delanteros=YAMLReader::get_instance()->getDelanteros(EQUIPO1);
+        int defensores=YAMLReader::get_instance()->getDefensores(equipo);
+        int mediocampistas=YAMLReader::get_instance()->getMediocampistas(equipo);
+        int delanteros=YAMLReader::get_instance()->getDelanteros(equipo);
 		tfactory->create(defensores, mediocampistas, delanteros, LEFT_GOAL, background.getWidth(), background.getHeight());
 		tfactory->add_view(animMapper);
 
