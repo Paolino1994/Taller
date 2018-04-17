@@ -21,6 +21,8 @@ struct player {
 
 class TeamFactory {
 private:
+	player_data_t BasePlayer;
+
 	std::vector<player> team;
 	/**
 		@PRE: recive, el lado de la cancha y las dimensiones de la cancha.
@@ -68,6 +70,8 @@ public:
 		@POS: retorna el equipo en el estado que esta, si no se creo estara vacio
 	*/
 	std::vector<player>& get_team();
+
+	TeamFactory(player_data_t defaultPlayer);
 };
 
 #endif

@@ -17,9 +17,9 @@ namespace YAML {
     const int SCREEN_HEIGHT = 600;
 	const int SCREEN_WIDTH_SCROLL_OFFSET = SCREEN_WIDTH / 6;
 	const int SCREEN_HEIGHT_SCROLL_OFFSET = SCREEN_HEIGHT / 6;
-    
+
     const std::string background_path = "res/soccer_field_1.6.png";
-    
+    /*
     const sprite_info_t PlayerRun = {
         "run",
         YAMLReader::get_instance()->getSpriteRunning(EQUIPO1),
@@ -56,6 +56,7 @@ namespace YAML {
         4,
         12
     };
+     */
 
 }
 
@@ -72,48 +73,19 @@ enum PlayerState {
 //Por cada tipo/objeto...
 //Lo que puede venir dentro del YAML, pero no necesariamente
 struct player_data {
-    const std::string sprite_ids[PlayerState::_LENGTH_]; //o directamente texturas?
+     std::string sprite_ids[PlayerState::_LENGTH_]; //o directamente texturas?
     //const Animation&[Player::_LENGTH_] animation_ids;        <-
-	const int widths[PlayerState::_LENGTH_];
-	const int heights[PlayerState::_LENGTH_];
-    const int X_VELOCITY;
-    const int Y_VELOCITY;
-    const double SWEEP_DURATION;
-	const double KICK_DURATION;
-	const double SPRINT_VELOCITY_MULTIPLIER;
+	 int widths[PlayerState::_LENGTH_];
+	 int heights[PlayerState::_LENGTH_];
+     int X_VELOCITY;
+     int Y_VELOCITY;
+     double SWEEP_DURATION;
+	 double KICK_DURATION;
+	 double SPRINT_VELOCITY_MULTIPLIER;
 };
 
 typedef struct player_data player_data_t;
 
 
 //ejemplo instanciacion player data especifico:
-const player_data_t DEFAULT_PLAYER = {
 
-	// Asignar los estados a sus respectivos sprites
-	// sprite_ids[Player::State] -> sprite_id
-	/*sprite_ids =*/ { //usando designators
-		[PlayerState::STILL] = YAML::PlayerStill.spriteid,
-		[PlayerState::RUNNING] = YAML::PlayerRun.spriteid,
-		[PlayerState::SWEEPING] = YAML::PlayerSweep.spriteid,
-        [PlayerState::KICKING] = YAML::PlayerKick.spriteid,
-
-	},
-
-	/*WIDTHS*/  {
-		[PlayerState::STILL] = YAML::PlayerStill.width,
-		[PlayerState::RUNNING] = YAML::PlayerRun.width,
-		[PlayerState::SWEEPING] = YAML::PlayerSweep.width,
-	},
-	/*HEIGHTS*/  {
-		[PlayerState::STILL] = YAML::PlayerStill.height,
-		[PlayerState::RUNNING] = YAML::PlayerRun.height,
-		[PlayerState::SWEEPING] = YAML::PlayerSweep.height,
-	},
-
-	// pixeles (logicos) por segundo
-	/*X_VELOCITY =*/ 200,
-	/*Y_VELOCITY =*/ 200,
-    /*SWEEP_DURATION =*/ (1.0 / YAML::PlayerSweep.frames_per_second) * YAML::PlayerSweep.frames,
-    /*KICK_DURATION =*/ (1.0 / YAML::PlayerKick.frames_per_second) * YAML::PlayerKick.frames,
-	/*SPRINT_VEL_MULT*/ 1.5
-};

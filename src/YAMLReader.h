@@ -37,11 +37,21 @@ public:
     std::string getSpriteKicking(int equipo);
 
 
+    int getDefensores(int i);
+
+    int getMediocampistas(int equipo);
+
+    int getDelanteros(int equipo);
+
+    int getEquipo();
+
+    std::string getLogLevel();
+
 private:
 
     YAMLReader(std::string string);
 
-    std::map<std::string,std::string> infoEquipo[2];
+    std::map<std::string,std::string> infoEquipo[3];
 
     yaml_token_t token;
 
@@ -82,6 +92,16 @@ private:
     std::map<std::string, std::string> cargarDefault();
 
     bool mapIsValid(std::map<std::string, std::string> map, std::vector<std::string> vector);
+
+
+    bool cargarEquipo(bool equipo);
+
+    std::string Formacion="3-2-1";
+
+    void readFile(int archivo);
+
+    std::string Equipo="Local";
+    std::string LogLevel="info";
 };
 
 

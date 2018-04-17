@@ -2,15 +2,19 @@
 
 #include "PlayerControllerAI.h"
 
+
+TeamFactory::TeamFactory(player_data_t defaultPlayer){
+	BasePlayer=defaultPlayer;
+}
 bool TeamFactory::add_goalkeeper(int goal, int field_length, int field_width){
 	PlayerModel* model;
 
 	switch (goal) {
 		case LEFT_GOAL:
-			model = new PlayerModel(DEFAULT_PLAYER, field_length * 1.5 / 22, field_width * 21/ 44);
+			model = new PlayerModel(BasePlayer, field_length * 1.5 / 22, field_width * 21/ 44);
 			break;
 		case RIGHT_GOAL:
-			model = new PlayerModel(DEFAULT_PLAYER, field_length * 20.5 / 22, field_width * 21 / 44);
+			model = new PlayerModel(BasePlayer, field_length * 20.5 / 22, field_width * 21 / 44);
 			break;
 		default:
 			return false;
@@ -46,7 +50,7 @@ bool TeamFactory::add_defenders(int quantity, int goal, int field_length, int fi
 
 	for (int i = 0; i < quantity; i++){
 		position_y = ((field_width * 5 / 8) * i / 2) + 	field_width / 7;
-		model = new PlayerModel(DEFAULT_PLAYER, position_x, position_y);
+		model = new PlayerModel(BasePlayer, position_x, position_y);
 		defender.model = model;
 		team.push_back(defender);
 	}
@@ -88,7 +92,7 @@ bool TeamFactory::add_midfielders(int quantity, int goal, int field_length, int 
 			default:
 				return false;
 		}
-		model = new PlayerModel(DEFAULT_PLAYER, position_x, position_y);
+		model = new PlayerModel(BasePlayer, position_x, position_y);
 		midfielder.model = model;
 		team.push_back(midfielder);
 	}
@@ -128,7 +132,7 @@ bool TeamFactory::add_forwards(int quantity, int goal, int field_length, int fie
 			default:
 				return false;
 		}
-		model = new PlayerModel(DEFAULT_PLAYER, position_x, position_y);
+		model = new PlayerModel(BasePlayer, position_x, position_y);
 		forward.model = model;
 		team.push_back(forward);
 	}
@@ -157,7 +161,7 @@ bool TeamFactory::create(int defenders, int midfielders, int goal, int field_len
 
 void TeamFactory::add_view(std::map<const std::string, Animation> animMapper){
 	for (player& p: team) {
-		p.view = new PlayerView(animMapper, DEFAULT_PLAYER, p.model);
+		p.view = new PlayerView(animMapper, BasePlayer, p.model);
 		p.controller = new PlayerControllerAI(p.model, p.view);
 	}
 }
