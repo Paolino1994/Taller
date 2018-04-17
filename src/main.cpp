@@ -37,6 +37,12 @@ void setPlayerRun(YAMLReader reader);
 
 std::string getLogType(char *string);
 
+void renderizar(std::vector<player>::iterator iterator, TeamFactory *pFactory, Camera camera, World world, Texto texto,
+                PlayerControllerHuman *pHuman);
+
+player_data_t
+crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick);
+
 //Starts up SDL and creates window
 bool init_SDL()
 {
@@ -139,39 +145,46 @@ int main( int argc, char* args[] )
         Texture background(gRenderer, YAML::background_path);
         Log* log=Log::get_instance();
         //Las texturas:
+
         log->info("Cargando Texturas");
-		Surface runS(YAML::PlayerRun.file_path);
+        sprite_info PlayerRun={"run",YAMLReader::get_instance()->getSpriteRunning(EQUIPO1),60, 64,4,12};
+		Surface runS(PlayerRun.file_path);
 		runS.setColorKey(126, 130, 56); //cargar desde constantes
         Texture runT(gRenderer, runS);
-        runT.setScaling(YAML::PlayerRun.width, YAML::PlayerRun.height);
+        runT.setScaling(PlayerRun.width, PlayerRun.height);
 
-		Surface stillS(YAML::PlayerStill.file_path);
+        sprite_info PlayerStill={"still",YAMLReader::get_instance()->getSpriteStill(EQUIPO1),68, 34,1,3};
+		Surface stillS(PlayerStill.file_path);
 		stillS.setColorKey(126, 130, 56); //cargar desde constantes
         Texture stillT(gRenderer, stillS);
-        stillT.setScaling(YAML::PlayerStill.width, YAML::PlayerStill.height);
+        stillT.setScaling(PlayerStill.width, PlayerStill.height);
 
-        Surface sweepS(YAML::PlayerSweep.file_path);
+        sprite_info PlayerSweep={"sweep",YAMLReader::get_instance()->getSpriteSweeping(EQUIPO1),60, 64,4,12};
+        Surface sweepS(PlayerSweep.file_path);
         sweepS.setColorKey(126, 130, 56); //cargar desde constantes
 		Texture sweepT(gRenderer, sweepS);
-		sweepT.setScaling(YAML::PlayerSweep.width, YAML::PlayerSweep.height);
+		sweepT.setScaling(PlayerSweep.width, PlayerSweep.height);
 
-        Surface kickS(YAML::PlayerKick.file_path);
+        sprite_info PlayerKick={"kick",YAMLReader::get_instance()->getSpriteKicking(EQUIPO1),60, 64,4,12};
+        Surface kickS(PlayerKick.file_path);
         kickS.setColorKey(126, 130, 56); //cargar desde constantes
         Texture kickT(gRenderer, kickS);
-        kickT.setScaling(YAML::PlayerKick.width, YAML::PlayerKick.height);
+        kickT.setScaling(PlayerKick.width, PlayerKick.height);
 
 
 
 		// Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
         log->info("Crear Animaciones");
-        animMapper.emplace(std::make_pair(YAML::PlayerRun.spriteid, Animation(runT, YAML::PlayerRun)));
-        animMapper.emplace(std::make_pair(YAML::PlayerStill.spriteid, Animation(stillT, YAML::PlayerStill)));
-        animMapper.emplace(std::make_pair(YAML::PlayerSweep.spriteid, Animation(sweepT, YAML::PlayerSweep)));
-        animMapper.emplace(std::make_pair(YAML::PlayerKick.spriteid, Animation(kickT, YAML::PlayerKick)));
+        animMapper.emplace(std::make_pair(PlayerRun.spriteid, Animation(runT, PlayerRun)));
+        animMapper.emplace(std::make_pair(PlayerStill.spriteid, Animation(stillT, PlayerStill)));
+        animMapper.emplace(std::make_pair(PlayerSweep.spriteid, Animation(sweepT, PlayerSweep)));
+        animMapper.emplace(std::make_pair(PlayerKick.spriteid, Animation(kickT, PlayerKick)));
+
 
         // Creo jugadores:
-        log->info("Cread Jugadores");
-		TeamFactory* tfactory = new TeamFactory();
+        player_data_t defaultPlayer=crearDefaultPlayer(PlayerStill,PlayerRun,PlayerSweep,PlayerKick);
+        log->info("Crear Jugadores");
+		TeamFactory* tfactory = new TeamFactory(defaultPlayer);
 		tfactory->create(3, 2, 1, LEFT_GOAL, background.getWidth(), background.getHeight());
 		tfactory->add_view(animMapper);
 
@@ -197,115 +210,153 @@ int main( int argc, char* args[] )
 
         Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
         camera.follow(teamIterator->model);
+        renderizar(teamIterator, tfactory, camera, world,
+                   quiereSalirTexto, controlled);
 
-        if (true)
-        {
-            //Main loop flag
-            bool quit = false;
-
-            //Event handler
-            SDL_Event e;
-
-            //El tema del clock, es para actualizar en intervalos fijos
-            //Y renderizar en el resto del tiempo
-            Clock::time_point currentTime, newTime;
-            currentTime = Clock::now();
-            std::chrono::milliseconds milli;
-            const double fixed_dt = 0.01; //10 milliseconds
-            double accumulator = 0;
-            double frametime;
-            bool salirJuego = false;
-
-            //While application is running
-            while( !quit )
-            {
-                newTime = Clock::now();
-                milli = std::chrono::duration_cast<std::chrono::milliseconds>(newTime - currentTime);
-                currentTime = newTime;
-                frametime = milli.count()/1000.0;
-
-                accumulator += frametime;
-
-                //Handle events on queue
-                while( SDL_PollEvent( &e ) != 0)
-                {
-                    //User requests quit
-                    if( e.type == SDL_QUIT )
-                    {
-                        quit = true;
-                    }
-
-					if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_q) {
-						// sabemos que el iterador apunta al controlled actual
-						player& controlledPlayer = *teamIterator;
-						do
-						{ // en el peor caso volvemos a el que estabamos controlando recien
-							++teamIterator;
-							if (teamIterator == tfactory->get_team().end()) {
-								teamIterator = tfactory->get_team().begin();
-							}
-
-						} while (teamIterator->controller != controlled && !camera.isWithinScrollBoundaries(teamIterator->model));
-						
-						if (teamIterator->controller != controlled) {
-							controlled->swap(teamIterator->controller);
-							camera.follow(controlled->getEntity());
-							// esto es un parche medio feo por los lios del swap, TODO mejorar
-							controlledPlayer.controller = teamIterator->controller;
-							teamIterator->controller = controlled;
-						}
-					}
-                    if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
-                        salirJuego = true;
-                    }
-
-
-                    controlled->handleEvent(e);
-                }
-
-                //Cuando el tiempo pasado es mayor a nuestro tiempo de actualizacion
-                while ( accumulator >= fixed_dt )
-                {
-                    //Calculate movement/physics:
-					world.update(fixed_dt); //Update de todos los players (y otras entidades proximamente?)
-                    camera.update(fixed_dt);
-                    accumulator -= fixed_dt;
-                }
-
-                //Clear screen
-                SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-                SDL_RenderClear( gRenderer );
-
-                //Render current frame
-                camera.render(world);
-
-                // Si seleciono la tecla escape entonces pregunto si quiere salir
-                if(salirJuego){
-                    int w, h;
-                    quiereSalirTexto.getTextureDimensions(&w,&h); // pregunto el tamanio para el centrado
-                    quiereSalirTexto.display((SCREEN_WIDTH - w) / 2, (SCREEN_HEIGHT - h) / 2); // muestro la pregunta centrada
-                    SDL_RenderPresent( gRenderer ); // renderizo la pantalla con la pregunta
-                    while(salirJuego && SDL_WaitEvent(&e) != 0){ // mientras no haya seleccionado s o n el juego esta parado
-                       if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_s) { // Con s sale del juego
-                        quit = true; 
-                        salirJuego = false;
-                        }
-                        if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_n) { // Con n vuelve al juego
-                        salirJuego = false;
-                        } 
-                    }       
-                } else {
-                    //Update screen
-                    SDL_RenderPresent( gRenderer );
-                }
-            }
-        }
     }
 
     //Free resources and close SDL
     close();
 
     return 0;
+}
+
+player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick) {
+    player_data_t defaultPlayer = {{
+                                           [PlayerState::STILL] = PlayerStill.spriteid,
+                                           [PlayerState::RUNNING] = PlayerRun.spriteid,
+                                           [PlayerState::SWEEPING] = PlayerSweep.spriteid,
+                                           [PlayerState::KICKING] = PlayerKick.spriteid,
+
+                                   },
+
+            /*WIDTHS*/  {
+                                           [PlayerState::STILL] = PlayerStill.width,
+                                           [PlayerState::RUNNING] = PlayerRun.width,
+                                           [PlayerState::SWEEPING] = PlayerSweep.width,
+                                   },
+            /*HEIGHTS*/  {
+                                           [PlayerState::STILL] = PlayerStill.height,
+                                           [PlayerState::RUNNING] = PlayerRun.height,
+                                           [PlayerState::SWEEPING] = PlayerSweep.height,
+                                   },
+
+            // pixeles (logicos) por segundo
+            /*X_VELOCITY =*/ 200,
+            /*Y_VELOCITY =*/ 200,
+            /*SWEEP_DURATION =*/ (1.0 / PlayerSweep.frames_per_second) * PlayerSweep.frames,
+            /*KICK_DURATION =*/ (1.0 / PlayerKick.frames_per_second) * PlayerKick.frames,
+            /*SPRINT_VEL_MULT*/ 1.5
+    };
+    return defaultPlayer;
+}
+
+void
+renderizar(std::vector<player>::iterator teamIterator, TeamFactory *tfactory, Camera camera, World world,
+           Texto quiereSalirTexto, PlayerControllerHuman *controlled) {
+    if (true)
+    {
+        //Main loop flag
+        bool quit = false;
+
+        //Event handler
+        SDL_Event e;
+
+        //El tema del clock, es para actualizar en intervalos fijos
+        //Y renderizar en el resto del tiempo
+        Clock::time_point currentTime, newTime;
+        currentTime = Clock::now();
+        std::chrono::milliseconds milli;
+        const double fixed_dt = 0.01; //10 milliseconds
+        double accumulator = 0;
+        double frametime;
+        bool salirJuego = false;
+
+        //While application is running
+        while( !quit )
+        {
+            newTime = Clock::now();
+            milli = std::chrono::duration_cast<std::chrono::milliseconds>(newTime - currentTime);
+            currentTime = newTime;
+            frametime = milli.count()/1000.0;
+
+            accumulator += frametime;
+
+            //Handle events on queue
+            while( SDL_PollEvent( &e ) != 0)
+            {
+                //User requests quit
+                if( e.type == SDL_QUIT )
+                {
+                    quit = true;
+                }
+
+                if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_q) {
+                    // sabemos que el iterador apunta al controlled actual
+                    player& controlledPlayer = *teamIterator;
+                    do
+                    { // en el peor caso volvemos a el que estabamos controlando recien
+                        ++teamIterator;
+                        if (teamIterator == tfactory->get_team().end()) {
+                            teamIterator = tfactory->get_team().begin();
+                        }
+
+                    } while (teamIterator->controller != controlled && !camera.isWithinScrollBoundaries(teamIterator->model));
+
+                    if (teamIterator->controller != controlled) {
+                        controlled->swap(teamIterator->controller);
+                        camera.follow(controlled->getEntity());
+                        // esto es un parche medio feo por los lios del swap, TODO mejorar
+                        controlledPlayer.controller = teamIterator->controller;
+                        teamIterator->controller = controlled;
+                    }
+                }
+                if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+                    salirJuego = true;
+                }
+
+
+                controlled->handleEvent(e);
+            }
+
+            //Cuando el tiempo pasado es mayor a nuestro tiempo de actualizacion
+            while ( accumulator >= fixed_dt )
+            {
+                //Calculate movement/physics:
+                world.update(fixed_dt); //Update de todos los players (y otras entidades proximamente?)
+                camera.update(fixed_dt);
+                accumulator -= fixed_dt;
+            }
+
+            //Clear screen
+            SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+            SDL_RenderClear( gRenderer );
+
+            //Render current frame
+            camera.render(world);
+
+            // Si seleciono la tecla escape entonces pregunto si quiere salir
+            if(salirJuego){
+                int w, h;
+                quiereSalirTexto.getTextureDimensions(&w,&h); // pregunto el tamanio para el centrado
+                quiereSalirTexto.display((SCREEN_WIDTH - w) / 2, (SCREEN_HEIGHT - h) / 2); // muestro la pregunta centrada
+                SDL_RenderPresent( gRenderer ); // renderizo la pantalla con la pregunta
+                while(salirJuego && SDL_WaitEvent(&e) != 0){ // mientras no haya seleccionado s o n el juego esta parado
+                    if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_s) { // Con s sale del juego
+                        quit = true;
+                        salirJuego = false;
+                    }
+                    if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_n) { // Con n vuelve al juego
+                        salirJuego = false;
+                    }
+                }
+            } else {
+                //Update screen
+                SDL_RenderPresent( gRenderer );
+            }
+        }
+    }
+
 }
 
 std::string getLogType(char *cadena) {
