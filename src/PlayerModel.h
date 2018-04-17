@@ -9,6 +9,8 @@
 
 #include "GameConstants.h"
 #include "Entity.h"
+#include "Log.h"
+#include "sstream"
 
 class PlayerModel: public Entity {
 
@@ -79,6 +81,8 @@ private:
 	double velocityMultiplier;
 
     bool isControlledByHuman = false;
+
+	Log* log;
 
 };
 
