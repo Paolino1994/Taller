@@ -18,6 +18,13 @@
 class YAMLReader {
 
 public:
+    
+    YAMLReader();
+
+    void readYamlGeneral(std::string string);  
+    
+    void readYamlEquipos();  
+
     static YAMLReader *get_instance();
 
     std::map<std::string, std::string> getEverything(int equipo);
@@ -43,11 +50,13 @@ public:
 
     int getDelanteros(int equipo);
 
+    int getEquipo();
+
+    std::string getLogLevel();
+
 private:
 
-    YAMLReader(std::string string);
-
-    std::map<std::string,std::string> infoEquipo[2];
+    std::map<std::string,std::string> infoEquipo[3];
 
     yaml_token_t token;
 
@@ -90,7 +99,14 @@ private:
     bool mapIsValid(std::map<std::string, std::string> map, std::vector<std::string> vector);
 
 
-    bool cargarEquipo(int equipo, bool errorgeneral);
+    bool cargarEquipo(bool equipo);
+
+    std::string Formacion="3-2-1";
+
+    void readFile(int archivo);
+
+    std::string Equipo="Local";
+    std::string LogLevel="info";
 };
 
 
