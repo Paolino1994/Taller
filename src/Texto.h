@@ -13,6 +13,7 @@ private:
     
 public:
     Texto(SDL_Renderer *renderer, const std::string &font_path, int font_size, const std::string &mensaje_texto, const SDL_Color &color);
+    ~Texto();
 
     void display(int x, int y) const;
 
