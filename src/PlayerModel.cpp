@@ -29,7 +29,7 @@ PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, doub
 	sprintVelocityMultiplier(player_data.SPRINT_VELOCITY_MULTIPLIER),
 	velocityMultiplier(1.0)
 {
-
+	log = Log::get_instance();
 }
 
 // IMPORTANYE: Proximamente manejar mejor esto con patron State 
@@ -162,6 +162,9 @@ void PlayerModel::changeVelY(double d)
 	else {
 		velY += d;
 	}
+	std::stringstream msg;
+	msg << "PlayeModel: cambio en velY, velY=" << velY << "; sweepVelY=" << sweepVelY << "; kickVelY=" << kickVelY;
+	log->debug(msg.str());
 }
 
 // Proximamente manejar mejor esto con patron State
@@ -174,6 +177,9 @@ void PlayerModel::changeVelX(double d)
 	else {
 		velX += d;
 	}
+	std::stringstream msg;
+	msg << "PlayeModel: cambio en velX, velX=" << velX << "; sweepVelX=" << sweepVelX << "; kickVelX=" << kickVelX;
+	log->debug(msg.str());
 }
 
 // Proximamente manejar mejor esto con patron State
@@ -186,6 +192,9 @@ void PlayerModel::setVelY(double d) {
 	else {
 		velY = d;
 	}
+	std::stringstream msg;
+	msg << "PlayeModel: cambio en velY, velY=" << velY << "; sweepVelY=" << sweepVelY << "; kickVelY=" << kickVelY;
+	log->debug(msg.str());
 }
 
 // Proximamente manejar mejor esto con patron State
@@ -198,6 +207,9 @@ void PlayerModel::setVelX(double d) {
 	else {
 		velX = d;
 	}
+	std::stringstream msg;
+	msg << "PlayeModel: cambio en velX, velX=" << velX << "; sweepVelX=" << sweepVelX << "; kickVelX=" << kickVelX;
+	log->debug(msg.str());
 }
 
 // Proximamente manejar mejor esto con patron State
@@ -209,6 +221,7 @@ void PlayerModel::sweep()
 		this->sweepVelX = velX;
 		this->sweepVelY = velY;
 	}
+	log->debug("PlayerModel: barriendo");
 }
 
 // Proximamente manejar mejor esto con patron State
@@ -220,15 +233,22 @@ void PlayerModel::kick()
 		this->kickVelX = velX;
 		this->kickVelY = velY;
 	}
+	log->debug("PlayerModel: pateando");
 }
 
 void PlayerModel::sprint()
 {
 	this->velocityMultiplier = this->sprintVelocityMultiplier;
+	std::stringstream msg;
+	msg << "PlayeModel: sprint activado, velocityMultiplier=" << velocityMultiplier;
+	log->debug(msg.str());
 }
 
 void PlayerModel::stopSprinting()
 {
 	this->velocityMultiplier = 1.0;
+	std::stringstream msg;
+	msg << "PlayeModel: sprint desactivado";
+	log->debug(msg.str());
 }
 
