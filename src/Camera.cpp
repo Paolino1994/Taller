@@ -78,6 +78,7 @@ void Camera::render(World& world){
 	auto background = world.getBackground();
 	auto entities = world.getEntities();
 	auto pControllers = world.getPlayerControllers();
+	auto playerSelectedTexture = world.getPlayerSelectedTexture();
 
 	// renderizamos el background (la cancha)
 	background->setScaling(this->width, this->height);
@@ -90,6 +91,9 @@ void Camera::render(World& world){
 		int screen_y = player->getEntity()->getY() - this->y;
 		//TODO: check screen_x/_y esten en mi ancho/alto
 		//no dibujar lo que no veo!
+		if(((PlayerModel*)player->getEntity())->getIsControlledByHuman()){
+			playerSelectedTexture->render(screen_x + 5, screen_y -10);
+		}
 		player->getView()->render(screen_x, screen_y);
 	}
 }

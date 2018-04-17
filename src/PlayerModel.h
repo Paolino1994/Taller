@@ -31,20 +31,24 @@ public:
     double getMaxVelY();
 
     double getMaxVelX();
+	
+    bool getIsControlledByHuman();
+    
+    void setIsControlledByHuman(bool controlled);
 
-	void changeVelY(double d);
-	void changeVelX(double d);
+    void changeVelY(double d);
+    void changeVelX(double d);
 
     void setVelY(double d);
 
     void setVelX(double d);
 
-	void sweep();
+    void sweep();
 
     void kick();
 
-	void sprint();
-	void stopSprinting();
+    void sprint();
+    void stopSprinting();
 
     void update(double dt, int x_limit, int y_limit);
 
@@ -73,6 +77,9 @@ private:
 	// Sprint
 	const double sprintVelocityMultiplier;
 	double velocityMultiplier;
+
+    bool isControlledByHuman = false;
+
 };
 
 

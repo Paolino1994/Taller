@@ -25,6 +25,14 @@ Texture* World::getBackground() {
     return background;
 }
 
+Texture* World::getPlayerSelectedTexture() {
+    return playerSelectedTexture;
+}
+
+void World::setPlayerSelectedTexture(Texture* texture) {
+    playerSelectedTexture = texture;
+}
+
 std::vector<Entity*>& World::getEntities() {
     return entities;
 }

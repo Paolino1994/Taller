@@ -136,6 +136,14 @@ double PlayerModel::getVelY() {
     return velY;
 }
 
+bool PlayerModel::getIsControlledByHuman() {
+    return isControlledByHuman;
+}
+
+void PlayerModel::setIsControlledByHuman(bool controlled) {
+    isControlledByHuman = controlled;
+}	
+
 double PlayerModel::getMaxVelY() {
     return MAX_VEL_Y;
 }

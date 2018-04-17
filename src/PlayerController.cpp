@@ -8,6 +8,7 @@ PlayerController::PlayerController(PlayerModel * model, PlayerView * view):
 	playerModel(model),
 	playerView(view)
 {
+	playerModel->setIsControlledByHuman(false);
 }
 
 Entity * PlayerController::getEntity()
@@ -32,7 +33,9 @@ void PlayerController::swap(PlayerController * otherController)
 	log->debug("PlayerController: cambiando jugador");
 
 	auto temp = this->playerModel;
+	this->playerModel->setIsControlledByHuman(false);
 	this->playerModel = otherController->playerModel;
+	this->playerModel->setIsControlledByHuman(true);
 	otherController->playerModel = temp;
 
 	auto tempView = this->playerView;

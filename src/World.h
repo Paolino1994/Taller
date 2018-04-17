@@ -12,6 +12,8 @@ class World
 private:
     // El fondo (la cancha)
     Texture* background;
+    // Jugador selecionado
+    Texture* playerSelectedTexture;
     // Objetos comunes
     std::vector<Entity*> entities;
     std::vector<PlayerController*> pControllers;
@@ -27,8 +29,10 @@ public:
     ~World();
     void addEntity(Entity* entity);
     void addPlayerController(PlayerController* pController);
+    void setPlayerSelectedTexture(Texture* texture) ;
 
     
+    Texture* getPlayerSelectedTexture() ;
     Texture* getBackground() ;
     std::vector<Entity*>& getEntities() ;
     std::vector<PlayerController*>& getPlayerControllers() ;

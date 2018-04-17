@@ -175,6 +175,9 @@ int main( int argc, char* args[] )
 
         //Background:
         Texture background(gRenderer, YAML::background_path);
+        // Jugador Seleccionado:
+        Texture selectedPlayerTecture(gRenderer, YAML::selectedPlayer_path);
+
         //Las texturas:
         log->info("Cargando Texturas");
         int equipo=YAMLReader::get_instance()->getEquipo();
@@ -232,6 +235,7 @@ int main( int argc, char* args[] )
 		PlayerControllerHuman* controlled = new PlayerControllerHuman(teamIterator->model, teamIterator->view);
 		delete teamIterator->controller;
 		teamIterator->controller = controlled;
+        teamIterator->model->setIsControlledByHuman(true);
 
         // Agrego mensaje para salir del juego
         log->info("Cargar Mensaje salida de juego");
@@ -240,6 +244,7 @@ int main( int argc, char* args[] )
 		// Agrego jugadores al mundo
         log->info("Agrego Jugadores al Juego");
         World world(background.getWidth(), background.getHeight(), &background);
+        world.setPlayerSelectedTexture(&selectedPlayerTecture);
 		tfactory->add_to_world(world);
 
         log->info("Agrego la camara");
