@@ -28,6 +28,9 @@ void PlayerController::update(double dt, int x_limit, int y_limit)
 
 void PlayerController::swap(PlayerController * otherController)
 {
+	Log* log = Log::get_instance();
+	log->debug("PlayerController: cambiando jugador");
+
 	auto temp = this->playerModel;
 	this->playerModel = otherController->playerModel;
 	otherController->playerModel = temp;

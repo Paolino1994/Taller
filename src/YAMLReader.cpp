@@ -258,7 +258,7 @@ std::map<std::string, std::string> YAMLReader::getEverything(int equipo) {
         log->info(mapa[keys[i]]);
         if(mapa[keys[i]].compare("Error")==0){
             error=true;
-            log->info("Error en la lectura");
+            log->error("Error en la lectura");
             break;
         }
     }

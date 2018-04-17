@@ -3,6 +3,7 @@
 #include <SDL_ttf.h>
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <chrono>
 #include <thread>
 #include <map>
@@ -48,11 +49,16 @@ bool init_SDL()
 {
     //Initialization flag
     bool success = true;
+	Log* log = Log::get_instance();
+	std::stringstream msg;
 
     //Initialize SDL
     if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
     {
-        printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
+        // printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
+		msg << "SDL could not initialize! SDL Error: " << SDL_GetError();
+		log->error(msg.str());
+		msg.str(std::string());
         success = false;
     }
     else
@@ -60,14 +66,18 @@ bool init_SDL()
         //Set texture filtering to linear
         if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "0" ) )
         {
-            printf( "Warning: Linear texture filtering not enabled!" );
+            // printf( "Warning: Linear texture filtering not enabled!" );
+			log->error("Warning: Linear texture filtering not enabled!");
         }
 
         //Create window
         gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
         if( gWindow == NULL )
         {
-            printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
+            // printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
+			msg << "Window could not be created! SDL Error: " << SDL_GetError();
+			log->error(msg.str());
+			msg.str(std::string());
             success = false;
         }
         else
@@ -76,7 +86,10 @@ bool init_SDL()
             gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED);// | SDL_RENDERER_PRESENTVSYNC );
             if( gRenderer == NULL )
             {
-                printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
+                // printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
+				msg << "Renderer could not be created! SDL Error: " << SDL_GetError();
+				log->error(msg.str());
+				msg.str(std::string());
                 success = false;
             }
             else
@@ -88,14 +101,20 @@ bool init_SDL()
                 int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
                 if( !( IMG_Init( imgFlags ) & imgFlags ) )
                 {
-                    printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+                    // printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+					msg << "SDL_image could not initialize! SDL Error: " << IMG_GetError();
+					log->error(msg.str());
+					msg.str(std::string());
                     success = false;
                 }
             }
         }
     }
     if(TTF_Init() < 0){
-        printf( "TTF could not initialize! SDL Error: %s\n", SDL_GetError() );
+        // printf( "TTF could not initialize! SDL Error: %s\n", SDL_GetError() );
+		msg << "TTF could not initialize! SDL Error: " << SDL_GetError();
+		log->error(msg.str());
+		msg.str(std::string());
         success = false;
     }
 
@@ -121,29 +140,32 @@ typedef std::chrono::steady_clock Clock;
 
 int main( int argc, char* args[] )
 {
+	// Inicializar log con parametro de line de comando
+	for (int i = 1; i+1 < argc; i++) {
+		if (strcmp(args[i],"-lg") == 0) {
+			std::string logType=getLogType(args[i+1]);
+			Log::initialize(logType);
+		}
+	}
+	if (!Log::is_initialized()) {
+		Log::initialize(LOG_INFO);
+    }
+
+	Log* log = Log::get_instance();
+
+
     //Start up SDL and create window
     if ( !init_SDL() ) {
         std::cout << "Failed to initialize!\n" << std::endl;
+		log->error("Falló la inicialización del SDL");
     } else {
         std::map<const std::string, Animation> animMapper;
-
-        // Inicializar log con parametro de line de comando
-        for (int i = 1; i+1 < argc; i++) {
-            if (strcmp(args[i],"-lg") == 0) {
-                std::string logType=getLogType(args[i+1]);
-                Log::initialize(logType);
-            }
-        }
-        if (!Log::is_initialized()) {
-            Log::initialize(LOG_INFO);
-        }
 
         // CARGAR La configuracion del YAML y de constantes nuestras:
 		// TODO
 
         //Background:
         Texture background(gRenderer, YAML::background_path);
-        Log* log=Log::get_instance();
         //Las texturas:
 
         log->info("Cargando Texturas");
@@ -217,6 +239,9 @@ int main( int argc, char* args[] )
         log->info("Renderizo");
         renderizar(teamIterator, tfactory, camera, world,
                    quiereSalirTexto, controlled);
+		
+		//Free team resources
+		delete tfactory;
 
     }
 
@@ -277,6 +302,8 @@ renderizar(std::vector<player>::iterator teamIterator, TeamFactory *tfactory, Ca
         double frametime;
         bool salirJuego = false;
 
+		Log* log = Log::get_instance();
+
         //While application is running
         while( !quit )
         {
@@ -317,6 +344,7 @@ renderizar(std::vector<player>::iterator teamIterator, TeamFactory *tfactory, Ca
                     }
                 }
                 if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+					log->info("Se selecciono ESC, juego pausado");
                     salirJuego = true;
                 }
 
@@ -350,8 +378,10 @@ renderizar(std::vector<player>::iterator teamIterator, TeamFactory *tfactory, Ca
                     if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_s) { // Con s sale del juego
                         quit = true;
                         salirJuego = false;
+						log->info("SALIENDO DEL JUEGO");
                     }
                     if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_n) { // Con n vuelve al juego
+						log->info("Salida del juego cancelada");
                         salirJuego = false;
                     }
                 }

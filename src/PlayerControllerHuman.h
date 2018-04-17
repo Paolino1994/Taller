@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PlayerController.h"
+#include "Log.h"
 
 class PlayerControllerHuman : public PlayerController {
 
@@ -18,4 +19,5 @@ private:
 	bool pressingDOWN;
 	bool pressingLEFT;
 	bool pressingRIGHT;
+	Log* log;
 };

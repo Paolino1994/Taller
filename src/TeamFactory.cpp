@@ -5,6 +5,7 @@
 
 TeamFactory::TeamFactory(player_data_t defaultPlayer){
 	BasePlayer=defaultPlayer;
+	this->log = Log::get_instance();
 }
 bool TeamFactory::add_goalkeeper(int goal, int field_length, int field_width){
 	PlayerModel* model;
@@ -17,6 +18,9 @@ bool TeamFactory::add_goalkeeper(int goal, int field_length, int field_width){
 			model = new PlayerModel(BasePlayer, field_length * 20.5 / 22, field_width * 21 / 44);
 			break;
 		default:
+			std::stringstream msg;
+			msg << "TeamFactory: el arco " << goal << " es invalido"; 
+			log->error(msg.str());
 			return false;
 	}
 
@@ -29,6 +33,9 @@ bool TeamFactory::add_goalkeeper(int goal, int field_length, int field_width){
 
 bool TeamFactory::add_defenders(int quantity, int goal, int field_length, int field_width){
 	if (quantity != 3) {
+		std::stringstream msg;
+		msg << "TeamFactory: la cantidad de defensores " << quantity << " es invalida"; 
+		log->error(msg.str());
 		return false;
 	}
 
@@ -42,6 +49,9 @@ bool TeamFactory::add_defenders(int quantity, int goal, int field_length, int fi
 			position_x = field_length * 16 / 22;
 			break;
 		default:
+			std::stringstream msg;
+			msg << "TeamFactory: El arco " << goal << " es invalido"; 
+			log->error(msg.str());
 			return false;
 	}
 
@@ -59,6 +69,9 @@ bool TeamFactory::add_defenders(int quantity, int goal, int field_length, int fi
 
 bool TeamFactory::add_midfielders(int quantity, int goal, int field_length, int field_width){
 	if (quantity <= 0 || quantity > 3) {
+		std::stringstream msg;
+		msg << "TeamFactory: la cantidad de mediocampistas " << quantity << " es invalida"; 
+		log->error(msg.str());
 		return false;
 	}
 
@@ -72,6 +85,9 @@ bool TeamFactory::add_midfielders(int quantity, int goal, int field_length, int 
 			position_x = field_length * 12 / 22;
 			break;
 		default:
+			std::stringstream msg;
+			msg << "TeamFactory: El arco " << goal << " es invalido"; 
+			log->error(msg.str());
 			return false;
 	}
 
@@ -102,6 +118,9 @@ bool TeamFactory::add_midfielders(int quantity, int goal, int field_length, int 
 
 bool TeamFactory::add_forwards(int quantity, int goal, int field_length, int field_width){
 	if (quantity <= 0 || quantity > 2) {
+		std::stringstream msg;
+		msg << "TeamFactory: la cantidad de delanteros " << quantity << " es invalida"; 
+		log->error(msg.str());
 		return false;
 	}
 
@@ -115,6 +134,9 @@ bool TeamFactory::add_forwards(int quantity, int goal, int field_length, int fie
 			position_x = field_length * 7 / 22;
 			break;
 		default:
+			std::stringstream msg;
+			msg << "TeamFactory: El arco " << goal << " es invalido"; 
+			log->error(msg.str());
 			return false;
 	}
 
@@ -141,7 +163,16 @@ bool TeamFactory::add_forwards(int quantity, int goal, int field_length, int fie
 }
 
 bool TeamFactory::create(int defenders, int midfielders, int forwards, int goal, int field_length, int field_width){
-	team.clear();
+	clear_team();
+	
+	std::stringstream msg;
+	msg << "TeamFactory: creando equipo con formacion "
+		<< defenders
+		<< "-" << midfielders
+		<< "-" << forwards
+		<< " en arco " << goal;
+	log->info(msg.str());
+
 	if(!(add_goalkeeper(goal, field_length, field_width)) ||
 		!(add_defenders(defenders, goal, field_length, field_width)) ||
 		!(add_midfielders(midfielders, goal, field_length, field_width)) ||
@@ -151,7 +182,15 @@ bool TeamFactory::create(int defenders, int midfielders, int forwards, int goal,
 }
 
 bool TeamFactory::create(int defenders, int midfielders, int goal, int field_length, int field_width){
-	team.clear();
+	clear_team();
+
+	std::stringstream msg;
+	msg << "TeamFactory: creando equipo con formacion "
+		<< defenders
+		<< "-" << midfielders
+		<< " en arco " << goal;
+	log->info(msg.str());
+
 	if(!(add_goalkeeper(goal, field_length, field_width)) ||
 		!(add_defenders(defenders, goal, field_length, field_width)) ||
 		!(add_midfielders(midfielders, goal, field_length, field_width)))
@@ -160,6 +199,7 @@ bool TeamFactory::create(int defenders, int midfielders, int goal, int field_len
 }
 
 void TeamFactory::add_view(std::map<const std::string, Animation> animMapper){
+	log->info("TeamFactory: agregando vistas a los jugadores");
 	for (player& p: team) {
 		p.view = new PlayerView(animMapper, BasePlayer, p.model);
 		p.controller = new PlayerControllerAI(p.model, p.view);
@@ -168,6 +208,7 @@ void TeamFactory::add_view(std::map<const std::string, Animation> animMapper){
 
 bool TeamFactory::add_to_world(World& world){
 	if (team.empty()){
+		log->error("TeamFactory: intento de agregar al mundo un equipo vacio");
 		return false;
 	}
 	
@@ -179,5 +220,20 @@ bool TeamFactory::add_to_world(World& world){
 }
 
 std::vector<player>& TeamFactory::get_team(){
+	if (team.empty()){
+		log->info("TeamFactory: se a requerido un equipo sin crear");
+	}
 	return team;
+}
+
+void TeamFactory::clear_team(){
+	for (player& p: team) {
+		delete p.model;
+		delete p.view;
+		delete p.controller;
+	}
+}
+
+TeamFactory::~TeamFactory(){
+	clear_team();
 }

@@ -6,6 +6,7 @@
 
 #include "PlayerModel.h"
 #include "PlayerView.h"
+#include "Log.h"
 
 class PlayerController {
 

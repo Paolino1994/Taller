@@ -9,6 +9,8 @@
 #include "PlayerView.h"
 #include "PlayerController.h"
 #include "World.h"
+#include "Log.h"
+#include <sstream>
 
 #define LEFT_GOAL 0
 #define RIGHT_GOAL 1
@@ -22,6 +24,7 @@ struct player {
 class TeamFactory {
 private:
 	player_data_t BasePlayer;
+	Log* log;
 
 	std::vector<player> team;
 	/**
@@ -44,6 +47,8 @@ private:
 		@POS: retorna true si se pudo agregar los delanteros al equipo, false si no
 	*/
 	bool add_forwards(int quantity, int goal, int field_length, int field_width);
+
+	void clear_team();
 
 public:
 	/**
@@ -72,6 +77,8 @@ public:
 	std::vector<player>& get_team();
 
 	TeamFactory(player_data_t defaultPlayer);
+
+	~TeamFactory();
 };
 
 #endif
