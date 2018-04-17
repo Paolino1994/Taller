@@ -15,22 +15,33 @@
 
 YAMLReader* YAMLReader::instance = 0;
 
-
 std::vector<std::string> separar(const std::string& str, const char& ch) ;
 
-YAMLReader::YAMLReader(std::string string) {
-    Log::initialize(LOG_INFO);
-    Log *log = Log::get_instance();
-    bool errorgeneral = false;
-    log->info("Intento abrir Archivo de Configuracion General");
+YAMLReader::YAMLReader() {
+   //instance = get_instance();
+}
+
+YAMLReader* YAMLReader::get_instance() {
+    if (!(instance != 0)){
+        instance= new YAMLReader();
+    }
+    return instance;
+}
+
+void YAMLReader::readYamlGeneral(std::string string){
     try {
         files[3] = startEquipo(string, 3);
         readFile(3);
-        log->info("Abierto Archivo de Configuracion General");
     } catch (std::exception &) {
-        errorgeneral=true;
-        log->error("Error al abrir archuvo de configuracion general");
+        Log::initialize(LOG_ERROR);
+        Log *log = Log::get_instance();
+        log->error("Error al abrir archivo de configuracion general");
     }
+}    
+
+void YAMLReader::readYamlEquipos(){
+    Log *log = Log::get_instance();
+    bool errorgeneral = false;
     errorgeneral= cargarEquipo(errorgeneral);
     log->info("Intento destruir archivo de configuracion general");
     destroyFile(3);
@@ -39,15 +50,9 @@ YAMLReader::YAMLReader(std::string string) {
         //readArchives();
         log->info("Lei archivos de configuracion de equipos");
     }
-    //destroy();
+
 }
 
-YAMLReader* YAMLReader::get_instance() {
-    if (!(instance != 0)){
-        instance= new YAMLReader("GeneralConfig.yaml");
-    }
-    return instance;
-}
 
 
 std::string YAMLReader::getNombre(int equipo){
@@ -187,11 +192,13 @@ FILE * YAMLReader::startEquipo(std::string equipo, int arch) {
     files[arch]=fopen(rutaEquipo.c_str(), "r");
     if(!yaml_parser_initialize(&(parser[arch]))){
         fputs("Error de parser\n", stderr);
-        Log::get_instance()->error("Error de parser");
+        Log::initialize(LOG_ERROR);
+        Log::get_instance()->error("Error de parser cuando se leer el archivo " + equipo);
     }
     if(files[arch] == NULL){
         fputs("Error al abrir el archivo!\n", stderr);
-        Log::get_instance()->error("Error al abrir el archivo"+equipo+std::to_string(arch));
+        Log::initialize(LOG_ERROR);
+        Log::get_instance()->error("Error al abrir el archivo " + equipo+ " " +std::to_string(arch)+ " - El juego continua la ejecucion - el log se configura en modo error");
         throw std::runtime_error("Error abrir archivo");
     }
     yaml_parser_set_input_file(&(parser[arch]), files[arch]);

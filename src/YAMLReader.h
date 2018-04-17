@@ -18,6 +18,13 @@
 class YAMLReader {
 
 public:
+    
+    YAMLReader();
+
+    void readYamlGeneral(std::string string);  
+    
+    void readYamlEquipos();  
+
     static YAMLReader *get_instance();
 
     std::map<std::string, std::string> getEverything(int equipo);
@@ -48,8 +55,6 @@ public:
     std::string getLogLevel();
 
 private:
-
-    YAMLReader(std::string string);
 
     std::map<std::string,std::string> infoEquipo[3];
 

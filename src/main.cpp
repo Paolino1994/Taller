@@ -121,24 +121,33 @@ typedef std::chrono::steady_clock Clock;
 
 int main( int argc, char* args[] )
 {
+    auto yamlReader = YAMLReader::get_instance();
+    yamlReader->readYamlGeneral("GeneralConfig.yaml");
+    // Inicializar log con parametro de line de comando
+    for (int i = 1; i+1 < argc; i++) {
+        if (strcmp(args[i],"-lg") == 0) {
+            std::string logType=getLogType(args[i+1]);
+            Log::initialize(logType);
+            Log* log=Log::get_instance();
+            log->error("Log cargado en modo " + logType);
+        }
+    }
+    if (!Log::is_initialized()) {
+        std::string logLevel = yamlReader->getLogLevel();
+        std::string logType=getLogType((char *) logLevel.c_str());
+        Log::initialize(logType);
+        Log* log=Log::get_instance();
+        log->error("Log cargado en modo " + logLevel);
+    }
+
+    yamlReader->readYamlEquipos();
+
     //Start up SDL and create window
     if ( !init_SDL() ) {
         std::cout << "Failed to initialize!\n" << std::endl;
     } else {
         std::map<const std::string, Animation> animMapper;
 
-        // Inicializar log con parametro de line de comando
-        for (int i = 1; i+1 < argc; i++) {
-            if (strcmp(args[i],"-lg") == 0) {
-                std::string logType=getLogType(args[i+1]);
-                Log::initialize(logType);
-            }
-        }
-        if (!Log::is_initialized()) {
-            std::string logType=getLogType((char *) YAMLReader::get_instance()->getLogLevel().c_str());
-            Log::initialize(logType);//No anda porque el Reader necesita Logear :(
-            //Log::initialize(LOG_INFO);
-        }
 
         // CARGAR La configuracion del YAML y de constantes nuestras:
 		// TODO
