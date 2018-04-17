@@ -1,9 +1,9 @@
 - Nombre: Mojarritas
   - Formacion: "3-2-1"
-  - SpriteStill: "res/player_still.png"
-  - SpriteRunning: "res/player_run.png"
-  - SpriteSweeping: "res/player_sweep.png"
-  - SpriteKicking: "res/player_kick.png"
+  - SpriteStill: "res/player_still_2.png"
+  - SpriteRunning: "res/player_run_2.png"
+  - SpriteSweeping: "res/player_sweep_2.png"
+  - SpriteKicking: "res/player_kick_2.png"
   - Jugadores:
       - Jugador1:
           -Nombre: "Marco"

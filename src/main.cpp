@@ -147,6 +147,7 @@ int main( int argc, char* args[] )
         //Las texturas:
 
         log->info("Cargando Texturas");
+        log->info(YAMLReader::get_instance()->getSpriteRunning(EQUIPO1));
         sprite_info PlayerRun={"run",YAMLReader::get_instance()->getSpriteRunning(EQUIPO1),60, 64,4,12};
 		Surface runS(PlayerRun.file_path);
 		runS.setColorKey(126, 130, 56); //cargar desde constantes
@@ -213,6 +214,7 @@ int main( int argc, char* args[] )
 
         Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
         camera.follow(teamIterator->model);
+        log->info("Renderizo");
         renderizar(teamIterator, tfactory, camera, world,
                    quiereSalirTexto, controlled);
 
@@ -325,7 +327,7 @@ renderizar(std::vector<player>::iterator teamIterator, TeamFactory *tfactory, Ca
             //Cuando el tiempo pasado es mayor a nuestro tiempo de actualizacion
             while ( accumulator >= fixed_dt )
             {
-                //Calculate movement/physics:
+                //Calcula movimientos
                 world.update(fixed_dt); //Update de todos los players (y otras entidades proximamente?)
                 camera.update(fixed_dt);
                 accumulator -= fixed_dt;

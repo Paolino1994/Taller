@@ -90,6 +90,7 @@ private:
     bool mapIsValid(std::map<std::string, std::string> map, std::vector<std::string> vector);
 
 
+    bool cargarEquipo(int equipo, bool errorgeneral);
 };
 
 

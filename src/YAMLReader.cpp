@@ -20,23 +20,26 @@ std::vector<std::string> separar(const std::string& str, const char& ch) ;
 
 YAMLReader::YAMLReader(std::string string) {
     Log::initialize(LOG_INFO);
-    Log* log=Log::get_instance();
+    Log *log = Log::get_instance();
+    bool errorgeneral = false;
 
     log->info("Intento abrir Archivo de Configuracion General");
-    files[3]=startEquipo(string,3);
-    log->info("Abierto Archivo de Configuracion General");
-    log->info("Intento abrir Archivo de Equipo"+EQUIPO1);
-    files[EQUIPO1]= startEquipo(const_cast<char *>(find("Equipo1", 3).c_str()), EQUIPO1);
-    log->info("Abierto Archivo de Equipo"+EQUIPO1);
-    log->info("Intento abrir Archivo de Equipo"+EQUIPO2);
-    files[EQUIPO2]= startEquipo(const_cast<char *>(find("Equipo2", 3).c_str()), EQUIPO2);
-    log->info("Abierto Archivo de Equipo"+EQUIPO2);
+    try {
+        files[3] = startEquipo(string, 3);
+        log->info("Abierto Archivo de Configuracion General");
+    } catch (std::exception &) {
+        errorgeneral=true;
+        log->error("Error al abrir archuvo de configuracion general");
+    }
+    errorgeneral=cargarEquipo(EQUIPO1,errorgeneral);
+    errorgeneral=cargarEquipo(EQUIPO2,errorgeneral);
     log->info("Intento destruir archivo de configuracion general");
     destroyFile(3);
-    log->info("Destrui archivo de configuracion general");
-    log->info("Intento leer archivos de configuracion de equipos");
-    readArchives();
-    log->info("Lei archivos de configuracion de equipos");
+    if(errorgeneral==false){
+        log->info("Intento leer archivos de configuracion de equipos");
+        //readArchives();
+        log->info("Lei archivos de configuracion de equipos");
+    }
     destroy();
 }
 
@@ -98,8 +101,18 @@ void YAMLReader::destroy() {
 }
 
 void YAMLReader::destroyFile(int i) {
-    yaml_parser_delete(&parser[i]);
-    //fclose(files[i]);
+    try{
+        if(files[i]==NULL){
+            Log::get_instance()->info("El archivo "+std::to_string(i+1)+" esta vacio");
+        }else{
+            Log::get_instance()->info("Intento destruir "+std::to_string(i+1));
+            yaml_parser_delete(&parser[i]);
+            fclose(files[i]);
+            Log::get_instance()->info("Destrui archivo");
+        }
+    }catch(const std::exception&){
+        Log::get_instance()->error("Error al destruir el archivo");
+    }
 }
 
 
@@ -184,10 +197,15 @@ FILE * YAMLReader::startEquipo(std::string equipo, int arch) {
     std::string ruta="res/";
     std::string rutaEquipo= ruta + equipo;
     files[arch]=fopen(rutaEquipo.c_str(), "r");
-    if(!yaml_parser_initialize(&(parser[arch])))
+    if(!yaml_parser_initialize(&(parser[arch]))){
         fputs("Error de parser\n", stderr);
-    if(files[arch] == NULL)
-        fputs("Error al abrir un archivo!\n", stderr);
+        Log::get_instance()->error("Error de parser");
+    }
+    if(files[arch] == NULL){
+        fputs("Error al abrir el archivo!\n", stderr);
+        Log::get_instance()->error("Error al abrir el archivo");
+        throw std::runtime_error("Error abrir archivo");
+    }
     yaml_parser_set_input_file(&(parser[arch]), files[arch]);
     return files[arch];
 
@@ -301,7 +319,7 @@ std::map<std::string, std::string> YAMLReader::cargarDefault() {
     std::map<std::string, std::string> mapa;
     //std::vector<std::string> keys={"Nombre","Formacion","SpriteStill","SpriteRunning","SpriteSweeping","SpriteKicking","Jugador1","Jugador2","Jugador3","Jugador4","Jugador5","Jugador6"};
     mapa["Nombre"]="Default";
-    mapa["Formacion"]="2-3-0";
+    mapa["Formacion"]="3-2-1";
     mapa["SpriteStill"]="res/player_still.png";
     mapa["SpriteRunning"]="res/player_run.png";
     mapa["SpriteSweeping"]="res/player_sweep.png";
@@ -343,6 +361,30 @@ int YAMLReader::getDelanteros(int equipo) {
     std::string string = getFormacion(equipo);
     std::vector<std::string> result = separar(string, '-');
     return std::stoi(result[2]);
+}
+
+bool YAMLReader::cargarEquipo(int equipo, bool errorgeneral) {
+    Log* log=Log::get_instance();
+    if (errorgeneral == false) {
+        try {
+            log->info("Intento abrir Archivo de Equipo" + equipo);
+            files[equipo] = startEquipo(const_cast<char *>(find("Equipo"+std::to_string(equipo+1), 3).c_str()), equipo);
+            log->info("Abierto Archivo de Equipo" + equipo);
+            infoEquipo[equipo] = getEverything(equipo);
+            return false;
+        } catch (std::exception &) {
+            files[equipo]=NULL;
+            log->error("Error al abrir archivo de equipo " + std::to_string(equipo + 1));
+            log->info("Cargo informacion por default");
+            infoEquipo[equipo] = cargarDefault();
+            return true;
+        }
+    }else{
+        files[equipo]=NULL;
+        log->info("Cargo informacion por default");
+        infoEquipo[equipo] = cargarDefault();
+        return true;
+    }
 }
 
 std::vector<std::string> separar(const std::string& str, const char& ch) {
