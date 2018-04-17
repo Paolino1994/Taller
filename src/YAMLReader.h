@@ -37,6 +37,12 @@ public:
     std::string getSpriteKicking(int equipo);
 
 
+    int getDefensores(int i);
+
+    int getMediocampistas(int equipo);
+
+    int getDelanteros(int equipo);
+
 private:
 
     YAMLReader(std::string string);
@@ -82,6 +88,8 @@ private:
     std::map<std::string, std::string> cargarDefault();
 
     bool mapIsValid(std::map<std::string, std::string> map, std::vector<std::string> vector);
+
+
 };
 
 

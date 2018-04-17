@@ -185,7 +185,10 @@ int main( int argc, char* args[] )
         player_data_t defaultPlayer=crearDefaultPlayer(PlayerStill,PlayerRun,PlayerSweep,PlayerKick);
         log->info("Crear Jugadores");
 		TeamFactory* tfactory = new TeamFactory(defaultPlayer);
-		tfactory->create(3, 2, 1, LEFT_GOAL, background.getWidth(), background.getHeight());
+        int defensores=YAMLReader::get_instance()->getDefensores(EQUIPO1);
+        int mediocampistas=YAMLReader::get_instance()->getMediocampistas(EQUIPO1);
+        int delanteros=YAMLReader::get_instance()->getDelanteros(EQUIPO1);
+		tfactory->create(defensores, mediocampistas, delanteros, LEFT_GOAL, background.getWidth(), background.getHeight());
 		tfactory->add_view(animMapper);
 
 		// Iterador de jugadores en el switcheo

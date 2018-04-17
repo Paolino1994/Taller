@@ -10,13 +10,13 @@
 #include <vector>
 #include <string>
 #include <map>
-
+#include <iterator>
 
 
 YAMLReader* YAMLReader::instance = 0;
 
 
-
+std::vector<std::string> separar(const std::string& str, const char& ch) ;
 
 YAMLReader::YAMLReader(std::string string) {
     Log::initialize(LOG_INFO);
@@ -325,6 +325,46 @@ bool YAMLReader::mapIsValid(std::map<std::string, std::string> map, std::vector<
     }
     return true;
 }
+
+int YAMLReader::getDefensores(int equipo) {
+    std::string string = getFormacion(equipo);
+    std::vector<std::string> result = separar(string, '-');
+    return std::stoi(result[0]);
+
+}
+
+int YAMLReader::getMediocampistas(int equipo) {
+    std::string string = getFormacion(equipo);
+    std::vector<std::string> result = separar(string, '-');
+    return std::stoi(result[1]);
+}
+
+int YAMLReader::getDelanteros(int equipo) {
+    std::string string = getFormacion(equipo);
+    std::vector<std::string> result = separar(string, '-');
+    return std::stoi(result[2]);
+}
+
+std::vector<std::string> separar(const std::string& str, const char& ch) {
+    std::string siguiente;
+    std::vector<std::string> resultado;
+
+    // For each character in the string
+    for (std::string::const_iterator it = str.begin(); it != str.end(); it++) {
+        if (*it == ch) {
+            if (!siguiente.empty()) {
+                resultado.push_back(siguiente);
+                siguiente.clear();
+            }
+        } else {
+            siguiente += *it;
+        }
+    }
+    if (!siguiente.empty())
+        resultado.push_back(siguiente);
+    return resultado;
+}
+
 
 
 
