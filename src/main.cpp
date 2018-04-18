@@ -195,13 +195,13 @@ int main( int argc, char* args[] )
         Texture stillT(gRenderer, stillS);
         stillT.setScaling(PlayerStill.width, PlayerStill.height);
 
-        sprite_info PlayerSweep={"sweep",YAMLReader::get_instance()->getSpriteSweeping(equipo),60, 64,4,12};
+        sprite_info PlayerSweep={"sweep",YAMLReader::get_instance()->getSpriteSweeping(equipo),76, 112,4,12};
         Surface sweepS(PlayerSweep.file_path);
         sweepS.setColorKey(126, 130, 56); //cargar desde constantes
 		Texture sweepT(gRenderer, sweepS);
 		sweepT.setScaling(PlayerSweep.width, PlayerSweep.height);
 
-        sprite_info PlayerKick={"kick",YAMLReader::get_instance()->getSpriteKicking(equipo),60, 64,4,12};
+        sprite_info PlayerKick={"kick",YAMLReader::get_instance()->getSpriteKicking(equipo),74, 94,4,12};
         Surface kickS(PlayerKick.file_path);
         kickS.setColorKey(126, 130, 56); //cargar desde constantes
         Texture kickT(gRenderer, kickS);
@@ -279,11 +279,13 @@ player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun,
                                            [PlayerState::STILL] = PlayerStill.width,
                                            [PlayerState::RUNNING] = PlayerRun.width,
                                            [PlayerState::SWEEPING] = PlayerSweep.width,
+                                           [PlayerState::KICKING] = PlayerKick.width,
                                    },
             /*HEIGHTS*/  {
                                            [PlayerState::STILL] = PlayerStill.height,
                                            [PlayerState::RUNNING] = PlayerRun.height,
                                            [PlayerState::SWEEPING] = PlayerSweep.height,
+                                           [PlayerState::KICKING] = PlayerKick.height,
                                    },
 
             // pixeles (logicos) por segundo
