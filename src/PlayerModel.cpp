@@ -103,7 +103,7 @@ void PlayerModel::update(double dt, int x_limit, int y_limit){
 int PlayerModel::getWidth()
 {
 	// Esto esta pendiente de mejoras, dependiendo para que se usa esto
-	// el tamaño del modelo no es necesariamente igual a un rectangulo como la imagen
+	// el tamaï¿½o del modelo no es necesariamente igual a un rectangulo como la imagen
 	// y no estamos considerando el angulo
 	return this->widths[this->state];
 }
@@ -111,7 +111,7 @@ int PlayerModel::getWidth()
 int PlayerModel::getHeight()
 {
 	// Esto esta pendiente de mejoras, dependiendo para que se usa esto
-	// el tamaño del modelo no es necesariamente igual a un rectangulo como la imagen
+	// el tamaï¿½o del modelo no es necesariamente igual a un rectangulo como la imagen
 	// y no estamos considerando el angulo
 	return this->heights[this->state];
 }
@@ -155,6 +155,7 @@ double PlayerModel::getMaxVelX() {
 // Proximamente manejar mejor esto con patron State
 void PlayerModel::changeVelY(double d)
 {
+
 	if (this->state == SWEEPING or this->state == KICKING) {
 		sweepVelY += d;
 		kickVelY += d;

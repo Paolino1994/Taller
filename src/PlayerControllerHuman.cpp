@@ -19,6 +19,7 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
     const double MAX_VEL_Y=playerModel->getMaxVelY();
 
     //If a key was pressed
+
     if( e.type == SDL_KEYDOWN && e.key.repeat == 0 )
     {
         //Adjust the velocity
@@ -27,7 +28,7 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
             case SDLK_UP:{
 				this->pressingUP = true;
                 //velY -= MAX_VEL_Y;
-                playerModel->changeVelY(-MAX_VEL_Y);
+				playerModel->changeVelY(-MAX_VEL_Y);
 				log->debug("PlayerControllerHuman: apretando arriba");
                 break;
             }
@@ -41,14 +42,15 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
             case SDLK_LEFT:{
 				this->pressingLEFT = true;
                 //velX -= MAX_VEL_X;
-                playerModel->changeVelX(-MAX_VEL_X);
+				playerModel->changeVelX(-MAX_VEL_X);
 				log->debug("PlayerControllerHuman: apretando izquierda");
                 break;
             }
             case SDLK_RIGHT:{
 				this->pressingRIGHT = true;
                 //velX += MAX_VEL_X;
-                playerModel->changeVelX(MAX_VEL_X);
+				playerModel->changeVelX(MAX_VEL_X);
+
 				log->debug("PlayerControllerHuman: apretando derecha");
                 break;
             }
@@ -78,6 +80,7 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 		if (e.key.keysym.sym == SDLK_UP && this->pressingUP) {
 			//velY += MAX_VEL_Y;
 			playerModel->changeVelY(MAX_VEL_Y);
+
 			log->debug("PlayerControllerHuman: soltando arriba");
 		}
 		else if (e.key.keysym.sym == SDLK_DOWN && this->pressingDOWN) {

@@ -23,6 +23,7 @@
 #include "TeamFactory.h"
 #include "YAMLReader.h"
 #include "Texto.h"
+#include "TextureSetter.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
@@ -169,7 +170,7 @@ int main( int argc, char* args[] )
 		log->error("Falló la inicialización del SDL");
     } else {
         std::map<const std::string, Animation> animMapper;
-
+        std::map<const std::string, Animation> animMapper2;
         // CARGAR La configuracion del YAML y de constantes nuestras:
 		// TODO
 
@@ -183,40 +184,46 @@ int main( int argc, char* args[] )
         
         // EQUIPO 1 HAY QUE MODULARIZAR ESTO 
         int equipo=1;
-
-        log->info(YAMLReader::get_instance()->getSpriteRunning(equipo));
-        sprite_info PlayerRun={"run",YAMLReader::get_instance()->getSpriteRunning(equipo),60, 64,4,12};
-		Surface runS(PlayerRun.file_path);
-		runS.setColorKey(126, 130, 56); //cargar desde constantes
-        Texture runT(gRenderer, runS);
-        runT.setScaling(PlayerRun.width, PlayerRun.height);
-
-        sprite_info PlayerStill={"still",YAMLReader::get_instance()->getSpriteStill(equipo),68, 34,1,3};
-		Surface stillS(PlayerStill.file_path);
-		stillS.setColorKey(126, 130, 56); //cargar desde constantes
-        Texture stillT(gRenderer, stillS);
-        stillT.setScaling(PlayerStill.width, PlayerStill.height);
-
-        sprite_info PlayerSweep={"sweep",YAMLReader::get_instance()->getSpriteSweeping(equipo),76, 112,4,12};
-        Surface sweepS(PlayerSweep.file_path);
-        sweepS.setColorKey(126, 130, 56); //cargar desde constantes
-		Texture sweepT(gRenderer, sweepS);
-		sweepT.setScaling(PlayerSweep.width, PlayerSweep.height);
-
-        sprite_info PlayerKick={"kick",YAMLReader::get_instance()->getSpriteKicking(equipo),74, 94,4,12};
-        Surface kickS(PlayerKick.file_path);
-        kickS.setColorKey(126, 130, 56); //cargar desde constantes
-        Texture kickT(gRenderer, kickS);
-        kickT.setScaling(PlayerKick.width, PlayerKick.height);
-
-
-
+        log->info("Crear Texturas");
+        TextureSetter textures(equipo, gRenderer);
+        sprite_info PlayerRun=textures.getPlayerRunInfo();
+        Texture runT=textures.getPLayerRunTexture();
+        sprite_info PlayerStill=textures.getPlayerStillInfo();
+        Texture stillT=textures.getPLayerStillTexture();
+        sprite_info PlayerSweep=textures.getPlayerSweepInfo();
+        Texture sweepT=textures.getPLayerSweepTexture();
+        sprite_info PlayerKick=textures.getPlayerKickInfo();
+        Texture kickT=textures.getPLayerKickTexture();
 		// Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
         log->info("Crear Animaciones");
+        log->debug("Crear Animacion Run");
         animMapper.emplace(std::make_pair(PlayerRun.spriteid, Animation(runT, PlayerRun)));
+        log->debug("Crear Animacion Still");
         animMapper.emplace(std::make_pair(PlayerStill.spriteid, Animation(stillT, PlayerStill)));
+        log->debug("Crear Animacion Sweep");
         animMapper.emplace(std::make_pair(PlayerSweep.spriteid, Animation(sweepT, PlayerSweep)));
+        log->debug("Crear Animacion Kick");
         animMapper.emplace(std::make_pair(PlayerKick.spriteid, Animation(kickT, PlayerKick)));
+
+        TextureSetter textures2(2, gRenderer);
+        sprite_info PlayerRun2=textures2.getPlayerRunInfo();
+        Texture runT2=textures2.getPLayerRunTexture();
+        sprite_info PlayerStill2=textures2.getPlayerStillInfo();
+        Texture stillT2=textures2.getPLayerStillTexture();
+        sprite_info PlayerSweep2=textures2.getPlayerSweepInfo();
+        Texture sweepT2=textures2.getPLayerSweepTexture();
+        sprite_info PlayerKick2=textures2.getPlayerKickInfo();
+        Texture kickT2=textures2.getPLayerKickTexture();
+        // Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
+        log->info("Crear Animaciones");
+        log->debug("Crear Animacion Run");
+        animMapper2.emplace(std::make_pair(PlayerRun2.spriteid, Animation(runT2, PlayerRun2)));
+        log->debug("Crear Animacion Still");
+        animMapper2.emplace(std::make_pair(PlayerStill2.spriteid, Animation(stillT2, PlayerStill2)));
+        log->debug("Crear Animacion Sweep");
+        animMapper2.emplace(std::make_pair(PlayerSweep2.spriteid, Animation(sweepT2, PlayerSweep2)));
+        log->debug("Crear Animacion Kick");
+        animMapper2.emplace(std::make_pair(PlayerKick2.spriteid, Animation(kickT2, PlayerKick2)));
 
 
         // Creo jugadores:
@@ -228,9 +235,19 @@ int main( int argc, char* args[] )
         int delanteros=YAMLReader::get_instance()->getDelanteros(equipo);
 		tfactory->create(defensores, mediocampistas, delanteros, LEFT_GOAL, background.getWidth(), background.getHeight());
 		tfactory->add_view(animMapper);
+        // Iterador de jugadores en el switcheo
+        std::vector<player>::iterator teamIterator = std::prev(tfactory->get_team().end());
 
-		// Iterador de jugadores en el switcheo
-		std::vector<player>::iterator teamIterator = std::prev(tfactory->get_team().end());
+        //creo sprites equipo2
+
+        //agrego equipo 2
+        player_data_t defaultPlayer2=crearDefaultPlayer(PlayerStill2,PlayerRun2,PlayerSweep2,PlayerKick2);
+        TeamFactory* tfactory2 = new TeamFactory(defaultPlayer2);
+        log->info("Crear Jugadores del team 2");
+        tfactory2->create(3, 2, 1, RIGHT_GOAL, background.getWidth(), background.getHeight());
+        tfactory2->add_view(animMapper2);
+
+
 
 		// Inyecto un jugador controlado por un humano
         log->info("Cargar Controlladores");
@@ -248,7 +265,7 @@ int main( int argc, char* args[] )
         World world(background.getWidth(), background.getHeight(), &background);
         world.setPlayerSelectedTexture(&selectedPlayerTecture);
 		tfactory->add_to_world(world);
-
+        tfactory2->add_to_world(world);
         log->info("Agrego la camara");
 
         Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
