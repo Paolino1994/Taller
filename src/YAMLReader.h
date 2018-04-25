@@ -11,7 +11,7 @@
 #define JUGADOR6 6
 #ifndef UNTITLED_YAMLREADER_H
 #define UNTITLED_YAMLREADER_H
-#include <yaml.h>
+#include <yaml-cpp/yaml.h>
 #include <map>
 #include <vector>
 
@@ -26,8 +26,6 @@ public:
     void readYamlEquipos();  
 
     static YAMLReader *get_instance();
-
-    std::map<std::string, std::string> getEverything(int equipo);
 
     void destroy();
 
@@ -50,47 +48,17 @@ public:
 
     int getDelanteros(int equipo);
 
-    int getEquipo();
-
     std::string getLogLevel();
 
 private:
 
+    YAML::Node configNode;
+
     std::map<std::string,std::string> infoEquipo[3];
-
-    yaml_token_t token;
-
-    yaml_document_t document[4];
-
-    yaml_parser_t parser[4];
-
-    yaml_parser_t parser2;
 
     FILE* files[4];
 
-    FILE *startEquipo(std::string equipo, int arch);
-
-    std::string find(std::string string, int equipo);
-
-    void destroyFile(int i);
-
-    std::string findJugador(std::string basic_string, int equipo);
-
-    std::string findnext(int equipo);
-
-
-    std::string getSpritesEquipo(int i);
-
-    void printType(yaml_token_type_t e);
-
-
-    void printAll(int arch);
-
     std::string getFormacion(int equipo);
-
-    void readAll(int arch);
-
-    void readArchives();
 
     static YAMLReader *instance;
 
@@ -98,12 +66,15 @@ private:
 
     bool mapIsValid(std::map<std::string, std::string> map, std::vector<std::string> vector);
 
-
     bool cargarEquipo(bool equipo);
 
     std::string Formacion="3-2-1";
 
     void readFile(int archivo);
+
+    void leerEquipo(std::string equipo, int posicionEnMapa);
+
+    std::string getLogType(char *cadena);
 
     std::string Equipo="Local";
     std::string LogLevel="info";

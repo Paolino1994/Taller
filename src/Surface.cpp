@@ -10,8 +10,9 @@ Surface::Surface(std::string file)
     mSurface = IMG_Load(file.c_str());
     
     if(!mSurface){ //hacer exception!
-        printf( "Unable to load image %s! SDL_image Error: %s\n", file.c_str(), IMG_GetError() );
-        throw std::runtime_error("AAA");
+        Log* log = Log::get_instance();
+	    log->error("No se encontro la imagen");
+        mSurface = IMG_Load("res/image_not_found.png");
     }
 }
 

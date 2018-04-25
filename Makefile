@@ -60,7 +60,7 @@ SDL_LD_FLAGS = $(shell pkg-config --libs sdl2)
 SDL_LD_FLAGS += $(shell pkg-config --libs SDL2_image)
 SDL_LD_FLAGS += $(shell pkg-config --libs SDL2_mixer)
 SDL_LD_FLAGS += $(shell pkg-config --libs SDL2_ttf)
-SDL_LD_FLAGS += -lyaml
+SDL_LD_FLAGS += -lyaml-cpp
 LDFLAGS += $(sort $(SDL_LD_FLAGS)) # para eliminar duplicados
 endif
 

@@ -1,3 +1,7 @@
-- Equipo: Local
-- Formacion: 3-1-2
-- LogLevel: error
+EquipoA:
+    Color: "Verde"
+    Formacion: "3-1-2"
+EquipoB:
+    Color: "Rojo"
+    Formacion: "2-2-2"
+LogLevel: "info"

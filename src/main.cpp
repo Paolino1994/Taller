@@ -141,7 +141,7 @@ typedef std::chrono::steady_clock Clock;
 int main( int argc, char* args[] )
 {
     auto yamlReader = YAMLReader::get_instance();
-    yamlReader->readYamlGeneral("GeneralConfig.yaml");
+    yamlReader->readYamlGeneral("res/GeneralConfig.yaml");
     // Inicializar log con parametro de line de comando
     for (int i = 1; i+1 < argc; i++) {
         if (strcmp(args[i],"-lg") == 0) {
@@ -159,8 +159,8 @@ int main( int argc, char* args[] )
         log->error("Log cargado en modo " + logLevel);
     }
 
-    yamlReader->readYamlEquipos();
-	
+    //yamlReader->readYamlEquipos();
+
 	Log* log = Log::get_instance();
 
     //Start up SDL and create window
@@ -180,7 +180,9 @@ int main( int argc, char* args[] )
 
         //Las texturas:
         log->info("Cargando Texturas");
-        int equipo=YAMLReader::get_instance()->getEquipo();
+        
+        // EQUIPO 1 HAY QUE MODULARIZAR ESTO 
+        int equipo=1;
 
         log->info(YAMLReader::get_instance()->getSpriteRunning(equipo));
         sprite_info PlayerRun={"run",YAMLReader::get_instance()->getSpriteRunning(equipo),60, 64,4,12};
@@ -418,5 +420,4 @@ std::string getLogType(char *cadena) {
     }
     return LOG_INFO;
 }
-
 

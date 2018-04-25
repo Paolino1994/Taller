@@ -1,0 +1,8 @@
+SpriteStill: "res/player_still.png"
+SpriteRunning: "res/player_run.png"
+SpriteSweeping: "res/player_sweep.png"
+SpriteKicking: "res/player_kick.png"
+
+
+
+
