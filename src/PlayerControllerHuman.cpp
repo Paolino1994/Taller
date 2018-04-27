@@ -54,17 +54,17 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 				log->debug("PlayerControllerHuman: apretando derecha");
                 break;
             }
-			case SDLK_SPACE: {
+			case SDLK_a: {
 				playerModel->sweep();
 				log->debug("PlayerControllerHuman: apretando barrer");
 				break;
 			}
-			case SDLK_r: {
+			case SDLK_SPACE: {
 				playerModel->sprint();
 				log->debug("PlayerControllerHuman: apretando correr");
 				break;
 			}
-			case SDLK_RETURN: {
+			case SDLK_s: {
 				playerModel->kick();
 				log->debug("PlayerControllerHuman: apretando patear");
 				break;
@@ -98,7 +98,7 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 			playerModel->changeVelX(-MAX_VEL_X);
 			log->debug("PlayerControllerHuman: soltando derecha");
 		}
-		else if (e.key.keysym.sym == SDLK_r) {
+		else if (e.key.keysym.sym == SDLK_SPACE) {
 			playerModel->stopSprinting();
 			log->debug("PlayerControllerHuman: soltando correr");
 		}

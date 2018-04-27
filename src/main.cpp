@@ -315,7 +315,7 @@ player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun,
             /*Y_VELOCITY =*/ 200,
             /*SWEEP_DURATION =*/ (1.0 / PlayerSweep.frames_per_second) * PlayerSweep.frames,
             /*KICK_DURATION =*/ (1.0 / PlayerKick.frames_per_second) * PlayerKick.frames,
-            /*SPRINT_VEL_MULT*/ 1.5
+            /*SPRINT_VEL_MULT*/ 2.0
     };
     return defaultPlayer;
 }
