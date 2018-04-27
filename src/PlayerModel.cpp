@@ -6,10 +6,40 @@
 #include <cmath>
 
 
-PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y) :
+PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y) :
+	Entity(kickOff_x, kickOff_y),
+	initial_x(initial_x),
+	initial_y(initial_y),
+	kickOff_x(kickOff_x),
+	kickOff_y(kickOff_y),
+	widths(player_data.widths, std::end(player_data.widths)),
+	heights(player_data.heights, std::end(player_data.heights)),
+	velX(0),
+	velY(0),
+	state(STILL),
+	angle(0.0),
+	MAX_VEL_X(player_data.X_VELOCITY),
+	MAX_VEL_Y(player_data.Y_VELOCITY),
+	sweepDuration(player_data.SWEEP_DURATION),
+	sweepTime(0.0),
+	sweepVelX(0.0),
+	sweepVelY(0.0),
+	kickDuration(player_data.KICK_DURATION),
+	kickTime(0.0),
+	kickVelX(0.0),
+	kickVelY(0.0),
+	sprintVelocityMultiplier(player_data.SPRINT_VELOCITY_MULTIPLIER),
+	velocityMultiplier(1.0)
+{
+	log = Log::get_instance();
+}
+
+PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y):
 	Entity(initial_x, initial_y),
 	initial_x(initial_x),
 	initial_y(initial_y),
+	kickOff_x(initial_x),
+	kickOff_y(initial_y),
 	widths(player_data.widths, std::end(player_data.widths)),
 	heights(player_data.heights, std::end(player_data.heights)),
 	velX(0),
@@ -126,7 +156,13 @@ PlayerState PlayerModel::getState() {
 
 }
 
+int PlayerModel::getKickOff_x() {
+    return kickOff_x;
+}
 
+int PlayerModel::getKickOff_y() {
+    return kickOff_y;
+}
 
 double PlayerModel::getVelX() {
     return velX;

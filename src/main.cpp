@@ -362,29 +362,31 @@ renderizar(std::vector<player>::iterator teamIterator, TeamFactory *tfactory, Ca
                     quit = true;
                 }
 
-                if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_q) {
-                    // sabemos que el iterador apunta al controlled actual
-                    player& controlledPlayer = *teamIterator;
-                    do
-                    { // en el peor caso volvemos a el que estabamos controlando recien
-                        ++teamIterator;
-                        if (teamIterator == tfactory->get_team().end()) {
-                            teamIterator = tfactory->get_team().begin();
+                if (e.type == SDL_KEYDOWN ){
+                    if(e.key.keysym.sym == SDLK_q) {
+                        // sabemos que el iterador apunta al controlled actual
+                        player& controlledPlayer = *teamIterator;
+                        do
+                        { // en el peor caso volvemos a el que estabamos controlando recien
+                            ++teamIterator;
+                            if (teamIterator == tfactory->get_team().end()) {
+                                teamIterator = tfactory->get_team().begin();
+                            }
+
+                        } while (teamIterator->controller != controlled && !camera.isWithinScrollBoundaries(teamIterator->model));
+
+                        if (teamIterator->controller != controlled) {
+                            controlled->swap(teamIterator->controller);
+                            camera.follow(controlled->getEntity());
+                            // esto es un parche medio feo por los lios del swap, TODO mejorar
+                            controlledPlayer.controller = teamIterator->controller;
+                            teamIterator->controller = controlled;
                         }
-
-                    } while (teamIterator->controller != controlled && !camera.isWithinScrollBoundaries(teamIterator->model));
-
-                    if (teamIterator->controller != controlled) {
-                        controlled->swap(teamIterator->controller);
-                        camera.follow(controlled->getEntity());
-                        // esto es un parche medio feo por los lios del swap, TODO mejorar
-                        controlledPlayer.controller = teamIterator->controller;
-                        teamIterator->controller = controlled;
                     }
-                }
-                if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
-					log->info("Se selecciono ESC, juego pausado");
-                    salirJuego = true;
+                    if ( e.key.keysym.sym == SDLK_ESCAPE) {
+                        log->info("Se selecciono ESC, juego pausado");
+                        salirJuego = true;
+                    }
                 }
 
 

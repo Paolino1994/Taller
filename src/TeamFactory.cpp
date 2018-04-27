@@ -60,7 +60,7 @@ bool TeamFactory::add_defenders(int quantity, int goal, int field_length, int fi
 
 	for (int i = 0; i < quantity; i++){
 		position_y = ((field_width * 5 / 8) * i / 2) + 	field_width / 7;
-		model = new PlayerModel(BasePlayer, position_x, position_y);
+		model = new PlayerModel(BasePlayer, position_x, position_y, position_x, position_y);
 		defender.model = model;
 		team.push_back(defender);
 	}
@@ -75,16 +75,18 @@ bool TeamFactory::add_midfielders(int quantity, int goal, int field_length, int 
 		return false;
 	}
 
-	int position_x, position_y;
+	int position_x, position_y, kickOff_x;
 
 	switch (goal) {
 		case LEFT_GOAL:
 			position_x = field_length * 10 / 22;
+			kickOff_x = position_x - 100;
 			break;
 		case RIGHT_GOAL:
 			position_x = field_length * 12 / 22;
+			kickOff_x = position_x + 100;
 			break;
-		default:
+		default: 
 			std::stringstream msg;
 			msg << "TeamFactory: El arco " << goal << " es invalido"; 
 			log->error(msg.str());
@@ -108,7 +110,7 @@ bool TeamFactory::add_midfielders(int quantity, int goal, int field_length, int 
 			default:
 				return false;
 		}
-		model = new PlayerModel(BasePlayer, position_x, position_y);
+		model = new PlayerModel(BasePlayer, position_x, position_y, kickOff_x, position_y);
 		midfielder.model = model;
 		team.push_back(midfielder);
 	}
@@ -124,14 +126,16 @@ bool TeamFactory::add_forwards(int quantity, int goal, int field_length, int fie
 		return false;
 	}
 
-	int position_x, position_y;
+	int position_x, position_y, kickOff_x, kickOff_y;
 
 	switch (goal) {
 		case LEFT_GOAL:
 			position_x = field_length * 15 / 22;
+			kickOff_x = field_length / 2 - 50;
 			break;
 		case RIGHT_GOAL:
 			position_x = field_length * 7 / 22;
+			kickOff_x = field_length / 2 + 50;
 			break;
 		default:
 			std::stringstream msg;
@@ -147,14 +151,26 @@ bool TeamFactory::add_forwards(int quantity, int goal, int field_length, int fie
 		switch (quantity) {
 			case 1:
 				position_y = field_width / 2;
+				if(goal == LEFT_GOAL) {
+					kickOff_y = position_y;
+					kickOff_x = field_length / 2;
+				} else {
+					kickOff_y = position_y;
+				}
 				break;
 			case 2:
 				position_y = ((field_width * 5 / 8) * (1 + 4 * i) / 5) + field_width / 8;
+				if(goal == LEFT_GOAL && i == quantity - 1) {
+					kickOff_y = field_width / 2;
+					kickOff_x = field_length / 2;
+				} else {
+					kickOff_y = position_y;
+				}
 				break;
 			default:
 				return false;
 		}
-		model = new PlayerModel(BasePlayer, position_x, position_y);
+		model = new PlayerModel(BasePlayer, position_x, position_y, kickOff_x, kickOff_y);
 		forward.model = model;
 		team.push_back(forward);
 	}
