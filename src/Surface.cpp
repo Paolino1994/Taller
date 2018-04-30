@@ -6,12 +6,10 @@
 
 Surface::Surface(std::string file)
 {
-    //Load image at specified path
-    mSurface = IMG_Load(file.c_str());
-    
-    if(!mSurface){ //hacer exception!
+    mSurface = IMG_Load(file.c_str());    
+    if(!mSurface){ 
         Log* log = Log::get_instance();
-	    log->error("No se encontro la imagen");
+	    log->error("No se encontro la imagen: " + file);
         mSurface = IMG_Load("res/image_not_found.png");
     }
 }

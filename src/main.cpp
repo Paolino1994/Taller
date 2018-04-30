@@ -141,17 +141,23 @@ typedef std::chrono::steady_clock Clock;
 
 int main( int argc, char* args[] )
 {
-    auto yamlReader = YAMLReader::get_instance();
-    yamlReader->readYamlGeneral("res/GeneralConfig.yaml");
     // Inicializar log con parametro de line de comando
     for (int i = 1; i+1 < argc; i++) {
         if (strcmp(args[i],"-lg") == 0) {
             std::string logType=getLogType(args[i+1]);
-            Log::initialize(logType);
-            Log* log=Log::get_instance();
-            log->error("Log cargado en modo " + logType);
+            if(logType.compare("NOT_FOUND") != 0) {
+                Log::initialize(logType);
+                Log* log=Log::get_instance();
+                log->error("Log cargado en modo " + logType);
+            } else {
+                Log::initialize(LOG_ERROR);
+                Log* log=Log::get_instance();
+                log->error("Log ingresado invalido. Log cargado en modo error");
+            }
         }
     }
+    auto yamlReader = YAMLReader::get_instance();
+    yamlReader->readYamlGeneral("res/GeneralConfig.yaml");
     if (!Log::is_initialized()) {
         std::string logLevel = yamlReader->getLogLevel();
         std::string logType=getLogType((char *) logLevel.c_str());
@@ -159,6 +165,7 @@ int main( int argc, char* args[] )
         Log* log=Log::get_instance();
         log->error("Log cargado en modo " + logLevel);
     }
+    
 
     //yamlReader->readYamlEquipos();
 
@@ -438,6 +445,6 @@ std::string getLogType(char *cadena) {
     if( string.compare(LOG_ERROR)==0 || string.compare(LOG_DEBUG)==0 || string.compare(LOG_INFO)==0){
         return string;
     }
-    return LOG_INFO;
+    return "NOT_FOUND";
 }
 
