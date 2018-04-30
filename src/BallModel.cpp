@@ -2,9 +2,10 @@
 // Created by federico on 30/04/18.
 //
 
+#include <iostream>
 #include "BallModel.h"
 #include "GameConstants.h"
-
+#define PI 3.14159265
 
 
 BallModel::BallModel(double kickOff_x, double kickOff_y, int X, int Y) : Entity(kickOff_x, kickOff_y) {
@@ -35,34 +36,52 @@ void BallModel::setY(double d) {
 
 }
 
-void BallModel::correctPosition(double angle) {
-    int xCor = getXCorrection(angle-90);
-    //int yCor = getYCorrection(angle);
+
+void BallModel::correctPosition() {
+    int xCor = getXCorrection();
+    int yCor = getYCorrection();
+    //std::cout<<"X:"<<x<<" Correccion:"<<xCor<<std::endl;
     x=x+xCor;
-    //y=y+yCor;
+
+    y=y+yCor;
 
 }
 
-int BallModel::getXCorrection(double angle) {
-    if (angle<=90){
-        return -5;
-    }else if(angle>=270){
-        return 5;
+int BallModel::getXCorrection() {
+    double initialcorrection=23.0;
+    int angleToUse=angle;
+    if(angleToUse>=90){
+        angleToUse-=90;
     }else{
-        return 0;
+        angleToUse+=270;
     }
+    double multiplier=cos(angleToUse*PI/180.0);
+    //std::cout<<"Angle:"<<angleToUse<<" Multiplicador:  "<<multiplier<<std::endl;
+
+    double correction=multiplier*25;
+    return initialcorrection+correction;
 }
 
-int BallModel::getYCorrection(double angle) {
-    int initialcorrection=40;
-    if (angle>90 && angle<270){
-        initialcorrection+= 5;
+int BallModel::getYCorrection() {
+    double initialcorrection=10.0;
+    int angleToUse=angle;
+    if(angleToUse>=90){
+        angleToUse-=90;
     }else{
-        if(angle!=90 || angle!=270){
-            initialcorrection+= -5;        }
-
+        angleToUse+=270;
     }
-    return initialcorrection;
+    double multiplier=sin(angleToUse*PI/180.0);
+    //std::cout<<"Angle:"<<angleToUse<<" Multiplicador:  "<<multiplier<<std::endl;
+
+    double correction=multiplier*25;
+    return initialcorrection+correction;
+
+}
+
+void BallModel::setAngle(double d) {
+    angle=d;
+    correctPosition();
+
 }
 
 

@@ -131,7 +131,8 @@ void PlayerModel::update(double dt, int x_limit, int y_limit){
 	if(hasControlOfTheBall){
 		BallController::getInstance()->getModel()->setX(x);
 		BallController::getInstance()->getModel()->setY(y);
-		BallController::getInstance()->getModel()->correctPosition(angle);
+		BallController::getInstance()->getModel()->setAngle(angle);
+
 	}
 
 }

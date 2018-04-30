@@ -14,8 +14,8 @@ BallView::BallView(std::map<const std::string, Animation> animMapperBall, sprite
 }
 
 void BallView::render(int i, int i1,double angle) {
-    int xCorrection=BallController::getInstance()->getModel()->getXCorrection(angle);
-    int yCorrection=BallController::getInstance()->getModel()->getYCorrection(angle);
+    int xCorrection=BallController::getInstance()->getModel()->getXCorrection();
+    int yCorrection=BallController::getInstance()->getModel()->getYCorrection();
     animation[0].render(i+xCorrection,i1+yCorrection,angle);
 }
 

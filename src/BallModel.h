@@ -7,6 +7,7 @@
 
 
 #include "Entity.h"
+#include <math.h>
 
 class BallModel: public Entity {
 
@@ -22,11 +23,16 @@ public:
 
     void setY(double d);
 
-    void correctPosition(double d);
+    void correctPosition();
 
-    int getXCorrection(double angle);
+    int getXCorrection();
 
-    int getYCorrection(double angle);
+    int getYCorrection();
+
+    void setAngle(double d);
+
+private:
+    double angle=0;
 };
 
 

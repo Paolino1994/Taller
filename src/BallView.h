@@ -9,6 +9,7 @@
 #include "BallModel.h"
 #include "Animation.h"
 
+
 class BallView {
 public:
     BallView(std::map<const std::string, Animation> animMapperBall,sprite_info ballStill,BallModel* ballModel);
