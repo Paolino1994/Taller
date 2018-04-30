@@ -18,9 +18,15 @@ public:
     int getWidth();
     int getHeight();
 
-private:
-    int posY;
-    int posX;
+    void setX(double d);
+
+    void setY(double d);
+
+    void correctPosition(double d);
+
+    int getXCorrection(double angle);
+
+    int getYCorrection(double angle);
 };
 
 

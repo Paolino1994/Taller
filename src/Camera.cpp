@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "BallController.h"
 #include <iostream>
 
 
@@ -85,6 +86,7 @@ void Camera::render(World& world){
 	background->setSrcRect(this->x, this->y, this->width, this->height);
 	background->render(0, 0);
 
+
 	for (auto player : pControllers)
 	{
 		int screen_x = player->getEntity()->getX() - this->x;
@@ -95,6 +97,10 @@ void Camera::render(World& world){
 			playerSelectedTexture->render(screen_x + 5, screen_y -10);
 		}
 		player->getView()->render(screen_x, screen_y);
+		if(player->hasControlOfTheBall()){
+			BallController::getInstance()->getView()->render(screen_x, screen_y,player->getAngle());
+		}
+
 	}
 }
 

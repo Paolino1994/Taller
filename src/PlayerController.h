@@ -27,4 +27,7 @@ public:
 
 	virtual void swap(PlayerController* other);
 
+    bool hasControlOfTheBall();
+
+    double getAngle();
 };

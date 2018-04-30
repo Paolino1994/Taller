@@ -13,14 +13,18 @@ class BallView {
 public:
     BallView(std::map<const std::string, Animation> animMapperBall,sprite_info ballStill,BallModel* ballModel);
 
-    BallView();
+    void render(int i, int i1, double angle);
 
-    void render(int i, int i1, double d);
+    void render();
+
+    void update(double d);
 
 private:
     std::vector<Animation> animation;
     BallModel* model;
     sprite_info sprite;
+
+
 };
 
 

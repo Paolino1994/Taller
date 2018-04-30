@@ -14,13 +14,23 @@ class BallController {
 
 
 public:
-    BallController(BallModel* model,BallView* view);
     BallModel* getModel();
 
+    BallView * getView();
+
+    static void initialize(BallModel *model, BallView *view);
+
+
+    static BallController *getInstance();
+
+private:
+    BallController(BallModel* model, BallView* view);
+
     BallModel* ballModel;
+
     BallView* ballView;
 
-    BallView * getView();
+
 };
 
 

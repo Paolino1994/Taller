@@ -1,4 +1,5 @@
 #include "World.h"
+#include "BallController.h"
 
 World::World(int width, int height, Texture* background):
     background(background),
@@ -48,6 +49,7 @@ void World::update(double dt)
 	for (auto player : pControllers) {
 		player->update(dt, this->getWidth(), this->getHeight());
 	}
+    BallController::getInstance()->getView()->update(dt);
 }
 
 int World::getWidth(){

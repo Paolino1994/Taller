@@ -68,6 +68,11 @@ public:
 
 	void setHasControlOfTheBall(bool i);
 
+
+
+
+	bool getHasControlOfTheBall();
+
 private:
 	
 	const std::vector<int> widths;
@@ -93,9 +98,9 @@ private:
 
     bool isControlledByHuman = false;
 
-	bool hasControlOfTheBall;
+	bool hasControlOfTheBall=false;
 
-	Log* log;
+    Log* log;
 
 
 };

@@ -3,6 +3,7 @@
 //
 
 #include "PlayerModel.h"
+#include "BallController.h"
 #include <cmath>
 
 
@@ -127,6 +128,11 @@ void PlayerModel::update(double dt, int x_limit, int y_limit){
 		this->velX = kickVelX;
 		this->velY = kickVelY;
 	}
+	if(hasControlOfTheBall){
+		BallController::getInstance()->getModel()->setX(x);
+		BallController::getInstance()->getModel()->setY(y);
+		BallController::getInstance()->getModel()->correctPosition(angle);
+	}
 
 }
 
@@ -178,6 +184,9 @@ bool PlayerModel::getIsControlledByHuman() {
 
 void PlayerModel::setIsControlledByHuman(bool controlled) {
     isControlledByHuman = controlled;
+    //Esto es re villero, pero cuando tengamos los 2 equipos recien se va a modificar
+    hasControlOfTheBall = controlled;
+
 }	
 
 double PlayerModel::getMaxVelY() {
@@ -291,5 +300,9 @@ void PlayerModel::stopSprinting()
 
 void PlayerModel::setHasControlOfTheBall(bool control) {
 	hasControlOfTheBall=control;
+}
+
+bool PlayerModel::getHasControlOfTheBall() {
+    return hasControlOfTheBall;
 }
 

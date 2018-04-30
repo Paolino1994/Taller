@@ -4,6 +4,19 @@
 
 #include "BallController.h"
 
+BallController *instance=NULL;
+
+void BallController::initialize(BallModel* model, BallView* view) {
+    if (instance == NULL) {
+        instance = new BallController(model, view);
+    }
+}
+BallController* BallController::getInstance(){
+    return instance;
+}
+
+
+
 BallModel* BallController::getModel() {
     return ballModel;
 }

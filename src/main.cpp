@@ -43,13 +43,13 @@ void setPlayerRun(YAMLReader reader);
 std::string getLogType(char *string);
 
 void renderizar(std::vector<player>::iterator iterator, TeamFactory *pFactory, Camera camera, World world, Texto texto,
-                PlayerControllerHuman *pHuman, BallController ballControl);
+                PlayerControllerHuman *pHuman);
 
 player_data_t
 crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick);
 
 
-void addBallToWorld(World& world,BallController ballC);
+void addBallToWorld(World& world);
 
 //Starts up SDL and creates window
 bool init_SDL()
@@ -263,7 +263,7 @@ int main( int argc, char* args[] )
         BallModel *ballModel=new BallModel(0, 0, teamIterator->model->getX(), teamIterator->model->getY());
         Log::get_instance()->info("Agregando vista de la pelota");
         BallView* ballView=new BallView(animMapperBall,ballStill,ballModel);
-        BallController ballControl(ballModel, ballView);
+        BallController::initialize(ballModel, ballView);
 
 
         //creo sprites equipo2
@@ -298,14 +298,14 @@ int main( int argc, char* args[] )
 		tfactory->add_to_world(world);
         tfactory2->add_to_world(world);
         log->info("Agrego la pelota");
-        addBallToWorld(world,ballControl);
+        addBallToWorld(world);
         log->info("Agrego la camara");
 
         Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
         camera.follow(teamIterator->model);
         log->info("Renderizo");
         renderizar(teamIterator, tfactory, camera, world,
-                   quiereSalirTexto, controlled,ballControl);
+                   quiereSalirTexto, controlled);
 		
 		//Free team resources
 		delete tfactory;
@@ -318,8 +318,9 @@ int main( int argc, char* args[] )
     return 0;
 }
 
-void addBallToWorld(World& world,BallController ballC) {
-    BallModel* mod=ballC.getModel();
+void addBallToWorld(World& world) {
+    BallController* cont=BallController::getInstance();
+    BallModel* mod=cont->getModel();
     world.addEntity(mod);
     //std::cout<<"HOLA"<<std::endl;
 }
@@ -361,7 +362,7 @@ player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun,
 
 void
 renderizar(std::vector<player>::iterator teamIterator, TeamFactory *tfactory, Camera camera, World world,
-           Texto quiereSalirTexto, PlayerControllerHuman *controlled, BallController ballControl) {
+           Texto quiereSalirTexto, PlayerControllerHuman *controlled) {
     if (true)
     {
         //Main loop flag
@@ -447,7 +448,6 @@ renderizar(std::vector<player>::iterator teamIterator, TeamFactory *tfactory, Ca
 
             //Render current frame
             camera.render(world);
-            ballControl.getView()->render(20, 20, 0.0);
 
 
             // Si seleciono la tecla escape entonces pregunto si quiere salir
