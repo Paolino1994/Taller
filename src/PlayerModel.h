@@ -66,6 +66,8 @@ public:
     const int kickOff_x;
     const int kickOff_y;
 
+	void setHasControlOfTheBall(bool i);
+
 private:
 	
 	const std::vector<int> widths;
@@ -91,7 +93,10 @@ private:
 
     bool isControlledByHuman = false;
 
+	bool hasControlOfTheBall;
+
 	Log* log;
+
 
 };
 

@@ -9,6 +9,7 @@
 #include <SDL_render.h>
 #include "GameConstants.h"
 #include "Texture.h"
+#define BALL 3
 
 class TextureSetter {
 
@@ -31,6 +32,10 @@ public:
 
     Texture getPLayerKickTexture();
 
+    sprite_info getBallStillInfo();
+
+    Texture getBallStillTexture();
+
 private:
 
     int equipo;
@@ -45,6 +50,7 @@ private:
 
     sprite_info PlayerKick;
 
+    sprite_info BallStill;
 
     Texture setTextureRun();
 
@@ -55,6 +61,10 @@ private:
     Texture setTextureKick();
 
     void setInfos();
+
+    void setBallInfo();
+
+    Texture setTextureBallStill();
 };
 
 

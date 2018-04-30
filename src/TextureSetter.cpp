@@ -8,9 +8,13 @@
 
 
 TextureSetter::TextureSetter(int i, SDL_Renderer *pRenderer) {
-    equipo=i;
     gRenderer=pRenderer;
-    setInfos();
+    if(i==BALL){
+        setBallInfo();
+    }else{
+        equipo=i;
+        setInfos();
+    }
 
 }
 
@@ -89,4 +93,24 @@ void TextureSetter::setInfos() {
     PlayerSweep={"sweep",YAMLReader::get_instance()->getSpriteSweeping(equipo),76, 112,4,12};
     PlayerKick={"kick",YAMLReader::get_instance()->getSpriteKicking(equipo),74, 94,4,12};
 
+}
+
+sprite_info TextureSetter::getBallStillInfo() {
+    return BallStill;
+}
+
+void TextureSetter::setBallInfo() {
+    BallStill={"ballStill","res/ball.png",20, 20,4,12};
+}
+
+Texture TextureSetter::getBallStillTexture() {
+    return setTextureBallStill();
+}
+
+Texture TextureSetter::setTextureBallStill() {
+    Surface ballStillS(BallStill.file_path);
+    ballStillS.setColorKey(126, 130, 56); //cargar desde constantes
+    Texture ballStill(gRenderer, ballStillS);
+    ballStill.setScaling(PlayerKick.width, PlayerKick.height);
+    return ballStill;
 }

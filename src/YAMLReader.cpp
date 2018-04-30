@@ -52,7 +52,7 @@ void YAMLReader::readYamlGeneral(std::string string){
     leerEquipo("EquipoA", 1);
     leerEquipo("EquipoB", 2);
 
-}    
+}
 
 std::string YAMLReader::getNombre(int equipo){
     return infoEquipo[equipo]["Nombre"];
@@ -150,6 +150,8 @@ void YAMLReader::leerEquipo(std::string equipo, int posicionEnMapa) {
         infoEquipo[posicionEnMapa]["Delanteros"] = "1";
     }
 }
+
+
 
 
 

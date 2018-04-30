@@ -28,6 +28,7 @@ public:
     World(int width, int height, Texture* background);
     ~World();
     void addEntity(Entity* entity);
+
     void addPlayerController(PlayerController* pController);
     void setPlayerSelectedTexture(Texture* texture) ;
 
@@ -42,5 +43,6 @@ public:
     
     int getWidth();
     int getHeight();
+
 };
 

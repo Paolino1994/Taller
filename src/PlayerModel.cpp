@@ -289,3 +289,7 @@ void PlayerModel::stopSprinting()
 	log->debug(msg.str());
 }
 
+void PlayerModel::setHasControlOfTheBall(bool control) {
+	hasControlOfTheBall=control;
+}
+

@@ -24,6 +24,9 @@
 #include "YAMLReader.h"
 #include "Texto.h"
 #include "TextureSetter.h"
+#include "BallModel.h"
+#include "BallView.h"
+#include "BallController.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
@@ -40,10 +43,13 @@ void setPlayerRun(YAMLReader reader);
 std::string getLogType(char *string);
 
 void renderizar(std::vector<player>::iterator iterator, TeamFactory *pFactory, Camera camera, World world, Texto texto,
-                PlayerControllerHuman *pHuman);
+                PlayerControllerHuman *pHuman, BallController ballControl);
 
 player_data_t
 crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick);
+
+
+void addBallToWorld(World& world,BallController ballC);
 
 //Starts up SDL and creates window
 bool init_SDL()
@@ -171,6 +177,7 @@ int main( int argc, char* args[] )
     } else {
         std::map<const std::string, Animation> animMapper;
         std::map<const std::string, Animation> animMapper2;
+        std::map<const std::string, Animation> animMapperBall;
         // CARGAR La configuracion del YAML y de constantes nuestras:
 		// TODO
 
@@ -215,7 +222,7 @@ int main( int argc, char* args[] )
         sprite_info PlayerKick2=textures2.getPlayerKickInfo();
         Texture kickT2=textures2.getPLayerKickTexture();
         // Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
-        log->info("Crear Animaciones");
+        log->info("Crear Animaciones del equipo 2");
         log->debug("Crear Animacion Run");
         animMapper2.emplace(std::make_pair(PlayerRun2.spriteid, Animation(runT2, PlayerRun2)));
         log->debug("Crear Animacion Still");
@@ -224,6 +231,7 @@ int main( int argc, char* args[] )
         animMapper2.emplace(std::make_pair(PlayerSweep2.spriteid, Animation(sweepT2, PlayerSweep2)));
         log->debug("Crear Animacion Kick");
         animMapper2.emplace(std::make_pair(PlayerKick2.spriteid, Animation(kickT2, PlayerKick2)));
+
 
 
         // Creo jugadores:
@@ -235,8 +243,28 @@ int main( int argc, char* args[] )
         int delanteros=YAMLReader::get_instance()->getDelanteros(equipo);
 		tfactory->create(defensores, mediocampistas, delanteros, LEFT_GOAL, background.getWidth(), background.getHeight());
 		tfactory->add_view(animMapper);
+
+
+
+
         // Iterador de jugadores en el switcheo
         std::vector<player>::iterator teamIterator = std::prev(tfactory->get_team().end());
+
+        log->info("Crear Animaciones de la pelota");
+        TextureSetter texturesBall(BALL, gRenderer);
+        sprite_info ballStill=texturesBall.getBallStillInfo();
+        Texture ballStillT=texturesBall.getBallStillTexture();
+        //sprite_info ballStill=texturesBall.getBallStillInfo();
+        animMapperBall.emplace(std::make_pair(ballStill.spriteid, Animation(ballStillT, ballStill)));
+
+        //Crteo la pelota
+        log->info("Crear Pelota");
+        teamIterator->model->setHasControlOfTheBall(true);
+        BallModel *ballModel=new BallModel(0, 0, teamIterator->model->getX(), teamIterator->model->getY());
+        Log::get_instance()->info("Agregando vista de la pelota");
+        BallView* ballView=new BallView(animMapperBall,ballStill,ballModel);
+        BallController ballControl(ballModel, ballView);
+
 
         //creo sprites equipo2
 
@@ -269,13 +297,15 @@ int main( int argc, char* args[] )
         world.setPlayerSelectedTexture(&selectedPlayerTecture);
 		tfactory->add_to_world(world);
         tfactory2->add_to_world(world);
+        log->info("Agrego la pelota");
+        addBallToWorld(world,ballControl);
         log->info("Agrego la camara");
 
         Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
         camera.follow(teamIterator->model);
         log->info("Renderizo");
         renderizar(teamIterator, tfactory, camera, world,
-                   quiereSalirTexto, controlled);
+                   quiereSalirTexto, controlled,ballControl);
 		
 		//Free team resources
 		delete tfactory;
@@ -287,6 +317,15 @@ int main( int argc, char* args[] )
 
     return 0;
 }
+
+void addBallToWorld(World& world,BallController ballC) {
+    BallModel* mod=ballC.getModel();
+    world.addEntity(mod);
+    //std::cout<<"HOLA"<<std::endl;
+}
+
+
+
 
 player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick) {
     player_data_t defaultPlayer = {{
@@ -322,7 +361,7 @@ player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun,
 
 void
 renderizar(std::vector<player>::iterator teamIterator, TeamFactory *tfactory, Camera camera, World world,
-           Texto quiereSalirTexto, PlayerControllerHuman *controlled) {
+           Texto quiereSalirTexto, PlayerControllerHuman *controlled, BallController ballControl) {
     if (true)
     {
         //Main loop flag
@@ -408,6 +447,8 @@ renderizar(std::vector<player>::iterator teamIterator, TeamFactory *tfactory, Ca
 
             //Render current frame
             camera.render(world);
+            ballControl.getView()->render(20, 20, 0.0);
+
 
             // Si seleciono la tecla escape entonces pregunto si quiere salir
             if(salirJuego){

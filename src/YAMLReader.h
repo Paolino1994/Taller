@@ -50,6 +50,8 @@ public:
 
     std::string getLogLevel();
 
+    void getSpriteBallStill();
+
 private:
 
     YAML::Node configNode;

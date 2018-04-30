@@ -2,6 +2,7 @@
 #include <string>
 #include "YAMLReader.h"
 
+
 typedef struct sprite_info {
     std::string spriteid;
     std::string file_path;
