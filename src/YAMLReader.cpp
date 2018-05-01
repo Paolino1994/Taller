@@ -10,29 +10,41 @@
 #include <map>
 #include <iterator>
 
-
-YAMLReader* YAMLReader::instance = 0;
-
 std::vector<std::string> separar(const std::string& str, const char& ch) ;
 
 YAMLReader::YAMLReader() {
 }
 
-YAMLReader* YAMLReader::get_instance() {
-    if (!(instance != 0)){
-        instance= new YAMLReader();
-    }
+YAMLReader& YAMLReader::get_instance() {
+    static YAMLReader instance;
     return instance;
 }
 
-void YAMLReader::readYamlGeneral(std::string string){
-    try {
-        configNode = YAML::LoadFile("res/GeneralConfig.yaml");
-    } catch (const std::exception& e){
-        Log::initialize(LOG_ERROR);
-        Log *log = Log::get_instance(); 
-        log->error("Error al leer el archivo de configuracion general");
+void YAMLReader::readYamlGeneral(std::string file){
+    bool initFromFile = false;
+    if (!file.empty()) {
+        try {
+            Log::get_instance()->error("Vamos a leer el archivo pasado por parametro: " + file);
+            configNode = YAML::LoadFile(file);
+            initFromFile = true;
+        } catch (const std::exception& e){
+            Log *log = Log::get_instance(); 
+            log->error("Error al leer el archivo de configuracion pasado por parametro");
+        }
     }
+
+    const std::string defaultConfig = "res/GeneralConfig.yaml";
+
+    if (!initFromFile) {
+        try {
+            Log::get_instance()->error("Vamos a leer el archivo de configuracion por defecto, actualmente es: " + defaultConfig);
+            configNode = YAML::LoadFile(defaultConfig);
+        } catch (const std::exception& e){
+            Log *log = Log::get_instance(); 
+            log->error("Error al leer el archivo de configuracion por defecto");
+        }
+    }
+
     if (!Log::is_initialized()) {
         if(configNode["LogLevel"]){
             std::string logType = getLogType((char*)configNode["LogLevel"].as<std::string>().c_str());

@@ -12,6 +12,8 @@
 
 class Log {
 private:
+	// = true despues de primer llamada a initialize
+	static bool initialized;
 	/* Instancia guardada */
 	static Log* instance;
 	std::string type;
@@ -54,6 +56,8 @@ public:
 		@POS: se realizo un nuevo ingreso en el log
 	*/
 	void error(std::string msg);
+
+	void setType(std::string newType);
 
 	~Log();
 };

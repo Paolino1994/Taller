@@ -141,6 +141,7 @@ typedef std::chrono::steady_clock Clock;
 
 int main( int argc, char* args[] )
 {
+    std::string yamlConfigFile = "";
     // Inicializar log con parametro de line de comando
     for (int i = 1; i+1 < argc; i++) {
         if (strcmp(args[i],"-lg") == 0) {
@@ -154,12 +155,14 @@ int main( int argc, char* args[] )
                 Log* log=Log::get_instance();
                 log->error("Log ingresado invalido. Log cargado en modo error");
             }
+        } else if (strcmp(args[i],"-yaml") == 0) {
+            yamlConfigFile = args[i+1];
         }
     }
-    auto yamlReader = YAMLReader::get_instance();
-    yamlReader->readYamlGeneral("res/GeneralConfig.yaml");
+    YAMLReader& yamlReader = YAMLReader::get_instance();
+    yamlReader.readYamlGeneral(yamlConfigFile);
     if (!Log::is_initialized()) {
-        std::string logLevel = yamlReader->getLogLevel();
+        std::string logLevel = yamlReader.getLogLevel();
         std::string logType=getLogType((char *) logLevel.c_str());
         Log::initialize(logType);
         Log* log=Log::get_instance();
@@ -237,9 +240,9 @@ int main( int argc, char* args[] )
         player_data_t defaultPlayer=crearDefaultPlayer(PlayerStill,PlayerRun,PlayerSweep,PlayerKick);
         log->info("Crear Jugadores");
 		TeamFactory* tfactory = new TeamFactory(defaultPlayer);
-        int defensores=YAMLReader::get_instance()->getDefensores(equipo);
-        int mediocampistas=YAMLReader::get_instance()->getMediocampistas(equipo);
-        int delanteros=YAMLReader::get_instance()->getDelanteros(equipo);
+        int defensores=YAMLReader::get_instance().getDefensores(equipo);
+        int mediocampistas=YAMLReader::get_instance().getMediocampistas(equipo);
+        int delanteros=YAMLReader::get_instance().getDelanteros(equipo);
 		tfactory->create(defensores, mediocampistas, delanteros, LEFT_GOAL, background.getWidth(), background.getHeight());
 		tfactory->add_view(animMapper);
         // Iterador de jugadores en el switcheo
@@ -251,9 +254,9 @@ int main( int argc, char* args[] )
         player_data_t defaultPlayer2=crearDefaultPlayer(PlayerStill2,PlayerRun2,PlayerSweep2,PlayerKick2);
         TeamFactory* tfactory2 = new TeamFactory(defaultPlayer2);
         log->info("Crear Jugadores del team 2");
-        defensores=YAMLReader::get_instance()->getDefensores(2);
-        mediocampistas=YAMLReader::get_instance()->getMediocampistas(2);
-        delanteros=YAMLReader::get_instance()->getDelanteros(2);
+        defensores=YAMLReader::get_instance().getDefensores(2);
+        mediocampistas=YAMLReader::get_instance().getMediocampistas(2);
+        delanteros=YAMLReader::get_instance().getDelanteros(2);
         tfactory2->create(defensores, mediocampistas, delanteros, RIGHT_GOAL, background.getWidth(), background.getHeight());
         tfactory2->add_view(animMapper2);
 
