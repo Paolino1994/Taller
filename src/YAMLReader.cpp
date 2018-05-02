@@ -131,6 +131,42 @@ std::vector<std::string> separar(const std::string& str, const char& ch) {
     return resultado;
 }
 
+void checkFormacion(std::vector<std::string>& formacion) {
+	
+	bool isOk = true;
+	
+	if (formacion.size() > 3) {
+		Log::get_instance()->error("Encontramos una formación de mas de 3 lineas");
+		isOk = false;
+	}
+	else { // llenar formacion con "0" si faltan definir
+		while (formacion.size() < 3) {
+			formacion.push_back("0");
+		}
+	}
+	
+	if (isOk) {
+		for (std::string& cantidad : formacion) {
+			try {
+				std::stoi(cantidad); //no puede ser negativo porque splitteamos por el signo -
+			}
+			catch (const std::exception&) {
+				Log::get_instance()->error("El valor: " + cantidad + " de la formacion no es un numero");
+				isOk = false;
+				break;
+			}
+		}
+	}
+
+	if (!isOk) {
+		Log::get_instance()->error("Por errores en la formación, vamos con una por defecto: 3-2-1");
+		formacion[0] = "3";
+		formacion[1] = "2";
+		formacion[2] = "1";
+	}
+
+}
+
 std::string YAMLReader::getLogType(char *cadena) {
     std::string string(cadena);
     if( string.compare(LOG_ERROR)==0 || string.compare(LOG_DEBUG)==0 || string.compare(LOG_INFO)==0){
@@ -151,6 +187,7 @@ void YAMLReader::leerEquipo(std::string equipo, int posicionEnMapa) {
     }
     if(configNode[equipo]["Formacion"]){
         std::vector<std::string> resultado = separar(configNode[equipo]["Formacion"].as<std::string>(), '-');
+		checkFormacion(resultado); //TEMP, ver de poner en otro lado (o no, no importa mucho)
         infoEquipo[posicionEnMapa]["Defensores"] = resultado[0];
         infoEquipo[posicionEnMapa]["Mediocampistas"] = resultado[1];
         infoEquipo[posicionEnMapa]["Delanteros"] = resultado[2];
