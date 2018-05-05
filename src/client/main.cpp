@@ -16,7 +16,7 @@
 #include "Camera.h"
 #include "GameConstants.h"
 #include "Player.h"
-#include "Log.h"
+#include "common/Log.h"
 #include "PlayerModel.h"
 #include "PlayerView.h"
 #include "PlayerControllerHuman.h"

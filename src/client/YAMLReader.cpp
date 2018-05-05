@@ -3,7 +3,7 @@
 //
 #include <assert.h>
 #include "YAMLReader.h"
-#include "Log.h"
+#include "common/Log.h"
 #include <iostream>
 #include <vector>
 #include <string>

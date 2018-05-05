@@ -9,7 +9,7 @@
 #include "PlayerView.h"
 #include "PlayerController.h"
 #include "World.h"
-#include "Log.h"
+#include "common/Log.h"
 #include <sstream>
 
 #define LEFT_GOAL 0

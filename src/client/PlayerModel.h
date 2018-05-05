@@ -9,7 +9,7 @@
 
 #include "GameConstants.h"
 #include "Entity.h"
-#include "Log.h"
+#include "common/Log.h"
 #include "sstream"
 
 class PlayerModel: public Entity {
