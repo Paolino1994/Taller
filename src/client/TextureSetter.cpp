@@ -8,15 +8,19 @@
 
 
 TextureSetter::TextureSetter(int i, SDL_Renderer *pRenderer) {
-    equipo=i;
     gRenderer=pRenderer;
-    setInfos();
+    if(i==BALL){
+        setBallInfo();
+    }else{
+        equipo=i;
+        setInfos();
+    }
 
 }
 
 Texture TextureSetter::setTextureRun() {
 
-    Log::get_instance()->info(YAMLReader::get_instance()->getSpriteRunning(equipo));
+    Log::get_instance()->info(YAMLReader::get_instance().getSpriteRunning(equipo));
     Surface runS(PlayerRun.file_path);
     runS.setColorKey(126, 130, 56); //cargar desde constantes
     Texture run(gRenderer, runS);
@@ -84,9 +88,42 @@ Texture TextureSetter::getPLayerKickTexture() {
 }
 
 void TextureSetter::setInfos() {
-    PlayerRun={"run",YAMLReader::get_instance()->getSpriteRunning(equipo),60, 64,4,12};
-    PlayerStill={"still",YAMLReader::get_instance()->getSpriteStill(equipo),68, 34,1,3};
-    PlayerSweep={"sweep",YAMLReader::get_instance()->getSpriteSweeping(equipo),76, 112,4,12};
-    PlayerKick={"kick",YAMLReader::get_instance()->getSpriteKicking(equipo),74, 94,4,12};
+    PlayerRun={"run",YAMLReader::get_instance().getSpriteRunning(equipo),60, 64,4,12};
+    PlayerStill={"still",YAMLReader::get_instance().getSpriteStill(equipo),68, 34,1,3};
+    PlayerSweep={"sweep",YAMLReader::get_instance().getSpriteSweeping(equipo),76, 112,4,12};
+    PlayerKick={"kick",YAMLReader::get_instance().getSpriteKicking(equipo),74, 94,4,12};
 
+}
+
+sprite_info TextureSetter::getBallStillInfo() {
+    return BallStill;
+}
+
+void TextureSetter::setBallInfo() {
+    BallStill={"ballStill","res/Ball/ball_still.png",20, 20,1,3};
+    BallMoving={"ballMoving","res/Ball/ball.png",20, 20,4,12};
+}
+
+Texture TextureSetter::getBallStillTexture() {
+    return setTextureBallStill();
+}
+
+Texture TextureSetter::setTextureBallStill() {
+    Surface ballStillS(BallStill.file_path);
+    ballStillS.setColorKey(126, 130, 56); //cargar desde constantes
+    Texture ballStill(gRenderer, ballStillS);
+    ballStill.setScaling(PlayerKick.width, PlayerKick.height);
+    return ballStill;
+}
+
+sprite_info TextureSetter::getBallMovingInfo() {
+    return BallMoving;
+}
+
+Texture TextureSetter::getBallMovingTexture() {
+    Surface ballMovingS(BallMoving.file_path);
+    ballMovingS.setColorKey(126, 130, 56); //cargar desde constantes
+    Texture ballMoving(gRenderer, ballMovingS);
+    ballMoving.setScaling(PlayerKick.width, PlayerKick.height);
+    return ballMoving;
 }

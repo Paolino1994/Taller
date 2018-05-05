@@ -9,14 +9,16 @@
 
 #include "GameConstants.h"
 #include "Entity.h"
-#include "Log.h"
+#include "common/Log.h"
 #include "sstream"
 
 class PlayerModel: public Entity {
 
 public:
 
+    PlayerModel(const player_data_t player_data, double initial_x, double initial_y, int kickOffX, int kickOffY);
     PlayerModel(const player_data_t player_data, double initial_x, double initial_y);
+
 
 	virtual int getWidth();
 
@@ -54,8 +56,24 @@ public:
 
     void update(double dt, int x_limit, int y_limit);
 
+    int getKickOff_x();
+    int getKickOff_y();
+
+
 	const int initial_x;
 	const int initial_y;
+
+    const int kickOff_x;
+    const int kickOff_y;
+
+	void setHasControlOfTheBall(bool i);
+
+
+
+
+	bool getHasControlOfTheBall();
+
+    void changeBallState();
 
 private:
 	
@@ -82,7 +100,10 @@ private:
 
     bool isControlledByHuman = false;
 
-	Log* log;
+	bool hasControlOfTheBall=false;
+
+    Log* log;
+
 
 };
 

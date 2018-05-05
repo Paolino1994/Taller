@@ -16,7 +16,7 @@
 #include "Camera.h"
 #include "GameConstants.h"
 #include "Player.h"
-#include "Log.h"
+#include "common/Log.h"
 #include "PlayerModel.h"
 #include "PlayerView.h"
 #include "PlayerControllerHuman.h"
@@ -24,6 +24,9 @@
 #include "YAMLReader.h"
 #include "Texto.h"
 #include "TextureSetter.h"
+#include "BallModel.h"
+#include "BallView.h"
+#include "BallController.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
@@ -44,6 +47,9 @@ void renderizar(std::vector<player>::iterator iterator, TeamFactory *pFactory, C
 
 player_data_t
 crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick);
+
+
+void addBallToWorld(World& world);
 
 //Starts up SDL and creates window
 bool init_SDL()
@@ -141,24 +147,34 @@ typedef std::chrono::steady_clock Clock;
 
 int main( int argc, char* args[] )
 {
-    auto yamlReader = YAMLReader::get_instance();
-    yamlReader->readYamlGeneral("res/GeneralConfig.yaml");
+    std::string yamlConfigFile = "";
     // Inicializar log con parametro de line de comando
     for (int i = 1; i+1 < argc; i++) {
         if (strcmp(args[i],"-lg") == 0) {
             std::string logType=getLogType(args[i+1]);
-            Log::initialize(logType);
-            Log* log=Log::get_instance();
-            log->error("Log cargado en modo " + logType);
+            if(logType.compare("NOT_FOUND") != 0) {
+                Log::initialize(logType);
+                Log* log=Log::get_instance();
+                log->error("Log cargado en modo " + logType);
+            } else {
+                Log::initialize(LOG_ERROR);
+                Log* log=Log::get_instance();
+                log->error("Log ingresado invalido. Log cargado en modo error");
+            }
+        } else if (strcmp(args[i],"-yaml") == 0) {
+            yamlConfigFile = args[i+1];
         }
     }
+    YAMLReader& yamlReader = YAMLReader::get_instance();
+    yamlReader.readYamlGeneral(yamlConfigFile);
     if (!Log::is_initialized()) {
-        std::string logLevel = yamlReader->getLogLevel();
+        std::string logLevel = yamlReader.getLogLevel();
         std::string logType=getLogType((char *) logLevel.c_str());
         Log::initialize(logType);
         Log* log=Log::get_instance();
         log->error("Log cargado en modo " + logLevel);
     }
+    
 
     //yamlReader->readYamlEquipos();
 
@@ -171,6 +187,7 @@ int main( int argc, char* args[] )
     } else {
         std::map<const std::string, Animation> animMapper;
         std::map<const std::string, Animation> animMapper2;
+        std::map<const std::string, Animation> animMapperBall;
         // CARGAR La configuracion del YAML y de constantes nuestras:
 		// TODO
 
@@ -215,7 +232,7 @@ int main( int argc, char* args[] )
         sprite_info PlayerKick2=textures2.getPlayerKickInfo();
         Texture kickT2=textures2.getPLayerKickTexture();
         // Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
-        log->info("Crear Animaciones");
+        log->info("Crear Animaciones del equipo 2");
         log->debug("Crear Animacion Run");
         animMapper2.emplace(std::make_pair(PlayerRun2.spriteid, Animation(runT2, PlayerRun2)));
         log->debug("Crear Animacion Still");
@@ -226,17 +243,41 @@ int main( int argc, char* args[] )
         animMapper2.emplace(std::make_pair(PlayerKick2.spriteid, Animation(kickT2, PlayerKick2)));
 
 
+
         // Creo jugadores:
         player_data_t defaultPlayer=crearDefaultPlayer(PlayerStill,PlayerRun,PlayerSweep,PlayerKick);
         log->info("Crear Jugadores");
 		TeamFactory* tfactory = new TeamFactory(defaultPlayer);
-        int defensores=YAMLReader::get_instance()->getDefensores(equipo);
-        int mediocampistas=YAMLReader::get_instance()->getMediocampistas(equipo);
-        int delanteros=YAMLReader::get_instance()->getDelanteros(equipo);
+        int defensores=YAMLReader::get_instance().getDefensores(equipo);
+        int mediocampistas=YAMLReader::get_instance().getMediocampistas(equipo);
+        int delanteros=YAMLReader::get_instance().getDelanteros(equipo);
 		tfactory->create(defensores, mediocampistas, delanteros, LEFT_GOAL, background.getWidth(), background.getHeight());
 		tfactory->add_view(animMapper);
+
+
+
+
         // Iterador de jugadores en el switcheo
         std::vector<player>::iterator teamIterator = std::prev(tfactory->get_team().end());
+
+        log->info("Crear Animaciones de la pelota");
+        TextureSetter texturesBall(BALL, gRenderer);
+        sprite_info ballStill=texturesBall.getBallStillInfo();
+        Texture ballStillT=texturesBall.getBallStillTexture();
+        sprite_info ballMoving=texturesBall.getBallMovingInfo();
+        Texture ballMovingT=texturesBall.getBallMovingTexture();
+        //sprite_info ballStill=texturesBall.getBallStillInfo();
+        animMapperBall.emplace(std::make_pair(ballStill.spriteid, Animation(ballStillT, ballStill)));
+        animMapperBall.emplace(std::make_pair(ballMoving.spriteid, Animation(ballMovingT, ballMoving)));
+
+        //Crteo la pelota
+        log->info("Crear Pelota");
+        teamIterator->model->setHasControlOfTheBall(true);
+        BallModel *ballModel=new BallModel(0, 0, teamIterator->model->getX(), teamIterator->model->getY());
+        Log::get_instance()->info("Agregando vista de la pelota");
+        BallView* ballView= new BallView(animMapperBall, ballModel);
+        BallController::initialize(ballModel, ballView);
+
 
         //creo sprites equipo2
 
@@ -244,7 +285,10 @@ int main( int argc, char* args[] )
         player_data_t defaultPlayer2=crearDefaultPlayer(PlayerStill2,PlayerRun2,PlayerSweep2,PlayerKick2);
         TeamFactory* tfactory2 = new TeamFactory(defaultPlayer2);
         log->info("Crear Jugadores del team 2");
-        tfactory2->create(3, 2, 1, RIGHT_GOAL, background.getWidth(), background.getHeight());
+        defensores=YAMLReader::get_instance().getDefensores(2);
+        mediocampistas=YAMLReader::get_instance().getMediocampistas(2);
+        delanteros=YAMLReader::get_instance().getDelanteros(2);
+        tfactory2->create(defensores, mediocampistas, delanteros, RIGHT_GOAL, background.getWidth(), background.getHeight());
         tfactory2->add_view(animMapper2);
 
 
@@ -266,6 +310,8 @@ int main( int argc, char* args[] )
         world.setPlayerSelectedTexture(&selectedPlayerTecture);
 		tfactory->add_to_world(world);
         tfactory2->add_to_world(world);
+        log->info("Agrego la pelota");
+        addBallToWorld(world);
         log->info("Agrego la camara");
 
         Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
@@ -284,6 +330,16 @@ int main( int argc, char* args[] )
 
     return 0;
 }
+
+void addBallToWorld(World& world) {
+    BallController* cont=BallController::getInstance();
+    BallModel* mod=cont->getModel();
+    world.addEntity(mod);
+    //std::cout<<"HOLA"<<std::endl;
+}
+
+
+
 
 player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick) {
     player_data_t defaultPlayer = {{
@@ -312,7 +368,7 @@ player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun,
             /*Y_VELOCITY =*/ 200,
             /*SWEEP_DURATION =*/ (1.0 / PlayerSweep.frames_per_second) * PlayerSweep.frames,
             /*KICK_DURATION =*/ (1.0 / PlayerKick.frames_per_second) * PlayerKick.frames,
-            /*SPRINT_VEL_MULT*/ 1.5
+            /*SPRINT_VEL_MULT*/ 2.0
     };
     return defaultPlayer;
 }
@@ -359,29 +415,31 @@ renderizar(std::vector<player>::iterator teamIterator, TeamFactory *tfactory, Ca
                     quit = true;
                 }
 
-                if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_q) {
-                    // sabemos que el iterador apunta al controlled actual
-                    player& controlledPlayer = *teamIterator;
-                    do
-                    { // en el peor caso volvemos a el que estabamos controlando recien
-                        ++teamIterator;
-                        if (teamIterator == tfactory->get_team().end()) {
-                            teamIterator = tfactory->get_team().begin();
+                if (e.type == SDL_KEYDOWN ){
+                    if(e.key.keysym.sym == SDLK_q) {
+                        // sabemos que el iterador apunta al controlled actual
+                        player& controlledPlayer = *teamIterator;
+                        do
+                        { // en el peor caso volvemos a el que estabamos controlando recien
+                            ++teamIterator;
+                            if (teamIterator == tfactory->get_team().end()) {
+                                teamIterator = tfactory->get_team().begin();
+                            }
+
+                        } while (teamIterator->controller != controlled && !camera.isWithinScrollBoundaries(teamIterator->model));
+
+                        if (teamIterator->controller != controlled) {
+                            controlled->swap(teamIterator->controller);
+                            camera.follow(controlled->getEntity());
+                            // esto es un parche medio feo por los lios del swap, TODO mejorar
+                            controlledPlayer.controller = teamIterator->controller;
+                            teamIterator->controller = controlled;
                         }
-
-                    } while (teamIterator->controller != controlled && !camera.isWithinScrollBoundaries(teamIterator->model));
-
-                    if (teamIterator->controller != controlled) {
-                        controlled->swap(teamIterator->controller);
-                        camera.follow(controlled->getEntity());
-                        // esto es un parche medio feo por los lios del swap, TODO mejorar
-                        controlledPlayer.controller = teamIterator->controller;
-                        teamIterator->controller = controlled;
                     }
-                }
-                if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
-					log->info("Se selecciono ESC, juego pausado");
-                    salirJuego = true;
+                    if ( e.key.keysym.sym == SDLK_ESCAPE) {
+                        log->info("Se selecciono ESC, juego pausado");
+                        salirJuego = true;
+                    }
                 }
 
 
@@ -403,6 +461,7 @@ renderizar(std::vector<player>::iterator teamIterator, TeamFactory *tfactory, Ca
 
             //Render current frame
             camera.render(world);
+
 
             // Si seleciono la tecla escape entonces pregunto si quiere salir
             if(salirJuego){
@@ -435,6 +494,6 @@ std::string getLogType(char *cadena) {
     if( string.compare(LOG_ERROR)==0 || string.compare(LOG_DEBUG)==0 || string.compare(LOG_INFO)==0){
         return string;
     }
-    return LOG_INFO;
+    return "NOT_FOUND";
 }
 

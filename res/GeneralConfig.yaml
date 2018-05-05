@@ -3,5 +3,5 @@ EquipoA:
     Formacion: "3-1-2"
 EquipoB:
     Color: "Rojo"
-    Formacion: "2-2-2"
-LogLevel: "debug"
+    Formacion: "3-2-1"
+LogLevel: "info"

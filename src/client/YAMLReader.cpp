@@ -3,36 +3,48 @@
 //
 #include <assert.h>
 #include "YAMLReader.h"
-#include "Log.h"
+#include "common/Log.h"
 #include <iostream>
 #include <vector>
 #include <string>
 #include <map>
 #include <iterator>
 
-
-YAMLReader* YAMLReader::instance = 0;
-
 std::vector<std::string> separar(const std::string& str, const char& ch) ;
 
 YAMLReader::YAMLReader() {
 }
 
-YAMLReader* YAMLReader::get_instance() {
-    if (!(instance != 0)){
-        instance= new YAMLReader();
-    }
+YAMLReader& YAMLReader::get_instance() {
+    static YAMLReader instance;
     return instance;
 }
 
-void YAMLReader::readYamlGeneral(std::string string){
-    try {
-        configNode = YAML::LoadFile("res/GeneralConfig.yaml");
-    } catch (const std::exception& e){
-        Log::initialize(LOG_ERROR);
-        Log *log = Log::get_instance(); 
-        log->error("Error al leer el archivo de configuracion general");
+void YAMLReader::readYamlGeneral(std::string file){
+    bool initFromFile = false;
+    if (!file.empty()) {
+        try {
+            Log::get_instance()->error("Vamos a leer el archivo pasado por parametro: " + file);
+            configNode = YAML::LoadFile(file);
+            initFromFile = true;
+        } catch (const std::exception& e){
+            Log *log = Log::get_instance(); 
+            log->error("Error al leer el archivo de configuracion pasado por parametro");
+        }
     }
+
+    const std::string defaultConfig = "res/GeneralConfig.yaml";
+
+    if (!initFromFile) {
+        try {
+            Log::get_instance()->error("Vamos a leer el archivo de configuracion por defecto, actualmente es: " + defaultConfig);
+            configNode = YAML::LoadFile(defaultConfig);
+        } catch (const std::exception& e){
+            Log *log = Log::get_instance(); 
+            log->error("Error al leer el archivo de configuracion por defecto");
+        }
+    }
+
     if (!Log::is_initialized()) {
         if(configNode["LogLevel"]){
             std::string logType = getLogType((char*)configNode["LogLevel"].as<std::string>().c_str());
@@ -52,7 +64,7 @@ void YAMLReader::readYamlGeneral(std::string string){
     leerEquipo("EquipoA", 1);
     leerEquipo("EquipoB", 2);
 
-}    
+}
 
 std::string YAMLReader::getNombre(int equipo){
     return infoEquipo[equipo]["Nombre"];
@@ -119,6 +131,42 @@ std::vector<std::string> separar(const std::string& str, const char& ch) {
     return resultado;
 }
 
+void checkFormacion(std::vector<std::string>& formacion) {
+	
+	bool isOk = true;
+	
+	if (formacion.size() > 3) {
+		Log::get_instance()->error("Encontramos una formación de mas de 3 lineas");
+		isOk = false;
+	}
+	else { // llenar formacion con "0" si faltan definir
+		while (formacion.size() < 3) {
+			formacion.push_back("0");
+		}
+	}
+	
+	if (isOk) {
+		for (std::string& cantidad : formacion) {
+			try {
+				std::stoi(cantidad); //no puede ser negativo porque splitteamos por el signo -
+			}
+			catch (const std::exception&) {
+				Log::get_instance()->error("El valor: " + cantidad + " de la formacion no es un numero");
+				isOk = false;
+				break;
+			}
+		}
+	}
+
+	if (!isOk) {
+		Log::get_instance()->error("Por errores en la formación, vamos con una por defecto: 3-2-1");
+		formacion[0] = "3";
+		formacion[1] = "2";
+		formacion[2] = "1";
+	}
+
+}
+
 std::string YAMLReader::getLogType(char *cadena) {
     std::string string(cadena);
     if( string.compare(LOG_ERROR)==0 || string.compare(LOG_DEBUG)==0 || string.compare(LOG_INFO)==0){
@@ -139,6 +187,7 @@ void YAMLReader::leerEquipo(std::string equipo, int posicionEnMapa) {
     }
     if(configNode[equipo]["Formacion"]){
         std::vector<std::string> resultado = separar(configNode[equipo]["Formacion"].as<std::string>(), '-');
+		checkFormacion(resultado); //TEMP, ver de poner en otro lado (o no, no importa mucho)
         infoEquipo[posicionEnMapa]["Defensores"] = resultado[0];
         infoEquipo[posicionEnMapa]["Mediocampistas"] = resultado[1];
         infoEquipo[posicionEnMapa]["Delanteros"] = resultado[2];
@@ -150,6 +199,8 @@ void YAMLReader::leerEquipo(std::string equipo, int posicionEnMapa) {
         infoEquipo[posicionEnMapa]["Delanteros"] = "1";
     }
 }
+
+
 
 
 

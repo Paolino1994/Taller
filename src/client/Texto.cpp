@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "Texto.h"
-#include "Log.h"
+#include "common/Log.h"
 
 
 Texto::Texto(SDL_Renderer *renderer, const std::string &font_path, int font_size, const std::string &mensaje_texto, const SDL_Color &color){

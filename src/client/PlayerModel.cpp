@@ -3,13 +3,45 @@
 //
 
 #include "PlayerModel.h"
+#include "BallController.h"
 #include <cmath>
+#include <iostream>
 
 
-PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y) :
+PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y) :
+	Entity(kickOff_x, kickOff_y),
+	initial_x(initial_x),
+	initial_y(initial_y),
+	kickOff_x(kickOff_x),
+	kickOff_y(kickOff_y),
+	widths(player_data.widths, std::end(player_data.widths)),
+	heights(player_data.heights, std::end(player_data.heights)),
+	velX(0),
+	velY(0),
+	state(STILL),
+	angle(0.0),
+	MAX_VEL_X(player_data.X_VELOCITY),
+	MAX_VEL_Y(player_data.Y_VELOCITY),
+	sweepDuration(player_data.SWEEP_DURATION),
+	sweepTime(0.0),
+	sweepVelX(0.0),
+	sweepVelY(0.0),
+	kickDuration(player_data.KICK_DURATION),
+	kickTime(0.0),
+	kickVelX(0.0),
+	kickVelY(0.0),
+	sprintVelocityMultiplier(player_data.SPRINT_VELOCITY_MULTIPLIER),
+	velocityMultiplier(1.0)
+{
+	log = Log::get_instance();
+}
+
+PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y):
 	Entity(initial_x, initial_y),
 	initial_x(initial_x),
 	initial_y(initial_y),
+	kickOff_x(initial_x),
+	kickOff_y(initial_y),
 	widths(player_data.widths, std::end(player_data.widths)),
 	heights(player_data.heights, std::end(player_data.heights)),
 	velX(0),
@@ -97,6 +129,13 @@ void PlayerModel::update(double dt, int x_limit, int y_limit){
 		this->velX = kickVelX;
 		this->velY = kickVelY;
 	}
+	if(hasControlOfTheBall){
+		BallController::getInstance()->getModel()->setX(x);
+		BallController::getInstance()->getModel()->setY(y);
+		BallController::getInstance()->getModel()->setAngle(angle);
+
+	}
+
 
 }
 
@@ -126,7 +165,13 @@ PlayerState PlayerModel::getState() {
 
 }
 
+int PlayerModel::getKickOff_x() {
+    return kickOff_x;
+}
 
+int PlayerModel::getKickOff_y() {
+    return kickOff_y;
+}
 
 double PlayerModel::getVelX() {
     return velX;
@@ -142,6 +187,9 @@ bool PlayerModel::getIsControlledByHuman() {
 
 void PlayerModel::setIsControlledByHuman(bool controlled) {
     isControlledByHuman = controlled;
+    //Esto es re villero, pero cuando tengamos los 2 equipos recien se va a modificar
+    hasControlOfTheBall = controlled;
+
 }	
 
 double PlayerModel::getMaxVelY() {
@@ -251,5 +299,28 @@ void PlayerModel::stopSprinting()
 	std::stringstream msg;
 	msg << "PlayeModel: sprint desactivado";
 	log->debug(msg.str());
+}
+
+void PlayerModel::setHasControlOfTheBall(bool control) {
+	hasControlOfTheBall=control;
+}
+
+bool PlayerModel::getHasControlOfTheBall() {
+    return hasControlOfTheBall;
+}
+
+void PlayerModel::changeBallState() {
+    //std::cout<<state<<std::endl;
+	if(hasControlOfTheBall&&(getVelX()!=0 || getVelY()!=0)){
+        if(BallController::getInstance()->getModel()->getState()!=MOVING){
+            BallController::getInstance()->getModel()->setState(MOVING);
+        }
+
+	}else {
+        if (BallController::getInstance()->getModel()->getState() != QUIESCENT) {
+            BallController::getInstance()->getModel()->setState(QUIESCENT);
+        }
+    }
+
 }
 

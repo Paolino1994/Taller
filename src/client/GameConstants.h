@@ -2,6 +2,7 @@
 #include <string>
 #include "YAMLReader.h"
 
+
 typedef struct sprite_info {
     std::string spriteid;
     std::string file_path;
@@ -69,6 +70,11 @@ enum PlayerState {
     SWEEPING,
     KICKING,
     _LENGTH_
+};
+
+enum BallState {
+	MOVING=0,
+	QUIESCENT=1
 };
 
 //Por cada tipo/objeto...

@@ -42,3 +42,11 @@ void PlayerController::swap(PlayerController * otherController)
 	this->playerView = otherController->playerView;
 	otherController->playerView = tempView;
 }
+
+bool PlayerController::hasControlOfTheBall() {
+	return this->playerModel->getHasControlOfTheBall();
+}
+
+double PlayerController::getAngle() {
+    return playerModel->getAngle();
+}

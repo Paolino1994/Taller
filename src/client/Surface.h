@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "SDL.h"
-#include "Log.h"
+#include "common/Log.h"
 
 class Surface
 {

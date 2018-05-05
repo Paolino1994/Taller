@@ -1,7 +1,7 @@
 #pragma once
 
 #include "PlayerController.h"
-#include "Log.h"
+#include "common/Log.h"
 
 class PlayerControllerHuman : public PlayerController {
 
