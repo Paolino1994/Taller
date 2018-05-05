@@ -5,6 +5,7 @@
 #include "PlayerModel.h"
 #include "BallController.h"
 #include <cmath>
+#include <iostream>
 
 
 PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y) :
@@ -134,6 +135,7 @@ void PlayerModel::update(double dt, int x_limit, int y_limit){
 		BallController::getInstance()->getModel()->setAngle(angle);
 
 	}
+
 
 }
 
@@ -305,5 +307,20 @@ void PlayerModel::setHasControlOfTheBall(bool control) {
 
 bool PlayerModel::getHasControlOfTheBall() {
     return hasControlOfTheBall;
+}
+
+void PlayerModel::changeBallState() {
+    //std::cout<<state<<std::endl;
+	if(hasControlOfTheBall&&(getVelX()!=0 || getVelY()!=0)){
+        if(BallController::getInstance()->getModel()->getState()!=MOVING){
+            BallController::getInstance()->getModel()->setState(MOVING);
+        }
+
+	}else {
+        if (BallController::getInstance()->getModel()->getState() != QUIESCENT) {
+            BallController::getInstance()->getModel()->setState(QUIESCENT);
+        }
+    }
+
 }
 

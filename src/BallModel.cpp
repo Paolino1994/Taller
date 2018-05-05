@@ -11,12 +11,14 @@
 BallModel::BallModel(double kickOff_x, double kickOff_y, int X, int Y) : Entity(kickOff_x, kickOff_y) {
     x=X;
     y=Y;
+    state=QUIESCENT;
 
 }
 
 BallModel::BallModel(double kickOff_x, double kickOff_y) : Entity(kickOff_x, kickOff_y) {
     x=0;
     y=0;
+    state=QUIESCENT;
 }
 
 int BallModel::getWidth() {
@@ -83,5 +85,15 @@ void BallModel::setAngle(double d) {
     correctPosition();
 
 }
+
+BallState BallModel::getState() {
+    return state;
+}
+
+void BallModel::setState(BallState aState) {
+    state=aState;
+
+}
+
 
 

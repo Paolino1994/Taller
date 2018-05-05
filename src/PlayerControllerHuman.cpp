@@ -96,6 +96,9 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 		}
 
     }
+    //Bastabte villero
+    playerModel->changeBallState();
+
 
     // se normaliza la velocidad
 	float factor = 0.70710678;
@@ -143,6 +146,7 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 		playerModel->setVelX(MAX_VEL_X);
 		playerModel->setVelY(0);
 	}
+
 
 }
 

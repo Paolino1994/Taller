@@ -7,6 +7,7 @@
 
 
 #include "Entity.h"
+#include "GameConstants.h"
 #include <math.h>
 
 class BallModel: public Entity {
@@ -17,6 +18,7 @@ public:
     BallModel(double kickOff_x, double kickOff_y);
 
     int getWidth();
+
     int getHeight();
 
     void setX(double d);
@@ -31,8 +33,14 @@ public:
 
     void setAngle(double d);
 
+    BallState getState();
+
+    void setState(BallState state);
+
 private:
     double angle=0;
+
+    BallState state;
 };
 
 

@@ -100,7 +100,8 @@ sprite_info TextureSetter::getBallStillInfo() {
 }
 
 void TextureSetter::setBallInfo() {
-    BallStill={"ballStill","res/ball.png",20, 20,4,12};
+    BallStill={"ballStill","res/Ball/ball_still.png",20, 20,1,3};
+    BallMoving={"ballMoving","res/Ball/ball.png",20, 20,4,12};
 }
 
 Texture TextureSetter::getBallStillTexture() {
@@ -113,4 +114,16 @@ Texture TextureSetter::setTextureBallStill() {
     Texture ballStill(gRenderer, ballStillS);
     ballStill.setScaling(PlayerKick.width, PlayerKick.height);
     return ballStill;
+}
+
+sprite_info TextureSetter::getBallMovingInfo() {
+    return BallMoving;
+}
+
+Texture TextureSetter::getBallMovingTexture() {
+    Surface ballMovingS(BallMoving.file_path);
+    ballMovingS.setColorKey(126, 130, 56); //cargar desde constantes
+    Texture ballMoving(gRenderer, ballMovingS);
+    ballMoving.setScaling(PlayerKick.width, PlayerKick.height);
+    return ballMoving;
 }

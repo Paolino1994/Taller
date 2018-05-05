@@ -73,6 +73,8 @@ public:
 
 	bool getHasControlOfTheBall();
 
+    void changeBallState();
+
 private:
 	
 	const std::vector<int> widths;

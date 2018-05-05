@@ -36,6 +36,10 @@ public:
 
     Texture getBallStillTexture();
 
+    sprite_info getBallMovingInfo();
+
+    Texture getBallMovingTexture();
+
 private:
 
     int equipo;
@@ -52,6 +56,8 @@ private:
 
     sprite_info BallStill;
 
+    sprite_info BallMoving;
+
     Texture setTextureRun();
 
     Texture setTextureStill();
@@ -65,6 +71,8 @@ private:
     void setBallInfo();
 
     Texture setTextureBallStill();
+
+
 };
 
 

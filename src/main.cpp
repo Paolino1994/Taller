@@ -254,15 +254,18 @@ int main( int argc, char* args[] )
         TextureSetter texturesBall(BALL, gRenderer);
         sprite_info ballStill=texturesBall.getBallStillInfo();
         Texture ballStillT=texturesBall.getBallStillTexture();
+        sprite_info ballMoving=texturesBall.getBallMovingInfo();
+        Texture ballMovingT=texturesBall.getBallMovingTexture();
         //sprite_info ballStill=texturesBall.getBallStillInfo();
         animMapperBall.emplace(std::make_pair(ballStill.spriteid, Animation(ballStillT, ballStill)));
+        animMapperBall.emplace(std::make_pair(ballMoving.spriteid, Animation(ballMovingT, ballMoving)));
 
         //Crteo la pelota
         log->info("Crear Pelota");
         teamIterator->model->setHasControlOfTheBall(true);
         BallModel *ballModel=new BallModel(0, 0, teamIterator->model->getX(), teamIterator->model->getY());
         Log::get_instance()->info("Agregando vista de la pelota");
-        BallView* ballView=new BallView(animMapperBall,ballStill,ballModel);
+        BallView* ballView= new BallView(animMapperBall, ballModel);
         BallController::initialize(ballModel, ballView);
 
 

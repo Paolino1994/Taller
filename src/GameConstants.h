@@ -72,6 +72,11 @@ enum PlayerState {
     _LENGTH_
 };
 
+enum BallState {
+	MOVING=0,
+	QUIESCENT=1
+};
+
 //Por cada tipo/objeto...
 //Lo que puede venir dentro del YAML, pero no necesariamente
 struct player_data {

@@ -12,7 +12,7 @@
 
 class BallView {
 public:
-    BallView(std::map<const std::string, Animation> animMapperBall,sprite_info ballStill,BallModel* ballModel);
+    BallView(std::map<const std::string, Animation> animMapperBall, BallModel *ballStill);
 
     void render(int i, int i1, double angle);
 
@@ -22,10 +22,10 @@ public:
 
 private:
     std::vector<Animation> animation;
+
     BallModel* model;
-    sprite_info sprite;
 
-
+    BallState priorState;
 };
 
 
