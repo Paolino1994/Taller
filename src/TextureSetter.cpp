@@ -20,7 +20,7 @@ TextureSetter::TextureSetter(int i, SDL_Renderer *pRenderer) {
 
 Texture TextureSetter::setTextureRun() {
 
-    Log::get_instance()->info(YAMLReader::get_instance()->getSpriteRunning(equipo));
+    Log::get_instance()->info(YAMLReader::get_instance().getSpriteRunning(equipo));
     Surface runS(PlayerRun.file_path);
     runS.setColorKey(126, 130, 56); //cargar desde constantes
     Texture run(gRenderer, runS);
@@ -88,10 +88,10 @@ Texture TextureSetter::getPLayerKickTexture() {
 }
 
 void TextureSetter::setInfos() {
-    PlayerRun={"run",YAMLReader::get_instance()->getSpriteRunning(equipo),60, 64,4,12};
-    PlayerStill={"still",YAMLReader::get_instance()->getSpriteStill(equipo),68, 34,1,3};
-    PlayerSweep={"sweep",YAMLReader::get_instance()->getSpriteSweeping(equipo),76, 112,4,12};
-    PlayerKick={"kick",YAMLReader::get_instance()->getSpriteKicking(equipo),74, 94,4,12};
+    PlayerRun={"run",YAMLReader::get_instance().getSpriteRunning(equipo),60, 64,4,12};
+    PlayerStill={"still",YAMLReader::get_instance().getSpriteStill(equipo),68, 34,1,3};
+    PlayerSweep={"sweep",YAMLReader::get_instance().getSpriteSweeping(equipo),76, 112,4,12};
+    PlayerKick={"kick",YAMLReader::get_instance().getSpriteKicking(equipo),74, 94,4,12};
 
 }
 

@@ -1,4 +1,7 @@
 #include "PlayerControllerHuman.h"
+#include <math.h>
+#include <iostream>
+using namespace std;
 
 PlayerControllerHuman::PlayerControllerHuman(PlayerModel * model, PlayerView * view):
 	PlayerController(model, view),
@@ -96,6 +99,7 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 		}
 
     }
+
     //Bastabte villero
     playerModel->changeBallState();
 
@@ -146,7 +150,6 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 		playerModel->setVelX(MAX_VEL_X);
 		playerModel->setVelY(0);
 	}
-
 
 }
 

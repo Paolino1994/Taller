@@ -25,8 +25,6 @@ public:
     
     void readYamlEquipos();  
 
-    static YAMLReader *get_instance();
-
     void destroy();
 
     std::string getNombre(int equipo);
@@ -52,6 +50,11 @@ public:
 
     void getSpriteBallStill();
 
+    // C++11 singleton
+    static YAMLReader& get_instance();
+    YAMLReader(YAMLReader const&) = delete;
+    void operator=(YAMLReader const&) = delete;
+
 private:
 
     YAML::Node configNode;
@@ -61,8 +64,6 @@ private:
     FILE* files[4];
 
     std::string getFormacion(int equipo);
-
-    static YAMLReader *instance;
 
     std::map<std::string, std::string> cargarDefault();
 

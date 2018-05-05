@@ -1,33 +1,43 @@
 #include "Log.h"
 
 Log* Log::instance = 0;
+bool Log::initialized = false;
 
 Log::Log(std::string t){
 	type = t;
 	time_t now;
 	time(&now);
+	std::string c_time = ctime(&now);
+	c_time.pop_back();
 	std::stringstream file_name;
-	file_name << "log/log-" << ctime(&now) << "-"<<t<<".txt";
+	file_name << "log/log-" << c_time << ".txt";
 	file.open(file_name.str(), std::ofstream::out);
 }
 
+Log::Log(): 
+	Log(LOG_ERROR)
+{}
+
 void Log::initialize(std::string t) {
-    if(instance == 0){
-        if (t.compare(LOG_DEBUG) == 0 || t.compare(LOG_INFO) == 0 || t.compare(LOG_ERROR) == 0){
-            instance = new Log(t);
+    if (t.compare(LOG_DEBUG) == 0 || t.compare(LOG_INFO) == 0 || t.compare(LOG_ERROR) == 0){
+        if (instance == 0) {
+        	instance = new Log(t);
+        } else {
+        	instance->setType(t);
         }
-    }
+        initialized = true;
+   	}
 }
 
 bool Log::is_initialized() {
-	return (instance != 0);
+	return initialized;
 }
 
 Log* Log::get_instance() {
-	if (instance != 0) {
-		return instance;
+	if (instance == 0) {
+		instance = new Log();
 	}
-	return NULL;
+	return instance;
 }
 
 void Log::log(std::string msg, std::string type) {
@@ -36,7 +46,7 @@ void Log::log(std::string msg, std::string type) {
 	std::string c_time;
 	c_time = ctime(&now);
 	c_time.pop_back();
-	file << "<" << c_time.c_str() << "> " << type << ": " << msg << std::endl;
+	file << "" << c_time.c_str() << "> " << type << ": " << msg << std::endl;
 }
 
 void Log::debug(std::string msg) {
@@ -55,6 +65,10 @@ void Log::error(std::string msg) {
 	if (this->type.compare(LOG_DEBUG) == 0 || this->type.compare(LOG_INFO) == 0 || this->type.compare(LOG_ERROR) == 0) {
 		log(msg, LOG_ERROR);
 	}
+}
+
+void Log::setType(std::string newType) {
+	this->type = newType;
 }
 
 Log::~Log() {
