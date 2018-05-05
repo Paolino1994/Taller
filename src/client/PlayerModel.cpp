@@ -6,6 +6,7 @@
 #include "BallController.h"
 #include <cmath>
 #include <iostream>
+using namespace std;
 
 
 PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y) :
@@ -108,7 +109,7 @@ void PlayerModel::update(double dt, int x_limit, int y_limit){
 		}
 	}
 
-	if (this->state != PlayerState::SWEEPING and this->state != PlayerState::KICKING) {
+	if (this->state != PlayerState::SWEEPING && this->state != PlayerState::KICKING) {
 		if (velX == 0.0 && velY == 0.0) {
 			this->state = STILL;
 			// mantenemos el angulo anterior
@@ -204,7 +205,7 @@ double PlayerModel::getMaxVelX() {
 void PlayerModel::changeVelY(double d)
 {
 
-	if (this->state == SWEEPING or this->state == KICKING) {
+	if (this->state == SWEEPING || this->state == KICKING) {
 		sweepVelY += d;
 		kickVelY += d;
 	}
@@ -219,7 +220,7 @@ void PlayerModel::changeVelY(double d)
 // Proximamente manejar mejor esto con patron State
 void PlayerModel::changeVelX(double d)
 {
-	if (this->state == SWEEPING or this->state == KICKING) {
+	if (this->state == SWEEPING || this->state == KICKING) {
 		sweepVelX += d;
 		kickVelX += d;
 	}
@@ -234,9 +235,9 @@ void PlayerModel::changeVelX(double d)
 // Proximamente manejar mejor esto con patron State
 // Tratar de no usar esto (quizas solo para el controller que devuelva al jugador a su lugar)
 void PlayerModel::setVelY(double d) {
-	if (this->state == SWEEPING or this->state == KICKING) {
+	if (this->state == SWEEPING || this->state == KICKING) {
 		sweepVelY = d;
-		kickVelX = d;
+		kickVelY = d;
 	}
 	else {
 		velY = d;
@@ -249,7 +250,7 @@ void PlayerModel::setVelY(double d) {
 // Proximamente manejar mejor esto con patron State
 // Tratar de no usar esto (quizas solo para el controller que devuelva al jugador a su lugar)
 void PlayerModel::setVelX(double d) {
-	if (this->state == SWEEPING or this->state == KICKING) {
+	if (this->state == SWEEPING || this->state == KICKING) {
 		sweepVelX = d;
 		kickVelX = d;
 	}
