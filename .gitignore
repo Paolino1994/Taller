@@ -38,6 +38,7 @@ dep/*
 
 # Log dirs
 log/*
+**/log/*
 
 # Visual Studio files
 .vs/*
