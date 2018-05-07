@@ -56,7 +56,7 @@ bool Texto::updateText( std::string textureText, SDL_Color textColor )
         text_texture = SDL_CreateTextureFromSurface( mRenderer, textSurface );
 		if( text_texture == NULL )
 		{
-			Log::get_instance()->error("Error al crear la textura para el texto ~~~ " + SDL_GetError());
+			Log::get_instance()->error("Error al crear la textura para el texto");
 		}else
 		{
 			//Get image dimensions
@@ -69,7 +69,7 @@ bool Texto::updateText( std::string textureText, SDL_Color textColor )
 	}
 	else
 	{
-		Log::get_instance()->error("Error al crear la superfice para el texto ~~~ " + SDL_GetError());
+		Log::get_instance()->error("Error al crear la superfice para el texto");
 	}
 
 	

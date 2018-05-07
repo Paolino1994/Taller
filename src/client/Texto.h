@@ -2,7 +2,9 @@
 
 #include "SDL.h"
 #include "SDL_ttf.h"
-#include "string"
+#include <string>
+#include <iostream>
+#include <sstream>
 
 
 class Texto

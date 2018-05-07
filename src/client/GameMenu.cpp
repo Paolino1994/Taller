@@ -51,6 +51,7 @@ int GameMenu::logginScreen() {
 
     log->info("Comenzando modo lectura de texto");
 
+    int returnValue = 0;
 
     bool running = true;
     bool loginTerminado = false;
@@ -110,6 +111,7 @@ int GameMenu::logginScreen() {
                 }
             } else if ( ev.type == SDL_QUIT ) {
                 running = false;
+                returnValue = -1;
             }
         }
         
@@ -159,7 +161,7 @@ int GameMenu::logginScreen() {
 
     SDL_StopTextInput();
     log->info("Modo de lectura de texto terminado");    
-    return 0;
+    return returnValue;
     
 }
 
