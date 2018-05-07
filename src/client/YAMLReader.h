@@ -50,6 +50,8 @@ public:
 
     void getSpriteBallStill();
 
+    int validarUsuario(std::string user, std::string pass);
+
     // C++11 singleton
     static YAMLReader& get_instance();
     YAMLReader(YAMLReader const&) = delete;

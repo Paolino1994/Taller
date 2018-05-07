@@ -27,10 +27,16 @@
 #include "BallModel.h"
 #include "BallView.h"
 #include "BallController.h"
+#include "GameMenu.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
 const int SCREEN_HEIGHT = YAML::SCREEN_HEIGHT;
+
+enum GameState {
+    OFFLINE = 0,
+    LOGGED
+};
 
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
@@ -180,11 +186,17 @@ int main( int argc, char* args[] )
 
 	Log* log = Log::get_instance();
 
+    GameState gameState = GameState::OFFLINE;
+
     //Start up SDL and create window
     if ( !init_SDL() ) {
         std::cout << "Failed to initialize!\n" << std::endl;
 		log->error("Falló la inicialización del SDL");
     } else {
+        if(gameState == GameState::OFFLINE) {
+            GameMenu gameMenu(gRenderer);
+            gameMenu.logginScreen();
+        } 
         std::map<const std::string, Animation> animMapper;
         std::map<const std::string, Animation> animMapper2;
         std::map<const std::string, Animation> animMapperBall;
