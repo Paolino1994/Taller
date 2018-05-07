@@ -27,6 +27,7 @@
 #include "BallModel.h"
 #include "BallView.h"
 #include "BallController.h"
+#include "CommandSender.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
@@ -376,6 +377,9 @@ player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun,
 void
 renderizar(std::vector<player>::iterator teamIterator, TeamFactory *tfactory, Camera camera, World world,
            Texto quiereSalirTexto, PlayerControllerHuman *controlled) {
+	// TEMP
+	CommandSender commandSender("127.0.0.1", 5000);
+	// FIN TEMP
     if (true)
     {
         //Main loop flag
@@ -442,8 +446,8 @@ renderizar(std::vector<player>::iterator teamIterator, TeamFactory *tfactory, Ca
                     }
                 }
 
-
                 controlled->handleEvent(e);
+				commandSender.handleEvent(e);
             }
 
             //Cuando el tiempo pasado es mayor a nuestro tiempo de actualizacion

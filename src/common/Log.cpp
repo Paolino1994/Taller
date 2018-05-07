@@ -1,6 +1,7 @@
 #include "Log.h"
 
 Log* Log::instance = 0;
+std::string Log::filename = "log"; //default log name
 bool Log::initialized = false;
 
 Log::Log(std::string t){
@@ -10,7 +11,7 @@ Log::Log(std::string t){
 	std::string c_time = ctime(&now);
 	c_time.pop_back();
 	std::stringstream file_name;
-	file_name << "log/log-" << c_time << ".txt";
+	file_name << "log/" << Log::filename << "-" << c_time << ".txt";
 	file.open(file_name.str(), std::ofstream::out);
 }
 
@@ -47,6 +48,11 @@ void Log::log(std::string msg, std::string type) {
 	c_time = ctime(&now);
 	c_time.pop_back();
 	file << "" << c_time.c_str() << "> " << type << ": " << msg << std::endl;
+}
+
+void Log::setFilenamePrefix(std::string filename)
+{
+	Log::filename = filename;
 }
 
 void Log::debug(std::string msg) {

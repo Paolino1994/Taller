@@ -1,11 +1,11 @@
 #include "Socket.h"
+#include "SocketException.h"
 
 int Socket::control_output(int control){
-        if (control == ERROR){
-                printf("Error: %s\n", strerror(errno));
-                return ERROR;
-        }
-        return SUCCESS;
+	if (control == ERROR){
+		throw SocketException();
+	}
+	return SUCCESS;
 }
 
 Socket::Socket(){
@@ -19,12 +19,11 @@ Socket::Socket(int fd){
 }
 
 Socket::~Socket(){
-	shutdown(SHUT_RDWR);
 	int control = close(fd);
 	status = control_output(control);
 }
 
-int Socket::connect(char* ip, unsigned short port){
+int Socket::connect(const char* ip, unsigned short port){
 	int control;
 	struct sockaddr_in sktaddr;
 	sktaddr.sin_family = AF_INET;
@@ -64,26 +63,28 @@ Socket* Socket::accept(){
 	return client;
 }
 
-int Socket::shutdown(int mode){
-	int control = ::shutdown(fd, mode);
+int Socket::shutdown(){
+	int control = ::shutdown(fd, SHUT_RDWR);
 	status = control_output(control);
 	return status;
 }
 
-int Socket::send(char* msg, short len, int flags){
-	int bytes_sent = 0, bytes = SOCKET_OPENED;
+int Socket::send(const char* msg, u_int32_t len, int flags) {
+	int bytes = SOCKET_OPENED;
+	u_int32_t bytes_sent = 0;
 	while (bytes_sent < len && bytes != ERROR && bytes != SOCKET_CLOSED){
 		bytes = ::send(fd, msg + bytes_sent, len - bytes_sent, flags);
 		if (bytes > 0){
 			bytes_sent += bytes;
 		}
 	}
-	status = control_output(bytes);
+	status = control_output(bytes == SOCKET_CLOSED ? ERROR : bytes);
 	return (bytes == FINISHED)? FINISHED : control_output(bytes);
 }
 
-int Socket::receive(char* buff, short len, int flags){
-	int bytes_recv = 0, bytes = SOCKET_OPENED;
+int Socket::receive(char* buff, u_int32_t len, int flags){
+	int bytes = SOCKET_OPENED;
+	u_int32_t bytes_recv = 0;
 	while(bytes_recv < len && bytes != ERROR && bytes != SOCKET_CLOSED){
 		bytes = ::recv(fd, buff + bytes_recv, len - bytes_recv,
 			flags);
@@ -91,7 +92,7 @@ int Socket::receive(char* buff, short len, int flags){
 			bytes_recv += bytes;
 		}
 	}
-	status = control_output(bytes);
+	status = control_output(bytes == SOCKET_CLOSED? ERROR: bytes);
 	if (bytes == ERROR){
 		return control_output(bytes);
 	}

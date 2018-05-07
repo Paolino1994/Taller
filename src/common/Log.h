@@ -12,6 +12,7 @@
 
 class Log {
 private:
+	static std::string filename;
 	// = true despues de primer llamada a initialize
 	static bool initialized;
 	/* Instancia guardada */
@@ -28,6 +29,7 @@ private:
 	void log(std::string msg, std::string type);
 
 public:
+	static void setFilenamePrefix(std::string filename);
 	/**
 		@PRE: recive el tipo de log (debug, info o error)
 		@POS: el log esta inicializado

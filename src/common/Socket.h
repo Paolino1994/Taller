@@ -26,23 +26,33 @@ private:
 	int control_output(int control);
 
 public:
+	static const int DEFAULT_FLAGS = MSG_NOSIGNAL; // prevenir terminacion del programa por SIGPIPE
+
 	Socket();
 
 	Socket(int fd);
 
 	~Socket();
 
-	int connect(char* ip, unsigned short port);
+	int connect(const char* ip, unsigned short port);
 
 	int bind_and_listen(unsigned short port);
 
 	Socket* accept();
 
-	int shutdown(int mode);
+	int shutdown();
 
-	int send(char* msg, short len, int flags);
+	int send(const char* msg, u_int32_t len, int flags);
 
-	int receive(char* buff, short len, int flags);
+	int receive(char* buff, u_int32_t len, int flags);
+
+	inline int receive(char* buff, u_int32_t len) {
+		return receive(buff, len, DEFAULT_FLAGS); 
+	}
+
+	inline int send(const char* msg, u_int32_t len) {
+		return send(msg, len, DEFAULT_FLAGS);
+	}
 
 	int get_status();
 };
