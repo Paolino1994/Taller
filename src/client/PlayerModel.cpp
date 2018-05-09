@@ -290,6 +290,7 @@ void PlayerModel::kick()
 		this->kickVelX = velX;
 		this->kickVelY = velY;
         setHasControlOfTheBall(false);
+		BallController::getInstance()->getModel()->setAngle(angle);
 		BallController::getInstance()->kick();
 	}
 	log->debug("PlayerModel: pateando");
@@ -331,6 +332,19 @@ void PlayerModel::changeBallState() {
             BallController::getInstance()->getModel()->setState(QUIESCENT);
         }
     }
+
+}
+
+void PlayerModel::pass(PlayerModel *pModel) {
+	int x2=pModel->getX();
+	int y2=pModel->getY();
+	int x1=getX();
+	int y1=getY();
+	double angulo=atan2(y2-y1,x2-x1);
+	std::cout<<std::to_string(angulo)<<std::endl;
+	angle=(angulo*180/M_PI) + 90;
+	std::cout<<std::to_string(angle)<<std::endl;
+	kick();
 
 }
 

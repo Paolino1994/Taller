@@ -72,6 +72,11 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 				log->debug("PlayerControllerHuman: cambiando el jugador controlado");
 				break;
 			}
+			case SDLK_d:{
+				PlayerController* passController=world.getPlayerToPass(this);
+				playerModel->pass(passController->getModel());
+				log->debug("PlayerControllerHuman: apretando pasar");
+			}
         }
     }
 
@@ -104,6 +109,7 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 			playerModel->stopSprinting();
 			log->debug("PlayerControllerHuman: soltando correr");
 		}
+
 
     }
 

@@ -77,6 +77,8 @@ public:
 
     void changeBallState();
 
+    void pass(PlayerModel *pModel);
+
 private:
 	Team team;
 	const std::vector<int> widths;

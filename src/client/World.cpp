@@ -72,6 +72,31 @@ bool World::playerIsOnRange(PlayerController* cont,PlayerController* controllerT
 
 }
 
+PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
+    Team team = controllerToSwap->getModel()->getTeam();
+    std::vector<PlayerController*>& teamControllers = playerControllers[team];
+
+    ptrdiff_t index = std::distance(teamControllers.begin(), std::find(teamControllers.begin(), teamControllers.end(), controllerToSwap));
+
+    if (index >= (long long)teamControllers.size()) {
+        Log::get_instance()->info("El controller que se quiso swapear no esta en mi listado de controllers del equipo correspondiente");
+
+    }
+
+    //size_t controllerToSwapIndex = index;
+
+    do
+    { // en el peor caso volvemos a el que estabamos controlando recien
+        ++index;
+        if (index == (long long)teamControllers.size()) {
+            index = 0;
+        }
+
+    } while (teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable() && playerIsOnRange(teamControllers[index],controllerToSwap)); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
+    return teamControllers[index];
+
+}
+
 void World::swap(PlayerController * controllerToSwap)
 {
 	Team team = controllerToSwap->getModel()->getTeam();

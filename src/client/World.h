@@ -43,6 +43,8 @@ public:
 	// Swap controller
 	void swap(PlayerController* playerController);
 
+	PlayerController* getPlayerToPass(PlayerController * controllerToSwap);
+
     void addEntity(Entity* entity);
 
     void addPlayerController(PlayerController* pController);
