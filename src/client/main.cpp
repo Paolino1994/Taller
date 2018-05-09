@@ -320,7 +320,7 @@ int main( int argc, char* args[] )
             
 			log->info("Agrego la camara");
             Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
-            camera.follow(controlled->getEntity());
+            camera.follow(ballModel);
 
             log->info("Renderizo");
             renderizar(camera, world, quiereSalirTexto, controlled);
@@ -423,9 +423,9 @@ renderizar(Camera& camera, World& world, Texto& quiereSalirTexto, PlayerControll
 
                 controlled->handleEvent(e);
 
-				if (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_q) {
+				/*if (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_q) {
 					camera.follow(controlled->getEntity());
-				}
+				}*/
             }
 
             //Cuando el tiempo pasado es mayor a nuestro tiempo de actualizacion

@@ -289,6 +289,8 @@ void PlayerModel::kick()
 		this->kickTime = 0.0;
 		this->kickVelX = velX;
 		this->kickVelY = velY;
+        setHasControlOfTheBall(false);
+		BallController::getInstance()->kick();
 	}
 	log->debug("PlayerModel: pateando");
 }

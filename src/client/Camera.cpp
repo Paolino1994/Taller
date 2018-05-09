@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "BallController.h"
+#include "../common/Log.h"
 #include <iostream>
 
 
@@ -79,6 +80,7 @@ void Camera::render(World& world){
 	auto background = world.getBackground();
 	auto pControllers = world.getPlayerControllers();
 	auto playerSelectedTexture = world.getPlayerSelectedTexture();
+    int rendered=0;
 
 	// renderizamos el background (la cancha)
 	background->setScaling(this->width, this->height);
@@ -98,8 +100,15 @@ void Camera::render(World& world){
 		player->getView()->render(screen_x, screen_y);
 		if(player->hasControlOfTheBall()){
 			BallController::getInstance()->getView()->render(screen_x, screen_y,player->getAngle());
+            rendered=1;
 		}
 
 	}
+    if(rendered==0){
+        int screen_x = BallController::getInstance()->getModel()->getX() - this->x;
+        int screen_y = BallController::getInstance()->getModel()->getY() - this->y;
+		Log::get_instance()->info("X: "+ std::to_string(screen_x) + " Y: " + std::to_string(screen_y));
+        BallController::getInstance()->getView()->render(screen_x, screen_y);
+    }
 }
 

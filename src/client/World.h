@@ -28,12 +28,13 @@ private:
 	// misma logica que la de renderizacion (x aumenta a derecha, y aumenta para abajo)
     int width;
     int height;
+	bool playerIsOnRange(PlayerController* cont,PlayerController* controllerToSwap);
 
 public:
     World(int width, int height, Texture* background);
     ~World();
 
-	// Creación de elementos
+	// Creaciï¿½n de elementos
 	void createTeam(Team team, int defenders, int midfielders, int forwards, player_data_t playerData, std::map<const std::string, Animation>& animMapper);
 
 	// Inyeccion de controller

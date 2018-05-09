@@ -63,6 +63,7 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 			}
 			case SDLK_s: {
 				playerModel->kick();
+
 				log->debug("PlayerControllerHuman: apretando patear");
 				break;
 			}

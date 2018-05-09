@@ -22,8 +22,8 @@ typedef struct sprite_info {
 namespace YAML {
     const int SCREEN_WIDTH = 800;
     const int SCREEN_HEIGHT = 600;
-	const int SCREEN_WIDTH_SCROLL_OFFSET = SCREEN_WIDTH / 6;
-	const int SCREEN_HEIGHT_SCROLL_OFFSET = SCREEN_HEIGHT / 6;
+	const int SCREEN_WIDTH_SCROLL_OFFSET = SCREEN_WIDTH / 2;
+	const int SCREEN_HEIGHT_SCROLL_OFFSET = SCREEN_HEIGHT / 2;
 
     const std::string background_path = "res/soccer_field_1.6.png";
     const std::string selectedPlayer_path = "res/player_selected.png";

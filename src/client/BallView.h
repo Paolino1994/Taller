@@ -16,9 +16,11 @@ public:
 
     void render(int i, int i1, double angle);
 
-    void render();
+    void render(int screen_x,int screen_y);
 
     void update(double d);
+
+
 
 private:
     std::vector<Animation> animation;

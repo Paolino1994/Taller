@@ -59,6 +59,19 @@ PlayerController* World::injectHumanController(Team team)
 	return nullptr;
 }
 
+bool World::playerIsOnRange(PlayerController* cont,PlayerController* controllerToSwap){
+	PlayerModel* model=cont->getModel();
+	int x=model->getX();
+	int y=model->getY();
+	int xCon=controllerToSwap->getModel()->getX();
+	int yCon=controllerToSwap->getModel()->getY();
+	if((x<xCon+200 || x>xCon-200) && (y<yCon+150 || y>yCon-150)){
+		return true;
+	}
+	return false;
+
+}
+
 void World::swap(PlayerController * controllerToSwap)
 {
 	Team team = controllerToSwap->getModel()->getTeam();
@@ -80,7 +93,7 @@ void World::swap(PlayerController * controllerToSwap)
 			index = 0;
 		}
 
-	} while (teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable()); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
+	} while (teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable() && playerIsOnRange(teamControllers[index],controllerToSwap)); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
 
 	if (teamControllers[index] != controllerToSwap) {
 		controllerToSwap->swap(teamControllers[index]);
@@ -90,6 +103,8 @@ void World::swap(PlayerController * controllerToSwap)
 		teamControllers[controllerToSwapIndex] = temp;
 	}
 }
+
+
 
 void World::addEntity(Entity* entity){
     entities.push_back(entity);
@@ -136,7 +151,7 @@ void World::update(double dt)
 			player->update(dt, this->getWidth(), this->getHeight());
 		}
 	}
-    BallController::getInstance()->getView()->update(dt);
+	BallController::getInstance()->update(dt, this->getWidth(), this->getHeight());
 }
 
 int World::getWidth(){
