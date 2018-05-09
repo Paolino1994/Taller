@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Entity.h"
-#include "Player.h"
+//#include "Player.h"
 #include "World.h"
 
 class Camera

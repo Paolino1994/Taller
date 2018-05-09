@@ -8,6 +8,11 @@ PlayerControllerAI::PlayerControllerAI(PlayerModel * model, PlayerView * view):
 	this->log = Log::get_instance();
 }
 
+void PlayerControllerAI::handleEvent(SDL_Event & e)
+{
+	//do nothing
+}
+
 void PlayerControllerAI::update(double dt, int x_limit, int y_limit)
 {
 	// AI para volver a nuestra posicion inicial
@@ -50,5 +55,9 @@ void PlayerControllerAI::update(double dt, int x_limit, int y_limit)
 	}
 
 	PlayerController::update(dt, x_limit, y_limit);
+}
+
+bool PlayerControllerAI::isControllable() {
+	return true;
 }
 

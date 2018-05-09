@@ -4,9 +4,11 @@
 
 #include "Texture.h"
 #include "Entity.h"
+#include "GameConstants.h"
 #include "PlayerController.h"
 
-//Por ahora esto solo es un juntadero de objetos del juego:
+// Esto ahora va estar un poco mas relacionado con el juego
+// Game / World
 class World
 {
 private:
@@ -15,7 +17,10 @@ private:
     // Jugador selecionado
     Texture* playerSelectedTexture;
     // Objetos comunes
-    std::vector<Entity*> entities;
+    std::vector<Entity*> entities; //queda todavia, pero pensar el uso de esto
+
+	std::vector<PlayerController*> playerControllers[Team::__LENGTH__];
+
     std::vector<PlayerController*> pControllers;
     // Las dimensiones del mapa en screen coordinates
 	// en x: vamos de 0 -> width
@@ -27,6 +32,16 @@ private:
 public:
     World(int width, int height, Texture* background);
     ~World();
+
+	// Creación de elementos
+	void createTeam(Team team, int defenders, int midfielders, int forwards, player_data_t playerData, std::map<const std::string, Animation>& animMapper);
+
+	// Inyeccion de controller
+	PlayerController* injectHumanController(Team team);
+
+	// Swap controller
+	void swap(PlayerController* playerController);
+
     void addEntity(Entity* entity);
 
     void addPlayerController(PlayerController* pController);

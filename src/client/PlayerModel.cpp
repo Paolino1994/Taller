@@ -9,12 +9,13 @@
 using namespace std;
 
 
-PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y) :
+PlayerModel::PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y) :
 	Entity(kickOff_x, kickOff_y),
 	initial_x(initial_x),
 	initial_y(initial_y),
 	kickOff_x(kickOff_x),
 	kickOff_y(kickOff_y),
+	team(team),
 	widths(player_data.widths, std::end(player_data.widths)),
 	heights(player_data.heights, std::end(player_data.heights)),
 	velX(0),
@@ -37,12 +38,13 @@ PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, doub
 	log = Log::get_instance();
 }
 
-PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y):
+PlayerModel::PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y):
 	Entity(initial_x, initial_y),
 	initial_x(initial_x),
 	initial_y(initial_y),
 	kickOff_x(initial_x),
 	kickOff_y(initial_y),
+	team(team),
 	widths(player_data.widths, std::end(player_data.widths)),
 	heights(player_data.heights, std::end(player_data.heights)),
 	velX(0),
@@ -154,6 +156,11 @@ int PlayerModel::getHeight()
 	// el tama�o del modelo no es necesariamente igual a un rectangulo como la imagen
 	// y no estamos considerando el angulo
 	return this->heights[this->state];
+}
+
+Team PlayerModel::getTeam()
+{
+	return this->team;
 }
 
 double PlayerModel::getAngle() {

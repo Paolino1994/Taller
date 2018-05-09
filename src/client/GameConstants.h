@@ -2,6 +2,12 @@
 #include <string>
 #include "YAMLReader.h"
 
+enum Team {
+	HOME = 0, //LEFT_GOAL
+	AWAY, //RIGHT_GOAL
+	__LENGTH__
+};
+
 
 typedef struct sprite_info {
     std::string spriteid;
@@ -92,7 +98,6 @@ struct player_data {
 };
 
 typedef struct player_data player_data_t;
-
 
 //ejemplo instanciacion player data especifico:
 

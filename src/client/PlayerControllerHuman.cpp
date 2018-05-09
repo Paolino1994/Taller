@@ -3,14 +3,15 @@
 #include <iostream>
 using namespace std;
 
-PlayerControllerHuman::PlayerControllerHuman(PlayerModel * model, PlayerView * view):
+PlayerControllerHuman::PlayerControllerHuman(PlayerModel * model, PlayerView * view, World& world):
 	PlayerController(model, view),
+	world(world),
 	pressingUP(false),
 	pressingDOWN(false),
 	pressingLEFT(false),
-	pressingRIGHT(false)
+	pressingRIGHT(false),
+	log(Log::get_instance())
 {
-	this->log = Log::get_instance();
 }
 
 void PlayerControllerHuman::handleEvent( SDL_Event& e )
@@ -63,6 +64,11 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 			case SDLK_s: {
 				playerModel->kick();
 				log->debug("PlayerControllerHuman: apretando patear");
+				break;
+			}
+			case SDLK_q: {
+				this->world.swap(this);
+				log->debug("PlayerControllerHuman: cambiando el jugador controlado");
 				break;
 			}
         }
@@ -167,4 +173,8 @@ void PlayerControllerHuman::swap(PlayerController * otherController)
 	this->playerModel->changeVelX(-this->playerModel->getVelX());
 	this->playerModel->changeVelY(-this->playerModel->getVelY());
 	log->debug("PlayerControllerHuman: cambiando jugador");
+}
+
+bool PlayerControllerHuman::isControllable() {
+	return false;
 }

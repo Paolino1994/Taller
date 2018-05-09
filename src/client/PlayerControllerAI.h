@@ -13,7 +13,11 @@ private:
 public:
 	PlayerControllerAI(PlayerModel* model, PlayerView* view);
 
+	virtual void handleEvent(SDL_Event &e);
+
 	virtual void update(double dt, int x_limit, int y_limit);
+
+	virtual bool isControllable();
 
 };
 

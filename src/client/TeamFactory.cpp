@@ -7,15 +7,15 @@ TeamFactory::TeamFactory(player_data_t defaultPlayer){
 	BasePlayer=defaultPlayer;
 	this->log = Log::get_instance();
 }
-bool TeamFactory::add_goalkeeper(int goal, int field_length, int field_width){
+bool TeamFactory::add_goalkeeper(Team goal, int field_length, int field_width){
 	PlayerModel* model;
 
 	switch (goal) {
 		case LEFT_GOAL:
-			model = new PlayerModel(BasePlayer, field_length * 1.5 / 22, field_width * 21/ 44);
+			model = new PlayerModel(goal, BasePlayer, field_length * 1.5 / 22, field_width * 21/ 44);
 			break;
 		case RIGHT_GOAL:
-			model = new PlayerModel(BasePlayer, field_length * 20.5 / 22, field_width * 21 / 44);
+			model = new PlayerModel(goal, BasePlayer, field_length * 20.5 / 22, field_width * 21 / 44);
 			break;
 		default:
 			std::stringstream msg;
@@ -31,7 +31,7 @@ bool TeamFactory::add_goalkeeper(int goal, int field_length, int field_width){
 }
 
 
-bool TeamFactory::add_defenders(int quantity, int goal, int field_length, int field_width){
+bool TeamFactory::add_defenders(int quantity, Team goal, int field_length, int field_width){
 	if (quantity != 3) {
 		std::stringstream msg;
 		msg << "TeamFactory: la cantidad de defensores " << quantity << " es invalida"; 
@@ -60,14 +60,14 @@ bool TeamFactory::add_defenders(int quantity, int goal, int field_length, int fi
 
 	for (int i = 0; i < quantity; i++){
 		position_y = ((field_width * 5 / 8) * i / 2) + 	field_width / 7;
-		model = new PlayerModel(BasePlayer, position_x, position_y, position_x, position_y);
+		model = new PlayerModel(goal, BasePlayer, position_x, position_y, position_x, position_y);
 		defender.model = model;
 		team.push_back(defender);
 	}
 	return true;
 }
 
-bool TeamFactory::add_midfielders(int quantity, int goal, int field_length, int field_width){
+bool TeamFactory::add_midfielders(int quantity, Team goal, int field_length, int field_width){
 	if (quantity <= 0 || quantity > 3) {
 		std::stringstream msg;
 		msg << "TeamFactory: la cantidad de mediocampistas " << quantity << " es invalida"; 
@@ -110,7 +110,7 @@ bool TeamFactory::add_midfielders(int quantity, int goal, int field_length, int 
 			default:
 				return false;
 		}
-		model = new PlayerModel(BasePlayer, position_x, position_y, kickOff_x, position_y);
+		model = new PlayerModel(goal, BasePlayer, position_x, position_y, kickOff_x, position_y);
 		midfielder.model = model;
 		team.push_back(midfielder);
 	}
@@ -118,7 +118,7 @@ bool TeamFactory::add_midfielders(int quantity, int goal, int field_length, int 
 	return true;
 }
 
-bool TeamFactory::add_forwards(int quantity, int goal, int field_length, int field_width){
+bool TeamFactory::add_forwards(int quantity, Team goal, int field_length, int field_width){
 	if (quantity <= 0 || quantity > 2) {
 		std::stringstream msg;
 		msg << "TeamFactory: la cantidad de delanteros " << quantity << " es invalida"; 
@@ -170,7 +170,7 @@ bool TeamFactory::add_forwards(int quantity, int goal, int field_length, int fie
 			default:
 				return false;
 		}
-		model = new PlayerModel(BasePlayer, position_x, position_y, kickOff_x, kickOff_y);
+		model = new PlayerModel(goal, BasePlayer, position_x, position_y, kickOff_x, kickOff_y);
 		forward.model = model;
 		team.push_back(forward);
 	}
@@ -178,7 +178,7 @@ bool TeamFactory::add_forwards(int quantity, int goal, int field_length, int fie
 	return true;
 }
 
-bool TeamFactory::create(int defenders, int midfielders, int forwards, int goal, int field_length, int field_width){
+bool TeamFactory::create(int defenders, int midfielders, int forwards, Team goal, int field_length, int field_width){
 	clear_team();
 	
 	std::stringstream msg;
@@ -197,7 +197,7 @@ bool TeamFactory::create(int defenders, int midfielders, int forwards, int goal,
 	return true;
 }
 
-bool TeamFactory::create(int defenders, int midfielders, int goal, int field_length, int field_width){
+bool TeamFactory::create(int defenders, int midfielders, Team goal, int field_length, int field_width){
 	clear_team();
 
 	std::stringstream msg;
@@ -242,12 +242,19 @@ std::vector<player>& TeamFactory::get_team(){
 	return team;
 }
 
+void TeamFactory::fill(std::vector<PlayerController*>& playerControllers)
+{
+	for (player& p : team) {
+		playerControllers.push_back(p.controller);
+	}
+}
+
 void TeamFactory::clear_team(){
-	for (player& p: team) {
+	/*for (player& p: team) {
 		delete p.model;
 		delete p.view;
 		delete p.controller;
-	}
+	}*/
 }
 
 TeamFactory::~TeamFactory(){

@@ -77,7 +77,6 @@ void Camera::update(double dt){
     
 void Camera::render(World& world){
 	auto background = world.getBackground();
-	auto entities = world.getEntities();
 	auto pControllers = world.getPlayerControllers();
 	auto playerSelectedTexture = world.getPlayerSelectedTexture();
 
