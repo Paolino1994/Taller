@@ -13,6 +13,11 @@ PlayerController::PlayerController(PlayerModel * model, PlayerView * view):
 
 Entity * PlayerController::getEntity()
 {
+	return getModel();
+}
+
+PlayerModel * PlayerController::getModel()
+{
 	return this->playerModel;
 }
 

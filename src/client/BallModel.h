@@ -37,10 +37,26 @@ public:
 
     void setState(BallState state);
 
+    void kick();
+
+    void update(double d, int i, int i1);
+
+    int getAngle();
+
 private:
     double angle=0;
 
     BallState state;
+
+    void setVelX(double d);
+
+    void setVelY(double vel);
+
+    double velX;
+
+    double velY;
+
+    double angleToUse;
 };
 
 

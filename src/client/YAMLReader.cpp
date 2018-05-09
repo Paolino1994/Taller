@@ -108,6 +108,25 @@ int YAMLReader::getDelanteros(int equipo) {
     return std::stoi(infoEquipo[equipo]["Delanteros"]);
 }
 
+// 0 -> Ok, -1 Password incorrecta, -2 usuario no encontrado
+int YAMLReader::validarUsuario(std::string user, std::string pass) {
+    std::vector<std::string> separados;
+    for (std::size_t i=0;i<configNode["usuarios"].size() -1 ;i++) {
+        std::string userPassString = configNode["usuarios"][i].as<std::string>();
+        std::string::iterator end_pos = std::remove(userPassString.begin(), userPassString.end(), ' ');
+        userPassString.erase(end_pos, userPassString.end());
+        separados = separar(userPassString, '-');
+        if(user.compare(separados[0]) == 0) {
+            if(pass.compare(separados[1]) == 0) {
+                return 0;
+            } else {
+                return -1;
+            }
+        }
+    }
+    return -2;
+}
+
 std::string YAMLReader::getLogLevel() {
     return LogLevel;
 }
@@ -136,7 +155,7 @@ void checkFormacion(std::vector<std::string>& formacion) {
 	bool isOk = true;
 	
 	if (formacion.size() > 3) {
-		Log::get_instance()->error("Encontramos una formación de mas de 3 lineas");
+		Log::get_instance()->error("Encontramos una formaciï¿½n de mas de 3 lineas");
 		isOk = false;
 	}
 	else { // llenar formacion con "0" si faltan definir
@@ -159,7 +178,7 @@ void checkFormacion(std::vector<std::string>& formacion) {
 	}
 
 	if (!isOk) {
-		Log::get_instance()->error("Por errores en la formación, vamos con una por defecto: 3-2-1");
+		Log::get_instance()->error("Por errores en la formaciï¿½n, vamos con una por defecto: 3-2-1");
 		formacion[0] = "3";
 		formacion[1] = "2";
 		formacion[2] = "1";

@@ -16,13 +16,15 @@ class PlayerModel: public Entity {
 
 public:
 
-    PlayerModel(const player_data_t player_data, double initial_x, double initial_y, int kickOffX, int kickOffY);
-    PlayerModel(const player_data_t player_data, double initial_x, double initial_y);
+    PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOffX, int kickOffY);
+    PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y);
 
 
 	virtual int getWidth();
 
 	virtual int getHeight();
+
+	Team getTeam();
 
     double getAngle();
 
@@ -75,8 +77,10 @@ public:
 
     void changeBallState();
 
+    void pass(PlayerModel *pModel);
+
 private:
-	
+	Team team;
 	const std::vector<int> widths;
 	const std::vector<int> heights;
     double velX;

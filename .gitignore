@@ -44,3 +44,4 @@ log/*
 .vs/*
 *.sln
 *.vcxproj*
+.vscode/

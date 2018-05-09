@@ -17,6 +17,11 @@ Texture::Texture(SDL_Renderer* renderer, const Surface& surface){
     mRenderer = renderer;
 }
 
+Texture::Texture(SDL_Renderer *renderer):
+    mRenderer(renderer){
+
+    }
+
 
 Texture::Texture(SDL_Renderer* renderer, std::string file):
     Texture(renderer, Surface(file))

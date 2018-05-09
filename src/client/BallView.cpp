@@ -30,6 +30,17 @@ void BallView::update(double deltaTime) {
     animation[priorState].update(deltaTime);
 }
 
+void BallView::render(int screen_x, int screen_y) {
+    BallState newState = BallController::getInstance()->getModel()->getState();
+    if (priorState != newState) {
+        animation[newState].reset();
+        priorState = newState;
+    }
+    int angle=BallController::getInstance()->getModel()->getAngle();
+    animation[priorState].render(screen_x,screen_y,angle);
+
+}
+
 
 
 

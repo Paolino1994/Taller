@@ -30,3 +30,17 @@ BallController::BallController(BallModel* model, BallView* view){
 BallView* BallController::getView() {
     return ballView;
 }
+
+void BallController::kick() {
+    ballModel->kick();
+
+
+}
+
+void BallController::update(double dt, int x_limit, int y_limit){
+    ballModel->update(dt,x_limit,y_limit);
+    ballView->update(dt);
+}
+
+
+

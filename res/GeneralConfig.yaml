@@ -5,3 +5,22 @@ EquipoB:
     Color: "Rojo"
     Formacion: "3-2-1"
 LogLevel: "info"
+usuarios:
+-
+    -messi
+    -barsa
+-
+    -maradona
+    -napoli
+-
+    -roman
+    -boca
+-
+    -lincha
+    -racing
+-
+    -pipi
+    -sanlore
+-
+    -crespo
+    -river

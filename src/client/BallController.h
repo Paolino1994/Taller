@@ -23,6 +23,10 @@ public:
 
     static BallController *getInstance();
 
+    void kick();
+
+    void update(double d, int i, int i1);
+
 private:
     BallController(BallModel* model, BallView* view);
 

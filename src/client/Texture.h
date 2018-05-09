@@ -2,6 +2,7 @@
 #include <memory>
 
 #include "SDL.h"
+#include "SDL_ttf.h"
 #include "Surface.h"
 
 class Texture
@@ -23,6 +24,9 @@ public:
     Texture(SDL_Renderer* renderer, const Surface& surface);
     //Create texture from specified image file
     Texture(SDL_Renderer* renderer, std::string file);
+    // Empty Texture
+    Texture(SDL_Renderer *renderer);
+
     ~Texture();
     
     //Set color modulation
@@ -53,5 +57,6 @@ public:
     
     int getScaledWidth() {return mDstRect.w;};
     int getScaledHeight() {return mDstRect.h;};
+
 };
 

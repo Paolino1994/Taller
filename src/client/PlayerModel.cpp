@@ -6,14 +6,16 @@
 #include "BallController.h"
 #include <cmath>
 #include <iostream>
+using namespace std;
 
 
-PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y) :
+PlayerModel::PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y) :
 	Entity(kickOff_x, kickOff_y),
 	initial_x(initial_x),
 	initial_y(initial_y),
 	kickOff_x(kickOff_x),
 	kickOff_y(kickOff_y),
+	team(team),
 	widths(player_data.widths, std::end(player_data.widths)),
 	heights(player_data.heights, std::end(player_data.heights)),
 	velX(0),
@@ -36,12 +38,13 @@ PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, doub
 	log = Log::get_instance();
 }
 
-PlayerModel::PlayerModel(const player_data_t player_data, double initial_x, double initial_y):
+PlayerModel::PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y):
 	Entity(initial_x, initial_y),
 	initial_x(initial_x),
 	initial_y(initial_y),
 	kickOff_x(initial_x),
 	kickOff_y(initial_y),
+	team(team),
 	widths(player_data.widths, std::end(player_data.widths)),
 	heights(player_data.heights, std::end(player_data.heights)),
 	velX(0),
@@ -108,7 +111,7 @@ void PlayerModel::update(double dt, int x_limit, int y_limit){
 		}
 	}
 
-	if (this->state != PlayerState::SWEEPING and this->state != PlayerState::KICKING) {
+	if (this->state != PlayerState::SWEEPING && this->state != PlayerState::KICKING) {
 		if (velX == 0.0 && velY == 0.0) {
 			this->state = STILL;
 			// mantenemos el angulo anterior
@@ -153,6 +156,11 @@ int PlayerModel::getHeight()
 	// el tama�o del modelo no es necesariamente igual a un rectangulo como la imagen
 	// y no estamos considerando el angulo
 	return this->heights[this->state];
+}
+
+Team PlayerModel::getTeam()
+{
+	return this->team;
 }
 
 double PlayerModel::getAngle() {
@@ -204,7 +212,7 @@ double PlayerModel::getMaxVelX() {
 void PlayerModel::changeVelY(double d)
 {
 
-	if (this->state == SWEEPING or this->state == KICKING) {
+	if (this->state == SWEEPING || this->state == KICKING) {
 		sweepVelY += d;
 		kickVelY += d;
 	}
@@ -219,7 +227,7 @@ void PlayerModel::changeVelY(double d)
 // Proximamente manejar mejor esto con patron State
 void PlayerModel::changeVelX(double d)
 {
-	if (this->state == SWEEPING or this->state == KICKING) {
+	if (this->state == SWEEPING || this->state == KICKING) {
 		sweepVelX += d;
 		kickVelX += d;
 	}
@@ -234,9 +242,9 @@ void PlayerModel::changeVelX(double d)
 // Proximamente manejar mejor esto con patron State
 // Tratar de no usar esto (quizas solo para el controller que devuelva al jugador a su lugar)
 void PlayerModel::setVelY(double d) {
-	if (this->state == SWEEPING or this->state == KICKING) {
+	if (this->state == SWEEPING || this->state == KICKING) {
 		sweepVelY = d;
-		kickVelX = d;
+		kickVelY = d;
 	}
 	else {
 		velY = d;
@@ -249,7 +257,7 @@ void PlayerModel::setVelY(double d) {
 // Proximamente manejar mejor esto con patron State
 // Tratar de no usar esto (quizas solo para el controller que devuelva al jugador a su lugar)
 void PlayerModel::setVelX(double d) {
-	if (this->state == SWEEPING or this->state == KICKING) {
+	if (this->state == SWEEPING || this->state == KICKING) {
 		sweepVelX = d;
 		kickVelX = d;
 	}
@@ -281,6 +289,9 @@ void PlayerModel::kick()
 		this->kickTime = 0.0;
 		this->kickVelX = velX;
 		this->kickVelY = velY;
+        setHasControlOfTheBall(false);
+		BallController::getInstance()->getModel()->setAngle(angle);
+		BallController::getInstance()->kick();
 	}
 	log->debug("PlayerModel: pateando");
 }
@@ -321,6 +332,19 @@ void PlayerModel::changeBallState() {
             BallController::getInstance()->getModel()->setState(QUIESCENT);
         }
     }
+
+}
+
+void PlayerModel::pass(PlayerModel *pModel) {
+	int x2=pModel->getX();
+	int y2=pModel->getY();
+	int x1=getX();
+	int y1=getY();
+	double angulo=atan2(y2-y1,x2-x1);
+	std::cout<<std::to_string(angulo)<<std::endl;
+	angle=(angulo*180/M_PI) + 90;
+	std::cout<<std::to_string(angle)<<std::endl;
+	kick();
 
 }
 
