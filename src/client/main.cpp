@@ -21,7 +21,7 @@
 //#include "PlayerView.h"
 //#include "PlayerControllerHuman.h"
 //#include "TeamFactory.h"
-#include "YAMLReader.h"
+#include "common/YAMLReader.h"
 #include "Texto.h"
 #include "TextureSetter.h"
 #include "BallModel.h"

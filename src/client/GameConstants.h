@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "YAMLReader.h"
+#include "common/YAMLReader.h"
 
 enum Team {
 	HOME = 0, //LEFT_GOAL
