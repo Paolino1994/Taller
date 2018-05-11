@@ -161,16 +161,7 @@ int GameMenu::logginScreen() {
     SDL_StopTextInput();
     log->info("Modo de lectura de texto terminado");
 
-    surface.~Surface();
-    background.~Texture();
-    usuarioTexto.~Texto();
-    passTexto.~Texto();
-    userTextTexture.~Texto();
-    passTextTexture.~Texto();
-    errorTexto.~Texto();
-
     return returnValue;
-    
 }
 
 int GameMenu::verificarCredenciales (std::string usuario, std::string pass) {
