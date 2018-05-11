@@ -53,6 +53,7 @@ PlayerController* World::injectHumanController(Team team)
 			PlayerControllerHuman* human = new PlayerControllerHuman(other->getModel(), other->getView(), *this);
 			teamControllers[i] = human;
 			human->getModel()->setIsControlledByHuman(true);
+            human->getModel()->setHasControlOfTheBall(true);
 			delete other;
 			return human;
 		}
@@ -192,4 +193,16 @@ int World::getWidth(){
 
 int World::getHeight(){
     return height;
+}
+
+void World::swapToBallController(PlayerController *cont) {
+    Team team = cont->getModel()->getTeam();
+    std::vector<PlayerController*>& teamControllers = playerControllers[team];
+    for(PlayerController* controller : teamControllers){
+        if(controller->getModel()->getHasControlOfTheBall()){
+            cont->swap(controller);
+        }
+    }
+
+
 }

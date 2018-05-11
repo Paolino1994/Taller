@@ -2,7 +2,7 @@
 
 #include "World.h"
 #include "PlayerController.h"
-#include "common/Log.h"
+#include "../common/Log.h"
 
 class PlayerControllerHuman : public PlayerController {
 

@@ -8,6 +8,7 @@
 #include "GameConstants.h"
 #include "PlayerController.h"
 
+
 // Esto ahora va estar un poco mas relacionado con el juego
 // Game / World
 class World
@@ -65,6 +66,8 @@ public:
     
     int getWidth();
     int getHeight();
+
+	void swapToBallController(PlayerController *cont);
 
 };
 
