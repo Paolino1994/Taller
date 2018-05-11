@@ -1,13 +1,11 @@
 //
 // Created by federico on 30/04/18.
 //
-
-#ifndef UNTITLED1_BALL_H
-#define UNTITLED1_BALL_H
-
+#pragma once
 
 #include "Entity.h"
 #include "GameConstants.h"
+#include "PlayerController.h"
 #include <math.h>
 
 class BallModel: public Entity {
@@ -39,7 +37,8 @@ public:
 
     void kick();
 
-    void update(double d, int i, int i1);
+	// TODO: pasar PlayerModels en vez de PlayerControllers
+    void update(double dt, int x_limit, int y_limit, std::vector<PlayerController*>& playerControllers);
 
     int getAngle();
 
@@ -58,6 +57,3 @@ private:
 
     double angleToUse;
 };
-
-
-#endif //UNTITLED1_BALL_H

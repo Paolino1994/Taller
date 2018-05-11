@@ -11,25 +11,26 @@
 #define PI 3.14159265
 
 
-BallModel::BallModel(double kickOff_x, double kickOff_y, int X, int Y) : Entity(kickOff_x, kickOff_y) {
+BallModel::BallModel(double kickOff_x, double kickOff_y, int X, int Y):
+	Entity(kickOff_x, kickOff_y) {
     x=X;
     y=Y;
     state=QUIESCENT;
 
 }
 
-BallModel::BallModel(double kickOff_x, double kickOff_y) : Entity(kickOff_x, kickOff_y) {
-    x=0;
-    y=0;
-    state=QUIESCENT;
+BallModel::BallModel(double kickOff_x, double kickOff_y): 
+	Entity(kickOff_x, kickOff_y) ,
+	state(QUIESCENT)
+{
 }
 
 int BallModel::getWidth() {
-    return 20;
+    return 20; // TODO: pasarlos desde un ball_data_t o algo asi
 }
 
 int BallModel::getHeight() {
-    return 20;
+    return 20; // TODO: pasarlos desde un ball_data_t o algo asi
 }
 
 void BallModel::setX(double d) {
@@ -117,7 +118,25 @@ void BallModel::setVelY(double vel) {
     velY=vel;
 }
 
-void BallModel::update(double dt, int x_limit, int y_limit) {
+// TODO: pasar PlayerModels en vez de PlayerControllers
+void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerController*>& playerControllers) {
+
+	for (PlayerController* controller : playerControllers) {
+		if (controller->getModel()->getHasControlOfTheBall()) {
+			auto player = controller->getModel();
+			this->setX(player->getX());
+			this->setY(player->getY());
+			this->setAngle(player->getAngle());
+			return;
+		}
+	}
+
+	/*
+	* ACA SE PODRIA HACE UN CHEQEUO DE CERCANIA CON RESPECTO A MODELS DE LOS JUGADORES
+	* --> SI ESTOY A x_diff, y_diff cerca, entonces seteo a ese playerModel.setHasControlOfTheBall(true)
+	* --> ojo! si hay varios cerca!
+	*/
+
     x += velX * dt;
     y += velY * dt;
     if ((y + this->getHeight()) > y_limit) { //limite de abajo

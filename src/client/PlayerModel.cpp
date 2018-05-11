@@ -132,14 +132,6 @@ void PlayerModel::update(double dt, int x_limit, int y_limit){
 		this->velX = kickVelX;
 		this->velY = kickVelY;
 	}
-	if(hasControlOfTheBall){
-		BallController::getInstance()->getModel()->setX(x);
-		BallController::getInstance()->getModel()->setY(y);
-		BallController::getInstance()->getModel()->setAngle(angle);
-
-	}
-
-
 }
 
 int PlayerModel::getWidth()
@@ -282,7 +274,8 @@ void PlayerModel::sweep()
 }
 
 // Proximamente manejar mejor esto con patron State
-void PlayerModel::kick()
+// Parche feo -> Recibe ballModel por ahora // TODO VER
+void PlayerModel::kick(BallModel& ballModel)
 {
 	if (this->state != KICKING) {
 		this->state = KICKING;
@@ -290,8 +283,8 @@ void PlayerModel::kick()
 		this->kickVelX = velX;
 		this->kickVelY = velY;
         setHasControlOfTheBall(false);
-		BallController::getInstance()->getModel()->setAngle(angle);
-		BallController::getInstance()->kick();
+		ballModel.setAngle(angle);
+		ballModel.kick();
 	}
 	log->debug("PlayerModel: pateando");
 }
@@ -320,22 +313,23 @@ bool PlayerModel::getHasControlOfTheBall() {
     return hasControlOfTheBall;
 }
 
-void PlayerModel::changeBallState() {
+// Parche feo -> Recibe ballModel por ahora // TODO VER
+void PlayerModel::changeBallState(BallModel& ballModel) {
     //std::cout<<state<<std::endl;
 	if(hasControlOfTheBall&&(getVelX()!=0 || getVelY()!=0)){
-        if(BallController::getInstance()->getModel()->getState()!=MOVING){
-            BallController::getInstance()->getModel()->setState(MOVING);
+        if(ballModel.getState()!=MOVING){
+			ballModel.setState(MOVING);
         }
 
 	}else {
-        if (BallController::getInstance()->getModel()->getState() != QUIESCENT) {
-            BallController::getInstance()->getModel()->setState(QUIESCENT);
+        if (ballModel.getState() != QUIESCENT) {
+			ballModel.setState(QUIESCENT);
         }
     }
 
 }
 
-void PlayerModel::pass(PlayerModel *pModel) {
+void PlayerModel::pass(PlayerModel *pModel, BallModel& ballModel) {
 	int x2=pModel->getX();
 	int y2=pModel->getY();
 	int x1=getX();
@@ -344,7 +338,7 @@ void PlayerModel::pass(PlayerModel *pModel) {
 	std::cout<<std::to_string(angulo)<<std::endl;
 	angle=(angulo*180/M_PI) + 90;
 	std::cout<<std::to_string(angle)<<std::endl;
-	kick();
+	kick(ballModel);
 
 }
 

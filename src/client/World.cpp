@@ -3,8 +3,9 @@
 #include "TeamFactory.h"
 #include "PlayerControllerHuman.h"
 
-World::World(int width, int height, Texture* background):
+World::World(int width, int height, Texture* background, std::map<const std::string, Animation>& ballAnimMapper):
     background(background),
+	ball(BallController(width/2, height/2, ballAnimMapper)),
     entities(std::vector<Entity*>()),
 	pControllers(std::vector<PlayerController*>()),
     width(width),
@@ -145,6 +146,11 @@ Texture* World::getBackground() {
     return background;
 }
 
+BallController& World::getBall()
+{
+	return ball;
+}
+
 Texture* World::getPlayerSelectedTexture() {
     return playerSelectedTexture;
 }
@@ -176,7 +182,7 @@ void World::update(double dt)
 			player->update(dt, this->getWidth(), this->getHeight());
 		}
 	}
-	BallController::getInstance()->update(dt, this->getWidth(), this->getHeight());
+	ball.update(dt, this->getWidth(), this->getHeight(), this->getPlayerControllers());
 }
 
 int World::getWidth(){

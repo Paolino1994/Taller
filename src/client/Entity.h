@@ -11,7 +11,7 @@ protected:
     double x; //real world x
     double y; //real world y
 public:
-    Entity(double kickOff_x, double kickOff_y): x(kickOff_x), y(kickOff_y) {};
+    Entity(double x, double y): x(x), y(y) {};
     virtual ~Entity(){};
     
     // update position
