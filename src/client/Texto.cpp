@@ -12,7 +12,18 @@ Texto::Texto(SDL_Renderer *renderer, const std::string &font_path, int font_size
 }
 
 Texto::~Texto()
-{}
+{
+	//Free texture if it exists
+	if( text_texture != NULL )
+	{
+		SDL_DestroyTexture( text_texture );
+		text_texture = NULL;
+	}
+	mRenderer = nullptr;
+	text.clear();
+	TTF_CloseFont(mFont);
+	mFont = nullptr;
+}
 
 void Texto::display(int x, int y) const {
 	text_rect.x = x;

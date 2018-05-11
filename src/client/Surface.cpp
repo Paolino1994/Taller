@@ -17,6 +17,7 @@ Surface::Surface(std::string file)
 Surface::~Surface()
 {
     SDL_FreeSurface(mSurface);
+    mSurface = nullptr;
 }
 
 void Surface::setColorKey(Uint8 red, Uint8 green, Uint8 blue){
