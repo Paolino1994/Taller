@@ -2,6 +2,7 @@
 #include "BallController.h"
 #include "TeamFactory.h"
 #include "PlayerControllerHuman.h"
+#include <algorithm>
 
 World::World(int width, int height, Texture* background, std::map<const std::string, Animation>& ballAnimMapper):
     background(background),
