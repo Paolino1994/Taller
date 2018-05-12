@@ -51,7 +51,7 @@ SDL_Renderer* gRenderer = NULL;
 
 std::string getLogType(char *string);
 
-void renderizar(Camera& camera, World& world, Texto& texto, PlayerController* pHuman);
+void renderizar(Camera& camera, World& world, Texto& texto);
 
 player_data_t
 crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick);
@@ -204,8 +204,8 @@ int main( int argc, char* args[] )
 			** INICIO CREACION TEXTURAS Y ANIMACIONES
 			*/
 
-            std::map<const std::string, Animation> animMapper;
-            std::map<const std::string, Animation> animMapper2;
+            std::map<const std::string, Animation> animMapperHOME;
+            std::map<const std::string, Animation> animMapperAWAY;
             std::map<const std::string, Animation> animMapperBall;
             // CARGAR La configuracion del YAML y de constantes nuestras:
             // TODO
@@ -213,7 +213,7 @@ int main( int argc, char* args[] )
             //Background:
             Texture background(gRenderer, YAML::background_path);
             // Jugador Seleccionado:
-            Texture selectedPlayerTecture(gRenderer, YAML::selectedPlayer_path);
+            Texture selectedPlayerTexture(gRenderer, YAML::selectedPlayer_path);
 
             //Las texturas:
             log->info("Cargando Texturas");
@@ -233,13 +233,13 @@ int main( int argc, char* args[] )
             // Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
             log->info("Crear Animaciones");
             log->debug("Crear Animacion Run");
-            animMapper.emplace(std::make_pair(PlayerRun.spriteid, Animation(runT, PlayerRun)));
+            animMapperHOME.emplace(std::make_pair(PlayerRun.spriteid, Animation(runT, PlayerRun)));
             log->debug("Crear Animacion Still");
-            animMapper.emplace(std::make_pair(PlayerStill.spriteid, Animation(stillT, PlayerStill)));
+            animMapperHOME.emplace(std::make_pair(PlayerStill.spriteid, Animation(stillT, PlayerStill)));
             log->debug("Crear Animacion Sweep");
-            animMapper.emplace(std::make_pair(PlayerSweep.spriteid, Animation(sweepT, PlayerSweep)));
+            animMapperHOME.emplace(std::make_pair(PlayerSweep.spriteid, Animation(sweepT, PlayerSweep)));
             log->debug("Crear Animacion Kick");
-            animMapper.emplace(std::make_pair(PlayerKick.spriteid, Animation(kickT, PlayerKick)));
+            animMapperHOME.emplace(std::make_pair(PlayerKick.spriteid, Animation(kickT, PlayerKick)));
 
             TextureSetter textures2(2, gRenderer);
             sprite_info PlayerRun2=textures2.getPlayerRunInfo();
@@ -253,13 +253,13 @@ int main( int argc, char* args[] )
             // Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
             log->info("Crear Animaciones del equipo 2");
             log->debug("Crear Animacion Run");
-            animMapper2.emplace(std::make_pair(PlayerRun2.spriteid, Animation(runT2, PlayerRun2)));
+            animMapperAWAY.emplace(std::make_pair(PlayerRun2.spriteid, Animation(runT2, PlayerRun2)));
             log->debug("Crear Animacion Still");
-            animMapper2.emplace(std::make_pair(PlayerStill2.spriteid, Animation(stillT2, PlayerStill2)));
+            animMapperAWAY.emplace(std::make_pair(PlayerStill2.spriteid, Animation(stillT2, PlayerStill2)));
             log->debug("Crear Animacion Sweep");
-            animMapper2.emplace(std::make_pair(PlayerSweep2.spriteid, Animation(sweepT2, PlayerSweep2)));
+            animMapperAWAY.emplace(std::make_pair(PlayerSweep2.spriteid, Animation(sweepT2, PlayerSweep2)));
             log->debug("Crear Animacion Kick");
-            animMapper2.emplace(std::make_pair(PlayerKick2.spriteid, Animation(kickT2, PlayerKick2)));
+            animMapperAWAY.emplace(std::make_pair(PlayerKick2.spriteid, Animation(kickT2, PlayerKick2)));
 
 			log->info("Crear Animaciones de la pelota");
 			TextureSetter texturesBall(BALL, gRenderer);
@@ -278,10 +278,11 @@ int main( int argc, char* args[] )
 
 			// Agrego jugadores al mundo
 			log->info("Creo el mundo con su pelota");
-			World world(background.getWidth(), background.getHeight(), &background, animMapperBall);
-			world.setPlayerSelectedTexture(&selectedPlayerTecture);
+			World world(background.getWidth(), background.getHeight(), &background, &selectedPlayerTexture, animMapperBall, animMapperHOME, animMapperAWAY,
+						crearDefaultPlayer(PlayerStill, PlayerRun, PlayerSweep, PlayerKick));
+			//world.setPlayerSelectedTexture(&selectedPlayerTecture);
 		
-
+/*
             // Creo jugadores:
             player_data_t defaultPlayer=crearDefaultPlayer(PlayerStill,PlayerRun,PlayerSweep,PlayerKick);
             log->info("Crear Jugadores");
@@ -306,7 +307,7 @@ int main( int argc, char* args[] )
 			// Inyecto un jugador controlado por un humano
 			log->info("Inyecto un jugador controlado por un humano");
 			PlayerController* controlled = world.injectHumanController(Team::HOME);
-
+*/
             // Agrego mensaje para salir del juego
             log->info("Cargar Mensaje salida de juego");
             Texto quiereSalirTexto(gRenderer, "res/Tehkan World Cup.ttf",36, "SALIR DEL JUEGO? S/N", {255,255,0,0});
@@ -314,10 +315,10 @@ int main( int argc, char* args[] )
             
 			log->info("Agrego la camara");
             Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
-            camera.follow(&world.getBall().getModel());
+            camera.follow(world.getBall());
 
             log->info("Renderizo");
-            renderizar(camera, world, quiereSalirTexto, controlled);
+            renderizar(camera, world, quiereSalirTexto);
         }
     }
 
@@ -359,7 +360,7 @@ player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun,
     return defaultPlayer;
 }
 
-void renderizar(Camera& camera, World& world, Texto& quiereSalirTexto, PlayerController* controlled) {
+void renderizar(Camera& camera, World& world, Texto& quiereSalirTexto) {
 	// TEMP
 	CommandSender commandSender("127.0.0.1", 5000, Team::HOME);
 	// FIN TEMP
@@ -408,19 +409,19 @@ void renderizar(Camera& camera, World& world, Texto& quiereSalirTexto, PlayerCon
                     salirJuego = true;
                 }
 
-                controlled->handleEvent(e);
+                //controlled->handleEvent(e);
 
-		commandSender.handleEvent(e);
-		/*if (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_q) {
-			camera.follow(controlled->getEntity());
-		}*/
+				commandSender.handleEvent(e);
+				/*if (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_q) {
+					camera.follow(controlled->getEntity());
+				}*/
             }
 
             //Cuando el tiempo pasado es mayor a nuestro tiempo de actualizacion
             while ( accumulator >= fixed_dt )
             {
                 //Calcula movimientos
-                world.update(fixed_dt); //Update de todos los players (y otras entidades proximamente?)
+                world.update(commandSender.protocol); //Update de todos los players (y otras entidades proximamente?)
                 camera.update(fixed_dt);
                 accumulator -= fixed_dt;
             }

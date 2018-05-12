@@ -2,72 +2,62 @@
 
 #include <vector>
 
-#include "Texture.h"
-#include "Entity.h"
-#include "BallController.h"
+#include "common/Protocol.h"
 #include "common/GameConstants.h"
-#include "PlayerController.h"
-
+#include "Texture.h"
+#include "Ball.h"
+#include "Player.h"
 
 // Esto ahora va estar un poco mas relacionado con el juego
 // Game / World
 class World
 {
 private:
+	// Las dimensiones del mapa en screen coordinates
+	// en x: vamos de 0 -> width
+	// en y: vamos de 0 -> height
+	// misma logica que la de renderizacion (x aumenta a derecha, y aumenta para abajo)
+	int width;
+	int height;
+
     // El fondo (la cancha)
     Texture* background;
     // Jugador selecionado
     Texture* playerSelectedTexture;
 	// Tenemos una pelota ya desde el principio (controller por ahora que funca como un struct de model + view)
-	BallController ball;
+	Ball ball;
     // Objetos comunes
     std::vector<Entity*> entities; //queda todavia, pero pensar el uso de esto
 
-	std::vector<PlayerController*> playerControllers[static_cast<std::underlying_type<Team>::type>(Team::__LENGTH__)];
+	std::map<Player_ID, Player> players; // [static_cast<std::underlying_type<Team>::type>(Team::__LENGTH__)];
 
-    std::vector<PlayerController*> pControllers;
-    // Las dimensiones del mapa en screen coordinates
-	// en x: vamos de 0 -> width
-	// en y: vamos de 0 -> height
-	// misma logica que la de renderizacion (x aumenta a derecha, y aumenta para abajo)
-    int width;
-    int height;
-	bool playerIsOnRange(PlayerController* cont,PlayerController* controllerToSwap);
+	// Guardo esto para poder crear Players despues
+	player_data_t player_data;
+	std::map<const std::string, Animation> playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(Team::__LENGTH__)];
 
+	void _update(Protocol& protocol, bool goAgain);
 public:
-    World(int width, int height, Texture* background, std::map<const std::string, Animation>& ballAnimMapper);
+	//pendiente un refactor
+    World(int width, int height, Texture* background, Texture* playerSelectedTexture, std::map<const std::string, Animation>& ballAnimMapper,
+		std::map<const std::string, Animation>& teamAnimMapperHOME, std::map<const std::string, Animation>& teamAnimMapperAWAY,
+		player_data_t player_data);
     ~World();
-
-	// Creaci�n de elementos
-	void createTeam(Team team, int defenders, int midfielders, int forwards, player_data_t playerData, std::map<const std::string, Animation>& animMapper);
-
-	// Inyeccion de controller
-	PlayerController* injectHumanController(Team team);
-
-	// Swap controller
-	void swap(PlayerController* playerController);
-
-	PlayerController* getPlayerToPass(PlayerController * controllerToSwap);
 
     void addEntity(Entity* entity);
 
-    void addPlayerController(PlayerController* pController);
     void setPlayerSelectedTexture(Texture* texture) ;
 
     
     Texture* getPlayerSelectedTexture() ;
     Texture* getBackground() ;
-	BallController& getBall();
+	Ball& getBall();
     std::vector<Entity*>& getEntities() ;
-    std::vector<PlayerController*>& getPlayerControllers() ;
+	const std::map<Player_ID, Player>& getPlayers() ;
 
-	void update(double dt);
+	void update(Protocol& protocol);
 
     
     int getWidth();
     int getHeight();
-
-	void swapToBallController(PlayerController *cont);
-
 };
 

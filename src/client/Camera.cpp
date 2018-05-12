@@ -1,6 +1,5 @@
 #include "Camera.h"
-#include "BallController.h"
-#include "../common/Log.h"
+#include "common/Log.h"
 #include <iostream>
 
 
@@ -14,13 +13,13 @@ Camera::Camera(World& world, int width, int height, int widthScrollOffset, int h
     y(0),
     x_update_offset(0),
     y_update_offset(0),
-    followed(NULL)
+    followed(world.getBall())
 {}
 
 Camera::~Camera()
 {}
     
-void Camera::follow(Entity* gameObj){ //Entity
+void Camera::follow(Entity& gameObj){ //Entity
     followed = gameObj;
 }
 
@@ -32,19 +31,17 @@ bool Camera::isWithinScrollBoundaries(Entity * entity)
 }
     
 void Camera::update(double dt){
-    if (!followed) return;
-    
-    int old_x = this->x;
+	int old_x = this->x;
 	int old_y = this->y;
 
 	// Actualizamos el x de la camara
 	
 	// if no esta en mis limites de x del scroll
-	if (this->x + widthScrollOffset > followed->getCenterX()) { // limite de x a izquierda
-		this->x = followed->getCenterX() - widthScrollOffset;
+	if (this->x + widthScrollOffset > followed.getCenterX()) { // limite de x a izquierda
+		this->x = followed.getCenterX() - widthScrollOffset;
 	}
-	else if (this->x + this->width - widthScrollOffset < followed->getCenterX()) { //limite de x a derecha
-		this->x = followed->getCenterX() - this->width + widthScrollOffset;
+	else if (this->x + this->width - widthScrollOffset < followed.getCenterX()) { //limite de x a derecha
+		this->x = followed.getCenterX() - this->width + widthScrollOffset;
 	}
 
 	// Si la posicion de camara esta pasando el limite del mundo en base a la pantalla
@@ -59,11 +56,11 @@ void Camera::update(double dt){
 	// Actualizamos el y de la camara
 
 	// if no esta en mis limites de Y del scroll
-	if (this->y + heightScrollOffset > followed->getCenterY()) { // limite de y superior
-		this->y = followed->getCenterY() - heightScrollOffset;
+	if (this->y + heightScrollOffset > followed.getCenterY()) { // limite de y superior
+		this->y = followed.getCenterY() - heightScrollOffset;
 	}
-	else if (this->y + this->height - heightScrollOffset < followed->getCenterY()) { //limite de y inferior
-		this->y = followed->getCenterY() - this->height + heightScrollOffset;
+	else if (this->y + this->height - heightScrollOffset < followed.getCenterY()) { //limite de y inferior
+		this->y = followed.getCenterY() - this->height + heightScrollOffset;
 	}
 
 	// Si la posicion de camara esta pasando el limite del mundo en base a la pantalla
@@ -78,9 +75,8 @@ void Camera::update(double dt){
     
 void Camera::render(World& world){
 	auto background = world.getBackground();
-	auto pControllers = world.getPlayerControllers();
+	auto players = world.getPlayers();
 	auto playerSelectedTexture = world.getPlayerSelectedTexture();
-    int rendered=0;
 
 	// renderizamos el background (la cancha)
 	background->setScaling(this->width, this->height);
@@ -88,27 +84,21 @@ void Camera::render(World& world){
 	background->render(0, 0);
 
 
-	for (auto player : pControllers)
+	for (const std::pair<Player_ID, Player>& pair : players)
 	{
-		int screen_x = player->getEntity()->getX() - this->x;
-		int screen_y = player->getEntity()->getY() - this->y;
+		const Player& player = pair.second;
+		int screen_x = player.getX() - this->x;
+		int screen_y = player.getY() - this->y;
 		//TODO: check screen_x/_y esten en mi ancho/alto
 		//no dibujar lo que no veo!
-		if(((PlayerModel*)player->getEntity())->getIsControlledByHuman()){
+		if(player.isControlledByMe()){
 			playerSelectedTexture->render(screen_x + 5, screen_y -10);
 		}
-		player->getView()->render(screen_x, screen_y);
-		if(player->hasControlOfTheBall()){
-			world.getBall().getView().render(screen_x, screen_y,player->getAngle());
-            rendered=1;
-		}
-
 	}
-    if(rendered==0){
-        int screen_x = world.getBall().getModel().getX() - this->x;
-        int screen_y = world.getBall().getModel().getY() - this->y;
-		Log::get_instance()->info("X: "+ std::to_string(screen_x) + " Y: " + std::to_string(screen_y));
-        world.getBall().getView().render(screen_x, screen_y);
-    }
+
+	int screen_x = world.getBall().getX() - this->x;
+	int screen_y = world.getBall().getY() - this->y;
+	Log::get_instance()->info("X: " + std::to_string(screen_x) + " Y: " + std::to_string(screen_y));
+	world.getBall().render(screen_x, screen_y);
 }
 

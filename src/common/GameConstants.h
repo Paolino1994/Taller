@@ -2,12 +2,17 @@
 #include <string>
 #include "common/YAMLReader.h"
 
+using Player_ID = u_int32_t;
+using User_ID = int32_t;
+const User_ID AI_USER = -1;
+using pos_t = int32_t;
+using angle_t = int32_t;
+
 enum class Team : u_int32_t {
 	HOME = 0, //LEFT_GOAL
 	AWAY, //RIGHT_GOAL
 	__LENGTH__
 };
-
 
 typedef struct sprite_info {
     std::string spriteid;
@@ -106,5 +111,19 @@ struct player_data {
 
 typedef struct player_data player_data_t;
 
-//ejemplo instanciacion player data especifico:
+typedef struct player_view_data {
+	User_ID userId;
+	Player_ID playerId;
+	Team team;
+	pos_t x;
+	pos_t y;
+	angle_t angle;
+	PlayerState state;
+} player_view_data_t;
 
+typedef struct ball_view_data {
+	pos_t x;
+	pos_t y;
+	angle_t angle;
+	BallState state;
+} ball_view_data_t;

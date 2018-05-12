@@ -10,8 +10,9 @@
 class CommandSender
 {
 private:
-	Protocol protocol;
+	
 public:
+	Protocol protocol; // TEMP
 	CommandSender(std::string ip, unsigned short port, Team team);
 	~CommandSender();
 	void handleEvent(SDL_Event& e);

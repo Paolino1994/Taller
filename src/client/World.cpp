@@ -1,155 +1,36 @@
-#include "World.h"
-#include "BallController.h"
-#include "TeamFactory.h"
-#include "PlayerControllerHuman.h"
 #include <algorithm>
 
-World::World(int width, int height, Texture* background, std::map<const std::string, Animation>& ballAnimMapper):
+#include "World.h"
+
+World::World(int width, int height, Texture* background, Texture* playerSelectedTexture, std::map<const std::string, Animation>& ballAnimMapper,
+	std::map<const std::string, Animation>& teamAnimMapperHOME, std::map<const std::string, Animation>& teamAnimMapperAWAY,
+	player_data_t player_data):
+	width(width),
+	height(height),
     background(background),
-	ball(BallController(width/2, height/2, ballAnimMapper)),
+	playerSelectedTexture(playerSelectedTexture),
+	ball(Ball(ballAnimMapper)),
     entities(std::vector<Entity*>()),
-	pControllers(std::vector<PlayerController*>()),
-    width(width),
-    height(height)
+	players(std::map<Player_ID, Player>()),
+	player_data(player_data)
 {
+	playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(Team::HOME)] = teamAnimMapperHOME;
+	playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(Team::AWAY)] = teamAnimMapperAWAY;
 }
 
 World::~World()
 {
-	for (auto controllers : playerControllers) {
-		for (PlayerController* controller : controllers) {
-			delete controller->getModel();
-			delete controller->getView();
-			delete controller;
-		}
-	}
 }
-
-void World::createTeam(Team team, int defenders, int midfielders, int forwards, player_data_t playerData, std::map<const std::string, Animation>& animMapper)
-{
-	size_t teamIndex = static_cast<std::underlying_type<Team>::type>(team);
-	if (team != Team::__LENGTH__ && playerControllers[teamIndex].size() == 0) {
-		TeamFactory teamFactory(playerData);
-		teamFactory.create(defenders, midfielders, forwards, team, this->getWidth(), this->getHeight());
-		teamFactory.add_view(animMapper);
-		teamFactory.fill(playerControllers[teamIndex]);
-
-		for (auto controller : playerControllers[teamIndex]) {
-			pControllers.push_back(controller);
-		}
-	}
-	else {
-		Log::get_instance()->info("Intentaron recrear un equipo, no lo permito y me quedo con el anterior");
-	}
-}
-
-PlayerController* World::injectHumanController(Team team)
-{
-	std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
-
-	for (size_t i = 0; i < teamControllers.size(); i++)
-	{
-		if (teamControllers[i]->isControllable()) {
-			PlayerController* other = teamControllers[i];
-			PlayerControllerHuman* human = new PlayerControllerHuman(other->getModel(), other->getView(), *this);
-			teamControllers[i] = human;
-			human->getModel()->setIsControlledByHuman(true);
-            human->getModel()->setHasControlOfTheBall(true);
-			delete other;
-			return human;
-		}
-	}
-
-	return nullptr;
-}
-
-bool World::playerIsOnRange(PlayerController* cont,PlayerController* controllerToSwap){
-	PlayerModel* model=cont->getModel();
-	int x=model->getX();
-	int y=model->getY();
-	int xCon=controllerToSwap->getModel()->getX();
-	int yCon=controllerToSwap->getModel()->getY();
-	if((x<xCon+200 || x>xCon-200) && (y<yCon+150 || y>yCon-150)){
-		return true;
-	}
-	return false;
-
-}
-
-PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
-    Team team = controllerToSwap->getModel()->getTeam();
-    std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
-
-    ptrdiff_t index = std::distance(teamControllers.begin(), std::find(teamControllers.begin(), teamControllers.end(), controllerToSwap));
-
-    if (index >= (long long)teamControllers.size()) {
-        Log::get_instance()->info("El controller que se quiso swapear no esta en mi listado de controllers del equipo correspondiente");
-
-    }
-
-    //size_t controllerToSwapIndex = index;
-
-    do
-    { // en el peor caso volvemos a el que estabamos controlando recien
-        ++index;
-        if (index == (long long)teamControllers.size()) {
-            index = 0;
-        }
-
-    } while (teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable() && playerIsOnRange(teamControllers[index],controllerToSwap)); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
-    return teamControllers[index];
-
-}
-
-void World::swap(PlayerController * controllerToSwap)
-{
-	Team team = controllerToSwap->getModel()->getTeam();
-	std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
-
-	ptrdiff_t index = std::distance(teamControllers.begin(), std::find(teamControllers.begin(), teamControllers.end(), controllerToSwap));
-
-	if (index >= (long long)teamControllers.size()) {
-		Log::get_instance()->info("El controller que se quiso swapear no esta en mi listado de controllers del equipo correspondiente");
-		return;
-	}
-
-	size_t controllerToSwapIndex = index;
-
-	do
-	{ // en el peor caso volvemos a el que estabamos controlando recien
-		++index;
-		if (index == (long long)teamControllers.size()) {
-			index = 0;
-		}
-
-	} while (teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable() && playerIsOnRange(teamControllers[index],controllerToSwap)); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
-
-	if (teamControllers[index] != controllerToSwap) {
-		controllerToSwap->swap(teamControllers[index]);
-		// camera.follow(controlled->getEntity()); lo hacemos en el main
-		auto temp = teamControllers[index];
-		teamControllers[index] = controllerToSwap;
-		teamControllers[controllerToSwapIndex] = temp;
-	}
-}
-
-
 
 void World::addEntity(Entity* entity){
     entities.push_back(entity);
-}
-
-
-
-void World::addPlayerController(PlayerController* pController){
-	pControllers.push_back(pController);
 }
 
 Texture* World::getBackground() {
     return background;
 }
 
-BallController& World::getBall()
+Ball& World::getBall()
 {
 	return ball;
 }
@@ -166,26 +47,46 @@ std::vector<Entity*>& World::getEntities() {
     return entities;
 }
 
-std::vector<PlayerController*>& World::getPlayerControllers() {
-	// TODO
-	// TEMP, pendiente una modificacion, pero con la arq cliente-servidor esto probablemente ni exista
-	pControllers = std::vector<PlayerController*>();
-
-	for (std::vector<PlayerController*>& controllers : playerControllers) {
-		pControllers.insert(pControllers.end(), controllers.begin(), controllers.end());
-	}
-	
-	return pControllers;
+const std::map<Player_ID, Player>& World::getPlayers() {
+	return players;
 }
 
-void World::update(double dt)
-{
-	for (auto controllers: playerControllers) {
-		for (auto player: controllers) {
-			player->update(dt, this->getWidth(), this->getHeight());
+void World::_update(Protocol& protocol, bool goAgain) {
+
+	protocol.read();
+
+	Request request = protocol.request();
+
+	if (request == Request::PLAYER_VIEW_UPDATE) {
+		const player_view_data_t* player_view_data = reinterpret_cast<const player_view_data_t*>(protocol.dataBuffer());
+		size_t player_view_data_len = protocol.dataLength() / sizeof(player_view_data);
+		for (size_t i = 0; i < player_view_data_len; ++i) {
+			// Faltaria chequear si me sacan algun jugador, pero no debeia pasar!
+
+			auto existing_player = players.find(player_view_data[i].playerId);
+			if (existing_player != players.end()) { //Existe
+				existing_player->second.update(player_view_data[i]);
+			}
+			else {
+				players.emplace(std::piecewise_construct,
+					std::make_tuple(player_view_data[i].playerId),
+					std::make_tuple(playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(player_view_data[i].team)], this->player_data));
+			}
 		}
 	}
-	ball.update(dt, this->getWidth(), this->getHeight(), this->getPlayerControllers());
+	else if (request == Request::BALL_VIEW_UPDATE) {
+		const ball_view_data_t ball_view_data = *reinterpret_cast<const ball_view_data_t*>(protocol.dataBuffer());
+		ball.update(ball_view_data);
+	}
+
+	if (goAgain) { // En una se actualizan los jugadores, en la otra la pelota. El orden no importa
+		this->_update(protocol, false); 
+	}
+}
+
+void World::update(Protocol& protocol)
+{
+	this->_update(protocol, true);
 }
 
 int World::getWidth(){
@@ -196,14 +97,3 @@ int World::getHeight(){
     return height;
 }
 
-void World::swapToBallController(PlayerController *cont) {
-    Team team = cont->getModel()->getTeam();
-    std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
-    for(PlayerController* controller : teamControllers){
-        if(controller->getModel()->getHasControlOfTheBall()){
-            cont->swap(controller);
-        }
-    }
-
-
-}

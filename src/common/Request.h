@@ -9,7 +9,9 @@
 enum class Request : u_int32_t {
 	NONE = 0,
 	TEAM_ASSIGN,
-	COMMAND
+	COMMAND,
+	PLAYER_VIEW_UPDATE,
+	BALL_VIEW_UPDATE
 };
 
 

@@ -11,14 +11,15 @@ protected:
     double x; //real world x
     double y; //real world y
 public:
+	Entity() : x(0), y(0) {};
     Entity(double x, double y): x(x), y(y) {};
     virtual ~Entity(){};
     
     // update position
     // void update(double dt);
     
-    int getX() {return (int)x;}; //redondear?
-    int getY() {return (int)y;}; //redondear?
+    int getX() const {return (int)x;}; //redondear?
+    int getY() const {return (int)y;}; //redondear?
 
 	int getCenterX() { return getX() + (getWidth() / 2); };
 	int getCenterY() { return getY() + (getHeight() / 2); };
@@ -26,6 +27,7 @@ public:
     
     virtual int getWidth() = 0;
     virtual int getHeight() = 0;
+	virtual double getAngle() = 0;
 
     // render: screen_x and screen_y
     //virtual void render(int screen_x, int screen_y) = 0;
