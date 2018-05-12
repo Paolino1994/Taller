@@ -8,7 +8,6 @@
 
 #include "Texto.h"
 #include "Texture.h"
-#include "GameConstants.h"
 #include "Surface.h"
 #include "CommandSender.h"
 #include "common/Log.h"

@@ -9,12 +9,15 @@
 #include <map>
 
 #include "World.h"
+#include "Animation.h"
+#include "common/GameConstants.h"
+
 #include "Texture.h"
 #include "Surface.h"
-#include "Animation.h"
-#include "Entity.h"
+
+//#include "Entity.h"
 #include "Camera.h"
-#include "GameConstants.h"
+
 //#include "Player.h"
 #include "common/Log.h"
 //#include "PlayerModel.h"
@@ -24,9 +27,9 @@
 #include "common/YAMLReader.h"
 #include "Texto.h"
 #include "TextureSetter.h"
-#include "BallModel.h"
-#include "BallView.h"
-#include "BallController.h"
+//#include "BallModel.h"
+//#include "BallView.h"
+//#include "BallController.h"
 #include "CommandSender.h"
 #include "GameMenu.h"
 
@@ -279,8 +282,8 @@ int main( int argc, char* args[] )
 
 
 			// Agrego jugadores al mundo
-			log->info("Agrego Jugadores al Juego");
-			World world(background.getWidth(), background.getHeight(), &background);
+			log->info("Creo el mundo con su pelota");
+			World world(background.getWidth(), background.getHeight(), &background, animMapperBall);
 			world.setPlayerSelectedTexture(&selectedPlayerTecture);
 		
 
@@ -305,17 +308,6 @@ int main( int argc, char* args[] )
 
 			world.createTeam(Team::AWAY, defensores, mediocampistas, delanteros, defaultPlayer2, animMapper2);
 
-			
-			//Crteo la pelota
-			log->info("Crear Pelota");
-			//teamIterator->model->setHasControlOfTheBall(true);
-			BallModel *ballModel = new BallModel(0, 0, 0, 0);
-			Log::get_instance()->info("Agregando vista de la pelota");
-			BallView* ballView = new BallView(animMapperBall, ballModel);
-			BallController::initialize(ballModel, ballView);
-			log->info("Agrego la pelota");
-			addBallToWorld(world);
-
 			// Inyecto un jugador controlado por un humano
 			log->info("Inyecto un jugador controlado por un humano");
 			PlayerController* controlled = world.injectHumanController(Team::HOME);
@@ -327,7 +319,7 @@ int main( int argc, char* args[] )
             
 			log->info("Agrego la camara");
             Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
-            camera.follow(ballModel);
+            camera.follow(&world.getBall().getModel());
 
             log->info("Renderizo");
             renderizar(camera, world, quiereSalirTexto, controlled, commandSender);
@@ -339,16 +331,6 @@ int main( int argc, char* args[] )
 
     return 0;
 }
-
-void addBallToWorld(World& world) {
-    BallController* cont=BallController::getInstance();
-    BallModel* mod=cont->getModel();
-    world.addEntity(mod);
-    //std::cout<<"HOLA"<<std::endl;
-}
-
-
-
 
 player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick) {
     player_data_t defaultPlayer = {{
@@ -383,6 +365,8 @@ player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun,
 }
 
 void renderizar(Camera& camera, World& world, Texto& quiereSalirTexto, PlayerController* controlled, CommandSender& commandSender) {
+
+	commandSender.assignTeam(Team::HOME);
 
     if (true)
     {

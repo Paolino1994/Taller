@@ -2,8 +2,8 @@
 
 #include "common/Log.h"
 
-const std::string& getDescription(Command command) {
-	return commandDescription[static_cast<std::underlying_type<Command>::type>(command)];
+const std::string& getDescription(CommandType command) {
+	return commandTypeDescription[static_cast<std::underlying_type<CommandType>::type>(command)];
 }
 
 void RequestHandler::_run()
@@ -14,16 +14,22 @@ void RequestHandler::_run()
 
 			Request request = protocol.request();
 			switch (request) {
-				case Request::COMMAND_KEY_DOWN: {
-					Log::get_instance()->info("Me llego un comando del tipo KEY_DOWN");
-					Command command = *reinterpret_cast<const Command*>(protocol.dataBuffer());
-					Log::get_instance()->info("El comando es: " + getDescription(command));
+				case Request::TEAM_ASSIGN: {
+					Team team = *reinterpret_cast<const Team*>(protocol.dataBuffer());
+					Log::get_instance()->info("Me llego un pedido de asignacion al equipo: " + static_cast<std::underlying_type<Team>::type>(team));
+					player = game.assignToTeam(team);
 					break;
 				}
-				case Request::COMMAND_KEY_UP: {
-					Log::get_instance()->info("Me llego un comando del tipo KEY_UP");
+				case Request::COMMAND: {
 					Command command = *reinterpret_cast<const Command*>(protocol.dataBuffer());
-					Log::get_instance()->info("El comando es: " + getDescription(command));
+					if (command.key == CommandKey::KEY_DOWN) {
+						Log::get_instance()->info("Me llego un comando del tipo KEY_DOWN");
+					}
+					else if (command.key == CommandKey::KEY_UP) {
+						Log::get_instance()->info("Me llego un comando del tipo KEY_UP");
+					}
+					Log::get_instance()->info("El comando es: " + getDescription(command.type));
+					player->handleEvent(command);
 					break;
 				}
 				default: {
@@ -46,10 +52,12 @@ void RequestHandler::_run()
 	if (!this->server_exit_requested) protocol.shutdown(); //Por problemas con la conexion con este cliente
 }
 
-RequestHandler::RequestHandler(Socket * socket) :
+RequestHandler::RequestHandler(Socket * socket, Game& game) :
 	protocol(Protocol(socket)),
+	game(game),
 	running(false),
-	server_exit_requested(false)
+	server_exit_requested(false),
+	player(nullptr)
 {
 }
 

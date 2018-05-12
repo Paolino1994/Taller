@@ -7,10 +7,12 @@
 
 
 #include <SDL_render.h>
-#include "GameConstants.h"
+#include "common/GameConstants.h"
 #include "Texture.h"
 #define BALL 3
 
+// CAMBIAR PARA QUE ESTO USE EL common/SpriteInfoSetter!!!!!!!!!!!!
+//
 class TextureSetter {
 
 public:

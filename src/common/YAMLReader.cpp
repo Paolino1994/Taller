@@ -9,6 +9,7 @@
 #include <string>
 #include <map>
 #include <iterator>
+#include <algorithm>
 
 std::vector<std::string> separar(const std::string& str, const char& ch) ;
 

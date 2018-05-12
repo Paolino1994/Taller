@@ -6,17 +6,19 @@
 #include "common/Log.h"
 #include "RequestHandler.h"
 #include "UserManager.h"
+#include "Game.h"
 
 using namespace std;
 
-void accepter(Socket& skt, bool* exit_requested) {
+void accepter(Game& game, Socket& skt, bool* exit_requested) {
 	vector<RequestHandler*> requestHandlers;
 	UserManager* u_manager = new UserManager();
 	try {
 		while (true) {
 			Socket* newClientSocket = skt.accept();
 			if (u_manager->login(newClientSocket) == LOGIN_SUCCESS) {
-				RequestHandler* rq = new RequestHandler(newClientSocket);
+				// Inyecto un jugador controlado por un humano
+				RequestHandler* rq = new RequestHandler(newClientSocket, game);
 				requestHandlers.push_back(rq);
 				rq->run();
 			} else {
@@ -47,6 +49,8 @@ int main(int argc, char *argv[]) {
 	}
 	Log::setFilenamePrefix("server");
 	Log::initialize("info");
+	YAMLReader& yamlReader = YAMLReader::get_instance();
+	yamlReader.readYamlGeneral("");
 
 	Log::get_instance()->info("Iniciamos el servidor...");
 	unsigned short port = atoi(argv[1]);
@@ -54,7 +58,10 @@ int main(int argc, char *argv[]) {
 	Socket skt = Socket();
 	skt.bind_and_listen(port);
 	bool exit_requested = false;
-	thread acc(&accepter, ref(skt), &exit_requested);
+
+	Game game;
+
+	thread acc(&accepter, ref(game), ref(skt), &exit_requested);
 	Log::get_instance()->info("Estamos aceptando clientes");
 	while (true) {
 		cout << "Ingrese \"*\" para finalizar: ";

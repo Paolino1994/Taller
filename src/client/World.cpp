@@ -2,9 +2,11 @@
 #include "BallController.h"
 #include "TeamFactory.h"
 #include "PlayerControllerHuman.h"
+#include <algorithm>
 
-World::World(int width, int height, Texture* background):
+World::World(int width, int height, Texture* background, std::map<const std::string, Animation>& ballAnimMapper):
     background(background),
+	ball(BallController(width/2, height/2, ballAnimMapper)),
     entities(std::vector<Entity*>()),
 	pControllers(std::vector<PlayerController*>()),
     width(width),
@@ -25,13 +27,14 @@ World::~World()
 
 void World::createTeam(Team team, int defenders, int midfielders, int forwards, player_data_t playerData, std::map<const std::string, Animation>& animMapper)
 {
-	if (team != Team::__LENGTH__ && playerControllers[team].size() == 0) {
+	size_t teamIndex = static_cast<std::underlying_type<Team>::type>(team);
+	if (team != Team::__LENGTH__ && playerControllers[teamIndex].size() == 0) {
 		TeamFactory teamFactory(playerData);
 		teamFactory.create(defenders, midfielders, forwards, team, this->getWidth(), this->getHeight());
 		teamFactory.add_view(animMapper);
-		teamFactory.fill(playerControllers[team]);
+		teamFactory.fill(playerControllers[teamIndex]);
 
-		for (auto controller : playerControllers[team]) {
+		for (auto controller : playerControllers[teamIndex]) {
 			pControllers.push_back(controller);
 		}
 	}
@@ -42,7 +45,7 @@ void World::createTeam(Team team, int defenders, int midfielders, int forwards, 
 
 PlayerController* World::injectHumanController(Team team)
 {
-	std::vector<PlayerController*>& teamControllers = playerControllers[team];
+	std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
 
 	for (size_t i = 0; i < teamControllers.size(); i++)
 	{
@@ -51,6 +54,7 @@ PlayerController* World::injectHumanController(Team team)
 			PlayerControllerHuman* human = new PlayerControllerHuman(other->getModel(), other->getView(), *this);
 			teamControllers[i] = human;
 			human->getModel()->setIsControlledByHuman(true);
+            human->getModel()->setHasControlOfTheBall(true);
 			delete other;
 			return human;
 		}
@@ -74,7 +78,7 @@ bool World::playerIsOnRange(PlayerController* cont,PlayerController* controllerT
 
 PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
     Team team = controllerToSwap->getModel()->getTeam();
-    std::vector<PlayerController*>& teamControllers = playerControllers[team];
+    std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
 
     ptrdiff_t index = std::distance(teamControllers.begin(), std::find(teamControllers.begin(), teamControllers.end(), controllerToSwap));
 
@@ -100,7 +104,7 @@ PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
 void World::swap(PlayerController * controllerToSwap)
 {
 	Team team = controllerToSwap->getModel()->getTeam();
-	std::vector<PlayerController*>& teamControllers = playerControllers[team];
+	std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
 
 	ptrdiff_t index = std::distance(teamControllers.begin(), std::find(teamControllers.begin(), teamControllers.end(), controllerToSwap));
 
@@ -145,6 +149,11 @@ Texture* World::getBackground() {
     return background;
 }
 
+BallController& World::getBall()
+{
+	return ball;
+}
+
 Texture* World::getPlayerSelectedTexture() {
     return playerSelectedTexture;
 }
@@ -176,7 +185,7 @@ void World::update(double dt)
 			player->update(dt, this->getWidth(), this->getHeight());
 		}
 	}
-	BallController::getInstance()->update(dt, this->getWidth(), this->getHeight());
+	ball.update(dt, this->getWidth(), this->getHeight(), this->getPlayerControllers());
 }
 
 int World::getWidth(){
@@ -185,4 +194,16 @@ int World::getWidth(){
 
 int World::getHeight(){
     return height;
+}
+
+void World::swapToBallController(PlayerController *cont) {
+    Team team = cont->getModel()->getTeam();
+    std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
+    for(PlayerController* controller : teamControllers){
+        if(controller->getModel()->getHasControlOfTheBall()){
+            cont->swap(controller);
+        }
+    }
+
+
 }

@@ -8,14 +8,14 @@
 
 enum class Request : u_int32_t {
 	NONE = 0,
-	COMMAND_KEY_DOWN,
-	COMMAND_KEY_UP,
+	TEAM_ASSIGN,
+	COMMAND,
 	LOGIN
 };
 
 
 // Probablemente mover a otro archivo todo lo del command
-enum class Command : u_int32_t {
+enum class CommandType : u_int32_t {
 	GO_LEFT = 0,
 	GO_UP,
 	GO_DOWN,
@@ -23,11 +23,23 @@ enum class Command : u_int32_t {
 	SPRINT,
 	KICK,
 	SWEEP,
+	PASS,
 	CHANGE_PLAYER,
 	__LENGTH__
 };
 
-const std::string commandDescription[static_cast<std::underlying_type<Command>::type>(Command::__LENGTH__)] = {
+enum class CommandKey : u_int32_t {
+	KEY_DOWN = 0,
+	KEY_UP,
+	__LENGTH__
+};
+
+struct Command {
+	CommandKey key;
+	CommandType type;
+};
+
+const std::string commandTypeDescription[static_cast<std::underlying_type<CommandType>::type>(CommandType::__LENGTH__)] = {
 	/*[Command::GO_LEFT] =*/ "Ir a la izquierda",
 	/*[Command::GO_UP] =*/ "Ir para arriba",
 	/*[Command::GO_DOWN] =*/ "Ir para abajo",
@@ -35,5 +47,6 @@ const std::string commandDescription[static_cast<std::underlying_type<Command>::
 	/*[Command::SPRINT] =*/ "Correr",
 	/*[Command::KICK] =*/ "Patear",
 	/*[Command::SWEEP] =*/ "Barrer",
+	/*[Command::PASS] =*/ "Pasar la pelota",
 	/*[Command::CHANGE_PLAYER] =*/ "Cambiar de jugador controlado"
 };

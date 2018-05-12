@@ -14,9 +14,9 @@ class BallView {
 public:
     BallView(std::map<const std::string, Animation>& animMapperBall, BallModel& ballStill);
 
-    void render(int i, int i1, double angle);
+	//void render(int i, int i1, double angle);
 
-    void render(int screen_x,int screen_y);
+    //void render(int screen_x,int screen_y);
 
     void update(double d);
 
@@ -27,7 +27,7 @@ private:
 
     BallModel& ballModel;
 
-    BallState priorState;
+    BallState ballState;
 };
 
 
