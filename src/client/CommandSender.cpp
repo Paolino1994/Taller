@@ -3,9 +3,10 @@
 #include "common/Request.h"
 
 
-CommandSender::CommandSender(std::string ip, unsigned short port):
+CommandSender::CommandSender(std::string ip, unsigned short port, Team team):
 	protocol(Protocol(ip, port))
 {
+	protocol.write(Request::TEAM_ASSIGN, reinterpret_cast<const char*>(&team), sizeof(team));
 }
 
 
@@ -17,55 +18,57 @@ CommandSender::~CommandSender()
 void CommandSender::handleEvent(SDL_Event& e)
 {
 	Request request = Request::NONE;
-	Command command = Command::__LENGTH__;
+	Command command = {CommandKey::__LENGTH__, CommandType::__LENGTH__};
 
 	if (e.type == SDL_KEYDOWN && e.key.repeat == 0)
 	{
-		request = Request::COMMAND_KEY_DOWN;
+		request = Request::COMMAND;
+		command.key = CommandKey::KEY_DOWN;
 	}
 	else if (e.type == SDL_KEYUP && e.key.repeat == 0) 
 	{
-		request = Request::COMMAND_KEY_UP;
+		request = Request::COMMAND;
+		command.key = CommandKey::KEY_UP;
 	}
 		
 	if (request != Request::NONE){
 		switch (e.key.keysym.sym)
 		{
 			case SDLK_UP: {
-				command = Command::GO_UP;
+				command.type = CommandType::GO_UP;
 				break;
 			}
 			case SDLK_DOWN: {
-				command = Command::GO_DOWN;
+				command.type = CommandType::GO_DOWN;
 				break;
 			}
 			case SDLK_LEFT: {
-				command = Command::GO_LEFT;
+				command.type = CommandType::GO_LEFT;
 				break;
 			}
 			case SDLK_RIGHT: {
-				command = Command::GO_RIGHT;
+				command.type = CommandType::GO_RIGHT;
 				break;
 			}
 			case SDLK_a: {
-				command = Command::SWEEP;
+				command.type = CommandType::SWEEP;
 				break;
 			}
 			case SDLK_SPACE: {
-				command = Command::SPRINT;
+				command.type = CommandType::SPRINT;
 				break;
 			}
 			case SDLK_s: {
-				command = Command::KICK;
+				command.type = CommandType::KICK;
 				break;
 			}
 			case SDLK_q: {
-				command = Command::CHANGE_PLAYER;
+				command.type = CommandType::CHANGE_PLAYER;
 				break;
 			}
 		}
 
-		if (command != Command::__LENGTH__) {
+		if (command.key != CommandKey::__LENGTH__ && command.type != CommandType::__LENGTH__) {
 			protocol.write(request, reinterpret_cast<const char*>(&command), sizeof(command));
 		}
 	}

@@ -27,13 +27,14 @@ World::~World()
 
 void World::createTeam(Team team, int defenders, int midfielders, int forwards, player_data_t playerData, std::map<const std::string, Animation>& animMapper)
 {
-	if (team != Team::__LENGTH__ && playerControllers[team].size() == 0) {
+	size_t teamIndex = static_cast<std::underlying_type<Team>::type>(team);
+	if (team != Team::__LENGTH__ && playerControllers[teamIndex].size() == 0) {
 		TeamFactory teamFactory(playerData);
 		teamFactory.create(defenders, midfielders, forwards, team, this->getWidth(), this->getHeight());
 		teamFactory.add_view(animMapper);
-		teamFactory.fill(playerControllers[team]);
+		teamFactory.fill(playerControllers[teamIndex]);
 
-		for (auto controller : playerControllers[team]) {
+		for (auto controller : playerControllers[teamIndex]) {
 			pControllers.push_back(controller);
 		}
 	}
@@ -44,7 +45,7 @@ void World::createTeam(Team team, int defenders, int midfielders, int forwards, 
 
 PlayerController* World::injectHumanController(Team team)
 {
-	std::vector<PlayerController*>& teamControllers = playerControllers[team];
+	std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
 
 	for (size_t i = 0; i < teamControllers.size(); i++)
 	{
@@ -77,7 +78,7 @@ bool World::playerIsOnRange(PlayerController* cont,PlayerController* controllerT
 
 PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
     Team team = controllerToSwap->getModel()->getTeam();
-    std::vector<PlayerController*>& teamControllers = playerControllers[team];
+    std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
 
     ptrdiff_t index = std::distance(teamControllers.begin(), std::find(teamControllers.begin(), teamControllers.end(), controllerToSwap));
 
@@ -103,7 +104,7 @@ PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
 void World::swap(PlayerController * controllerToSwap)
 {
 	Team team = controllerToSwap->getModel()->getTeam();
-	std::vector<PlayerController*>& teamControllers = playerControllers[team];
+	std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
 
 	ptrdiff_t index = std::distance(teamControllers.begin(), std::find(teamControllers.begin(), teamControllers.end(), controllerToSwap));
 
@@ -197,7 +198,7 @@ int World::getHeight(){
 
 void World::swapToBallController(PlayerController *cont) {
     Team team = cont->getModel()->getTeam();
-    std::vector<PlayerController*>& teamControllers = playerControllers[team];
+    std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
     for(PlayerController* controller : teamControllers){
         if(controller->getModel()->getHasControlOfTheBall()){
             cont->swap(controller);

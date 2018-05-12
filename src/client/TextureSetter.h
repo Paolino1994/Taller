@@ -11,6 +11,8 @@
 #include "Texture.h"
 #define BALL 3
 
+// CAMBIAR PARA QUE ESTO USE EL common/SpriteInfoSetter!!!!!!!!!!!!
+//
 class TextureSetter {
 
 public:

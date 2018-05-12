@@ -2,7 +2,7 @@
 #include <string>
 #include "common/YAMLReader.h"
 
-enum Team {
+enum class Team : u_int32_t {
 	HOME = 0, //LEFT_GOAL
 	AWAY, //RIGHT_GOAL
 	__LENGTH__
@@ -20,6 +20,13 @@ typedef struct sprite_info {
 
 // Datos que pueden venir de la configuracion
 namespace YAML {
+	// Identicos a nuestra imagen de background en el cliente
+	// Si lo quieren manejar por separado hay que aplicar logica de escalado del mundo logico al background -> no es la idea
+	const int WORLD_WIDTH = 1600;
+	const int WORLD_HEIGHT = 1000;
+
+	const size_t MAX_PLAYERS = 1; //TODO: Esto recibirlo desde el YAMLReader
+
     const int SCREEN_WIDTH = 800;
     const int SCREEN_HEIGHT = 600;
 	const int SCREEN_WIDTH_SCROLL_OFFSET = SCREEN_WIDTH / 2;

@@ -23,7 +23,7 @@ private:
     // Objetos comunes
     std::vector<Entity*> entities; //queda todavia, pero pensar el uso de esto
 
-	std::vector<PlayerController*> playerControllers[Team::__LENGTH__];
+	std::vector<PlayerController*> playerControllers[static_cast<std::underlying_type<Team>::type>(Team::__LENGTH__)];
 
     std::vector<PlayerController*> pControllers;
     // Las dimensiones del mapa en screen coordinates

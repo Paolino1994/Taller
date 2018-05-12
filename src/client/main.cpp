@@ -361,7 +361,7 @@ player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun,
 
 void renderizar(Camera& camera, World& world, Texto& quiereSalirTexto, PlayerController* controlled) {
 	// TEMP
-	CommandSender commandSender("127.0.0.1", 5000);
+	CommandSender commandSender("127.0.0.1", 5000, Team::HOME);
 	// FIN TEMP
 
     if (true)
