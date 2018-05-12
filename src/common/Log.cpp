@@ -1,22 +1,26 @@
 #include "Log.h"
 
+
 Log* Log::instance = 0;
 bool Log::initialized = false;
+std::mutex Log::mtx_class;
 
 Log::Log(std::string t){
-	type = t;
-	time_t now;
-	time(&now);
-	std::string c_time = ctime(&now);
-	c_time.pop_back();
+	time_t rawtime;
+  	struct tm * timeinfo;
+  	char charTime [80];
+  	time (&rawtime);
+  	timeinfo = localtime (&rawtime);
+  	strftime (charTime,80,"[%F]-%X",timeinfo);
 	std::stringstream file_name;
-	file_name << "log/log-" << c_time << ".txt";
+	file_name << "log/log-" << charTime << ".txt";
 	file.open(file_name.str(), std::ofstream::out);
 }
 
 Log::Log(): 
 	Log(LOG_ERROR)
 {}
+
 
 void Log::initialize(std::string t) {
     if (t.compare(LOG_DEBUG) == 0 || t.compare(LOG_INFO) == 0 || t.compare(LOG_ERROR) == 0){
@@ -41,27 +45,31 @@ Log* Log::get_instance() {
 }
 
 void Log::log(std::string msg, std::string type) {
-	time_t now;
-	time(&now);
-	std::string c_time;
-	c_time = ctime(&now);
-	c_time.pop_back();
-	file << "" << c_time.c_str() << "> " << type << ": " << msg << std::endl;
+	time_t rawtime;
+  	struct tm * timeinfo;
+  	char charTime [80];
+  	time (&rawtime);
+  	timeinfo = localtime (&rawtime);
+  	strftime (charTime,80,"[%F] - %X ",timeinfo);
+	file << "" << charTime << "> " << type << ": " << msg << std::endl;
 }
 
 void Log::debug(std::string msg) {
+	std::unique_lock<std::mutex> lck(this->mtx_log);
 	if (this->type.compare(LOG_DEBUG) == 0) {
 		log(msg, LOG_DEBUG);
 	}
 }
 
 void Log::info(std::string msg) {
+	std::unique_lock<std::mutex> lck(this->mtx_log);
 	if (this->type.compare(LOG_DEBUG) == 0 || this->type.compare(LOG_INFO) == 0) {
 		log(msg, LOG_INFO);
 	}
 }
 
 void Log::error(std::string msg) {
+	std::unique_lock<std::mutex> lck(this->mtx_log);
 	if (this->type.compare(LOG_DEBUG) == 0 || this->type.compare(LOG_INFO) == 0 || this->type.compare(LOG_ERROR) == 0) {
 		log(msg, LOG_ERROR);
 	}
