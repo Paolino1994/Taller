@@ -26,7 +26,7 @@ int GameMenu::logginScreen() {
     Texture background(gRenderer, "res/soccer_field_1.6.png");
 
     background.render( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-    int tituloW, tituloH, usuarioW, usuarioH, passW, passH, errorW, errorH;
+    int tituloW, tituloH, usuarioW, usuarioH, passW, passH, errorH, errorW;
 
     EscrbiendoState usuarioOPass = EscrbiendoState::USUARIO;
 
@@ -55,7 +55,6 @@ int GameMenu::logginScreen() {
 
     bool running = true;
     bool loginTerminado = false;
-
     while ( running ) {
         SDL_Event ev;
         while ( SDL_PollEvent( &ev ) ) {
@@ -160,9 +159,9 @@ int GameMenu::logginScreen() {
     }
 
     SDL_StopTextInput();
-    log->info("Modo de lectura de texto terminado");    
+    log->info("Modo de lectura de texto terminado");
+
     return returnValue;
-    
 }
 
 int GameMenu::verificarCredenciales (std::string usuario, std::string pass) {

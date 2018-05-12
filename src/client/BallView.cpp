@@ -5,19 +5,19 @@
 #include "BallView.h"
 #include "BallController.h"
 
-BallView::BallView(std::map<const std::string, Animation> animMapperBall, BallModel *ballModel) {
-    //animation=animMapperBall;
-    model=ballModel;
-    priorState=QUIESCENT;
+BallView::BallView(std::map<const std::string, Animation>& animMapperBall, BallModel& ballModel):
+	ballModel(ballModel),
+	priorState(QUIESCENT)
+{
     for(auto elem : animMapperBall)
         animation.push_back(elem.second);
 }
 
 void BallView::render(int i, int i1,double angle) {
-    int xCorrection=BallController::getInstance()->getModel()->getXCorrection();
-    int yCorrection=BallController::getInstance()->getModel()->getYCorrection();
+    int xCorrection=ballModel.getXCorrection();
+    int yCorrection=ballModel.getYCorrection();
 
-    BallState newState = BallController::getInstance()->getModel()->getState();
+    BallState newState = ballModel.getState();
     if (priorState != newState) {
         animation[newState].reset();
         priorState = newState;
@@ -31,12 +31,12 @@ void BallView::update(double deltaTime) {
 }
 
 void BallView::render(int screen_x, int screen_y) {
-    BallState newState = BallController::getInstance()->getModel()->getState();
+    BallState newState = ballModel.getState();
     if (priorState != newState) {
         animation[newState].reset();
         priorState = newState;
     }
-    int angle=BallController::getInstance()->getModel()->getAngle();
+    int angle=ballModel.getAngle();
     animation[priorState].render(screen_x,screen_y,angle);
 
 }

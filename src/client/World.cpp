@@ -2,9 +2,11 @@
 #include "BallController.h"
 #include "TeamFactory.h"
 #include "PlayerControllerHuman.h"
+#include <algorithm>
 
-World::World(int width, int height, Texture* background):
+World::World(int width, int height, Texture* background, std::map<const std::string, Animation>& ballAnimMapper):
     background(background),
+	ball(BallController(width/2, height/2, ballAnimMapper)),
     entities(std::vector<Entity*>()),
 	pControllers(std::vector<PlayerController*>()),
     width(width),
@@ -51,6 +53,7 @@ PlayerController* World::injectHumanController(Team team)
 			PlayerControllerHuman* human = new PlayerControllerHuman(other->getModel(), other->getView(), *this);
 			teamControllers[i] = human;
 			human->getModel()->setIsControlledByHuman(true);
+            human->getModel()->setHasControlOfTheBall(true);
 			delete other;
 			return human;
 		}
@@ -145,6 +148,11 @@ Texture* World::getBackground() {
     return background;
 }
 
+BallController& World::getBall()
+{
+	return ball;
+}
+
 Texture* World::getPlayerSelectedTexture() {
     return playerSelectedTexture;
 }
@@ -176,7 +184,7 @@ void World::update(double dt)
 			player->update(dt, this->getWidth(), this->getHeight());
 		}
 	}
-	BallController::getInstance()->update(dt, this->getWidth(), this->getHeight());
+	ball.update(dt, this->getWidth(), this->getHeight(), this->getPlayerControllers());
 }
 
 int World::getWidth(){
@@ -185,4 +193,16 @@ int World::getWidth(){
 
 int World::getHeight(){
     return height;
+}
+
+void World::swapToBallController(PlayerController *cont) {
+    Team team = cont->getModel()->getTeam();
+    std::vector<PlayerController*>& teamControllers = playerControllers[team];
+    for(PlayerController* controller : teamControllers){
+        if(controller->getModel()->getHasControlOfTheBall()){
+            cont->swap(controller);
+        }
+    }
+
+
 }

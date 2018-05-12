@@ -1,41 +1,29 @@
 //
 // Created by federico on 30/04/18.
 //
-
-#ifndef UNTITLED1_BALLCONTROLLER_H
-#define UNTITLED1_BALLCONTROLLER_H
-
+#pragma once
 
 #include "Entity.h"
 #include "BallModel.h"
 #include "BallView.h"
+#include "PlayerController.h"
 
 class BallController {
 
+private:
+	BallModel ballModel;
+	BallView ballView;
 
 public:
-    BallModel* getModel();
+	BallController(int initial_x, int initial_y, std::map<const std::string, Animation>& ballAnimMapper);
 
-    BallView * getView();
+    BallModel& getModel();
 
-    static void initialize(BallModel *model, BallView *view);
-
-
-    static BallController *getInstance();
+    BallView& getView();
 
     void kick();
 
-    void update(double d, int i, int i1);
+    void update(double dt, int x_limit, int y_limit, std::vector<PlayerController*>& playerControllers);
 
-private:
-    BallController(BallModel* model, BallView* view);
-
-    BallModel* ballModel;
-
-    BallView* ballView;
-
-
+	void calculateCollision(std::vector<PlayerController *> &vector);
 };
-
-
-#endif //UNTITLED1_BALLCONTROLLER_H

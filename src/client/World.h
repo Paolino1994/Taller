@@ -4,8 +4,10 @@
 
 #include "Texture.h"
 #include "Entity.h"
+#include "BallController.h"
 #include "GameConstants.h"
 #include "PlayerController.h"
+
 
 // Esto ahora va estar un poco mas relacionado con el juego
 // Game / World
@@ -16,6 +18,8 @@ private:
     Texture* background;
     // Jugador selecionado
     Texture* playerSelectedTexture;
+	// Tenemos una pelota ya desde el principio (controller por ahora que funca como un struct de model + view)
+	BallController ball;
     // Objetos comunes
     std::vector<Entity*> entities; //queda todavia, pero pensar el uso de esto
 
@@ -31,7 +35,7 @@ private:
 	bool playerIsOnRange(PlayerController* cont,PlayerController* controllerToSwap);
 
 public:
-    World(int width, int height, Texture* background);
+    World(int width, int height, Texture* background, std::map<const std::string, Animation>& ballAnimMapper);
     ~World();
 
 	// Creaci�n de elementos
@@ -53,6 +57,7 @@ public:
     
     Texture* getPlayerSelectedTexture() ;
     Texture* getBackground() ;
+	BallController& getBall();
     std::vector<Entity*>& getEntities() ;
     std::vector<PlayerController*>& getPlayerControllers() ;
 
@@ -61,6 +66,8 @@ public:
     
     int getWidth();
     int getHeight();
+
+	void swapToBallController(PlayerController *cont);
 
 };
 

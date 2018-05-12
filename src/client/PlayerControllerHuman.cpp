@@ -62,7 +62,9 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 				break;
 			}
 			case SDLK_s: {
-				playerModel->kick();
+                if(playerModel->getHasControlOfTheBall()) {
+                    playerModel->kick(world.getBall().getModel());
+                }
 
 				log->debug("PlayerControllerHuman: apretando patear");
 				break;
@@ -73,8 +75,11 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 				break;
 			}
 			case SDLK_d:{
-				PlayerController* passController=world.getPlayerToPass(this);
-				playerModel->pass(passController->getModel());
+                if(playerModel->getHasControlOfTheBall()){
+                    PlayerController* passController=world.getPlayerToPass(this);
+                    playerModel->pass(passController->getModel(), world.getBall().getModel());
+                    this->world.swap(this);
+                }
 				log->debug("PlayerControllerHuman: apretando pasar");
 			}
         }
@@ -114,7 +119,7 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
     }
 
     //Bastabte villero
-    playerModel->changeBallState();
+    playerModel->changeBallState(world.getBall().getModel());
 
 
     // se normaliza la velocidad

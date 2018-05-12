@@ -99,16 +99,16 @@ void Camera::render(World& world){
 		}
 		player->getView()->render(screen_x, screen_y);
 		if(player->hasControlOfTheBall()){
-			BallController::getInstance()->getView()->render(screen_x, screen_y,player->getAngle());
+			world.getBall().getView().render(screen_x, screen_y,player->getAngle());
             rendered=1;
 		}
 
 	}
     if(rendered==0){
-        int screen_x = BallController::getInstance()->getModel()->getX() - this->x;
-        int screen_y = BallController::getInstance()->getModel()->getY() - this->y;
+        int screen_x = world.getBall().getModel().getX() - this->x;
+        int screen_y = world.getBall().getModel().getY() - this->y;
 		Log::get_instance()->info("X: "+ std::to_string(screen_x) + " Y: " + std::to_string(screen_y));
-        BallController::getInstance()->getView()->render(screen_x, screen_y);
+        world.getBall().getView().render(screen_x, screen_y);
     }
 }
 

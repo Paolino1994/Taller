@@ -12,6 +12,11 @@
 #include "common/Log.h"
 #include "sstream"
 
+// Tenemos un temita de dependencia circular, 
+// --> TODO: pensar mejor asociacion pelota <-> jugador
+//#include "BallModel.h"
+class BallModel;
+
 class PlayerModel: public Entity {
 
 public:
@@ -51,7 +56,8 @@ public:
 
     void sweep();
 
-    void kick();
+	// TODO: Evaluar si conviene tener una referencia a la pelota cuando el PlayerModel la tiene bajo su control
+    void kick(BallModel& ballModel);
 
     void sprint();
     void stopSprinting();
@@ -68,16 +74,16 @@ public:
     const int kickOff_x;
     const int kickOff_y;
 
+	// TODO: Evaluar si conviene tener una referencia a la pelota cuando el PlayerModel la tiene bajo su control
 	void setHasControlOfTheBall(bool i);
-
-
-
-
+	// TODO: Evaluar si conviene tener una referencia a la pelota cuando el PlayerModel la tiene bajo su control
 	bool getHasControlOfTheBall();
 
-    void changeBallState();
+	// TODO: Esto lo deberia poder hacer la pelota por su propia cuenta en el update!
+    void changeBallState(BallModel& ballModel);
 
-    void pass(PlayerModel *pModel);
+	// TODO: Evaluar si conviene tener una referencia a la pelota cuando el PlayerModel la tiene bajo su control
+    void pass(PlayerModel *pModel, BallModel& ballModel);
 
 private:
 	Team team;

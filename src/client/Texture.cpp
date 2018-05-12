@@ -30,6 +30,8 @@ Texture::Texture(SDL_Renderer* renderer, std::string file):
 Texture::~Texture()
 {
     SDL_DestroyTexture(mTexture);
+    mTexture = nullptr;
+    mRenderer = nullptr;
 }
 
 void Texture::setColor(Uint8 red, Uint8 green, Uint8 blue)

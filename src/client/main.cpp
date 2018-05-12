@@ -274,8 +274,8 @@ int main( int argc, char* args[] )
 
 
 			// Agrego jugadores al mundo
-			log->info("Agrego Jugadores al Juego");
-			World world(background.getWidth(), background.getHeight(), &background);
+			log->info("Creo el mundo con su pelota");
+			World world(background.getWidth(), background.getHeight(), &background, animMapperBall);
 			world.setPlayerSelectedTexture(&selectedPlayerTecture);
 		
 
@@ -300,17 +300,6 @@ int main( int argc, char* args[] )
 
 			world.createTeam(Team::AWAY, defensores, mediocampistas, delanteros, defaultPlayer2, animMapper2);
 
-			
-			//Crteo la pelota
-			log->info("Crear Pelota");
-			//teamIterator->model->setHasControlOfTheBall(true);
-			BallModel *ballModel = new BallModel(0, 0, 0, 0);
-			Log::get_instance()->info("Agregando vista de la pelota");
-			BallView* ballView = new BallView(animMapperBall, ballModel);
-			BallController::initialize(ballModel, ballView);
-			log->info("Agrego la pelota");
-			addBallToWorld(world);
-
 			// Inyecto un jugador controlado por un humano
 			log->info("Inyecto un jugador controlado por un humano");
 			PlayerController* controlled = world.injectHumanController(Team::HOME);
@@ -322,7 +311,7 @@ int main( int argc, char* args[] )
             
 			log->info("Agrego la camara");
             Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
-            camera.follow(ballModel);
+            camera.follow(&world.getBall().getModel());
 
             log->info("Renderizo");
             renderizar(camera, world, quiereSalirTexto, controlled);
@@ -334,16 +323,6 @@ int main( int argc, char* args[] )
 
     return 0;
 }
-
-void addBallToWorld(World& world) {
-    BallController* cont=BallController::getInstance();
-    BallModel* mod=cont->getModel();
-    world.addEntity(mod);
-    //std::cout<<"HOLA"<<std::endl;
-}
-
-
-
 
 player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick) {
     player_data_t defaultPlayer = {{
