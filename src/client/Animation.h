@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameConstants.h"
+#include "common/GameConstants.h"
 #include "Texture.h"
 // Animaciones: tiras de sprites HORIZONTALES!, 
 // width / frames = width de sprite individual

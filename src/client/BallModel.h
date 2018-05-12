@@ -4,9 +4,8 @@
 #pragma once
 
 #include "Entity.h"
-#include "GameConstants.h"
+#include "common/GameConstants.h"
 #include "PlayerController.h"
-#include <math.h>
 
 class BallModel: public Entity {
 

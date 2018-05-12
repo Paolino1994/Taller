@@ -1,12 +1,12 @@
 //
 // Created by federico on 30/04/18.
 //
-
+#include <cmath>
 #include <iostream>
+
 #include "BallModel.h"
-#include "GameConstants.h"
 #include "BallController.h"
-#include "../common/Log.h"
+#include "common/Log.h"
 
 #define PI 3.14159265
 

@@ -9,12 +9,15 @@
 #include <map>
 
 #include "World.h"
+#include "Animation.h"
+#include "common/GameConstants.h"
+
 #include "Texture.h"
 #include "Surface.h"
-#include "Animation.h"
-#include "Entity.h"
+
+//#include "Entity.h"
 #include "Camera.h"
-#include "GameConstants.h"
+
 //#include "Player.h"
 #include "common/Log.h"
 //#include "PlayerModel.h"
@@ -24,9 +27,9 @@
 #include "common/YAMLReader.h"
 #include "Texto.h"
 #include "TextureSetter.h"
-#include "BallModel.h"
-#include "BallView.h"
-#include "BallController.h"
+//#include "BallModel.h"
+//#include "BallView.h"
+//#include "BallController.h"
 #include "CommandSender.h"
 #include "GameMenu.h"
 

@@ -7,7 +7,7 @@
 
 #include <vector>
 
-#include "GameConstants.h"
+#include "common/GameConstants.h"
 #include "Entity.h"
 #include "common/Log.h"
 #include "sstream"

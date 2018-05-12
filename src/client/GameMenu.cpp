@@ -1,5 +1,7 @@
 #include "GameMenu.h"
 
+#include "common/GameConstants.h"
+
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
 const int SCREEN_HEIGHT = YAML::SCREEN_HEIGHT;
 

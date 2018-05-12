@@ -8,7 +8,7 @@
 #include "PlayerModel.h"
 #include "PlayerView.h"
 #include "PlayerController.h"
-#include "GameConstants.h"
+#include "common/GameConstants.h"
 #include "World.h"
 #include "common/Log.h"
 #include <sstream>

@@ -5,7 +5,7 @@
 #include "Texture.h"
 #include "Entity.h"
 #include "BallController.h"
-#include "GameConstants.h"
+#include "common/GameConstants.h"
 #include "PlayerController.h"
 
 
