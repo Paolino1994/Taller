@@ -9,7 +9,8 @@
 enum class Request : u_int32_t {
 	NONE = 0,
 	COMMAND_KEY_DOWN,
-	COMMAND_KEY_UP
+	COMMAND_KEY_UP,
+	LOGIN
 };
 
 

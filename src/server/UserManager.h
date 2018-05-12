@@ -1,6 +1,8 @@
 #ifndef USER_MANAGER
 #define USER_MANAGER
 
+#include "common/Protocol.h"
+#include "common/Request.h"
 #include "common/Socket.h"
 #include "common/YAMLReader.h"
 #include "common/Log.h"
@@ -8,16 +10,7 @@
 #include <vector>
 #include <cstring>
 
-#define LOGIN_ERROR false
-#define LOGIN_SUCCESS true
-
-#define USERNAME_DELIMETER ";"
-#define MAX_LEN_LOGIN 126
-#define WRONG_CREDENTIALS "w"
-#define GAME_FULL "f"
-#define ALREADY_LOGGED_IN "l"
-#define GAME_ALREADY_STARTED "s"
-#define USER_ACCEPTED "a"
+#define MAX_LOGIN_ATTEMPTS 100000
 
 typedef struct {
 	Socket* skt;
@@ -33,19 +26,20 @@ private:
 	std::string get_password(std::string buff);
 	bool is_logged_in(std::string name);
 	bool is_reconecting(std::string name);
+	short _login(Socket* skt);
 
 public:
 	/**
 		@PRE: Receives a skt already connected to a client, which is about to send the user and password
 		@POS: Returns LOGIN_SUCCESS if the user was added and LOGIN_ERROR if it wasn't
 	*/
-	bool login(Socket* skt);
+	short login(Socket* com);
 
 	/**
 		@PRE: Receives a skt already connected to a logged in client
 		@POS: The client is no longer logged in
 	*/
-	void logout(Socket* skt);
+	void logout(Socket* com);
 
 	/**
 		Sets the manager to game on functions

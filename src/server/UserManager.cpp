@@ -27,15 +27,18 @@ bool UserManager::is_reconecting(std::string name) {
 	return false;
 }
 
-bool UserManager::login(Socket* skt){
-	char buffer[MAX_LEN_LOGIN];
-	if (skt->receive(buffer, MAX_LEN_LOGIN, MSG_NOSIGNAL) == ERROR){
+short UserManager::_login(Socket* skt){
+	Protocol com(skt);
+	com.protect();
+	com.read();
+	if (com.request() != Request::LOGIN){
 		Log::get_instance()->error("Error reciviendo info de login");
 		return LOGIN_ERROR;
 	}
-	
-	std::string name = get_name(buffer);
-	std::string pwd = get_password(buffer);
+
+	std::string buffer = com.dataBuffer();
+	std::string name = get_name(buffer.c_str());
+	std::string pwd = get_password(buffer.c_str());
 
 	std::string log = "Usuario con nombre: ";
 	log.append(name);
@@ -43,25 +46,27 @@ bool UserManager::login(Socket* skt){
 	log.append(pwd);
 	Log::get_instance()->debug(log);
 
-	if (YAMLReader::get_instance().validarUsuario(name, pwd)) {
-		skt->send(WRONG_CREDENTIALS, std::strlen(WRONG_CREDENTIALS), MSG_NOSIGNAL);
+	YAMLReader& yamlReader = YAMLReader::get_instance();
+    yamlReader.readYamlGeneral("");
+	if (yamlReader.validarUsuario(name, pwd)) {
+		com.write(Request::LOGIN, std::to_string(WRONG_CREDENTIALS).c_str(), sizeof(int));
 		Log::get_instance()->info("Credenciales invalidas");
-		return LOGIN_ERROR;
+		return LOGIN_INVALID;
 	} else if (users.size() > 4) {
-		skt->send(GAME_FULL, std::strlen(GAME_FULL), MSG_NOSIGNAL);
+		com.write(Request::LOGIN, std::to_string(GAME_FULL).c_str(), sizeof(int));
 		Log::get_instance()->info("Juego Completo");
-		return LOGIN_ERROR;
+		return LOGIN_INVALID;
 	} else if (is_logged_in(name)) {
-		skt->send(ALREADY_LOGGED_IN, std::strlen(ALREADY_LOGGED_IN), MSG_NOSIGNAL);
+		com.write(Request::LOGIN, std::to_string(ALREADY_LOGGED_IN).c_str(), sizeof(int)); 
 		Log::get_instance()->info("El usuario que intenta ingresar ya esta conectado");
-		return LOGIN_ERROR;
+		return LOGIN_INVALID;
 	} else if (playing && !is_reconecting(name)) {
+		com.write(Request::LOGIN, std::to_string(GAME_ALREADY_STARTED).c_str(), sizeof(int));
 		Log::get_instance()->info("El Juego ya esta empezado");
-		skt->send(GAME_ALREADY_STARTED, std::strlen(GAME_ALREADY_STARTED), MSG_NOSIGNAL);
-		return LOGIN_ERROR;
+		return LOGIN_INVALID;
 	}
 
-	skt->send(USER_ACCEPTED, std::strlen(USER_ACCEPTED), MSG_NOSIGNAL);
+	com.write(Request::LOGIN, std::to_string(USER_ACCEPTED).c_str(), sizeof(int));
 
 	user u;
 	u.skt = skt;
@@ -74,6 +79,14 @@ bool UserManager::login(Socket* skt){
 	Log::get_instance()->info(log);
 
 	return LOGIN_SUCCESS;
+}
+
+short UserManager::login(Socket* skt){
+	short status = LOGIN_INVALID;
+	for (int i = 0; status == LOGIN_INVALID && i < MAX_LOGIN_ATTEMPTS; i++) {
+		status = _login(skt);
+	}
+	return status;	
 }
 
 void UserManager::logout(Socket* skt) {

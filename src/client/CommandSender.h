@@ -14,5 +14,6 @@ public:
 	CommandSender(std::string ip, unsigned short port);
 	~CommandSender();
 	void handleEvent(SDL_Event& e);
+	short login(std::string credentials);
 };
 

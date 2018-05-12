@@ -70,3 +70,18 @@ void CommandSender::handleEvent(SDL_Event& e)
 		}
 	}
 }
+
+short CommandSender::login(std::string credentials) {
+	protocol.write(Request::LOGIN, credentials.c_str(), credentials.length());
+	protocol.read();
+	if (protocol.request() == Request::LOGIN) {
+		int result = std::stoi(protocol.dataBuffer());
+		if (result == USER_ACCEPTED) {
+			return LOGIN_SUCCESS;
+		} else {
+			return result;
+		}
+	} else {
+		return LOGIN_ERROR;
+	}
+}

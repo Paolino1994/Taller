@@ -16,7 +16,9 @@ Protocol::Protocol(std::string ip, unsigned short port):
 
 Protocol::~Protocol()
 {
-	delete this->skt;
+	if (!skt_protected) {
+		delete this->skt;
+	}
 }
 
 
@@ -54,4 +56,8 @@ void Protocol::write(Request request, const char * data, u_int32_t len)
 	header_t writeHeader{ request, len };
 	skt->send((char*)&writeHeader, sizeof(writeHeader), Socket::DEFAULT_FLAGS | MSG_MORE);
 	skt->send(data, len);
+}
+
+void Protocol::protect() {
+	skt_protected = true;
 }

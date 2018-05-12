@@ -10,6 +10,7 @@
 #include "Texture.h"
 #include "GameConstants.h"
 #include "Surface.h"
+#include "CommandSender.h"
 #include "common/Log.h"
 
 class GameMenu {
@@ -20,5 +21,5 @@ public:
 
     int verificarCredenciales (std::string usuario, std::string pass);
 
-    int logginScreen();
+    int logginScreen(CommandSender& commandSender);
 };

@@ -48,7 +48,7 @@ SDL_Renderer* gRenderer = NULL;
 
 std::string getLogType(char *string);
 
-void renderizar(Camera& camera, World& world, Texto& texto, PlayerController* pHuman);
+void renderizar(Camera& camera, World& world, Texto& texto, PlayerController* pHuman, CommandSender& commandSender);
 
 player_data_t
 crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick);
@@ -189,12 +189,17 @@ int main( int argc, char* args[] )
         std::cout << "Failed to initialize!\n" << std::endl;
 		log->error("Falló la inicialización del SDL");
     } else {
+
+		// TEMP
+			CommandSender commandSender("127.0.0.1", 5000);
+		// FIN TEMP
+
         if(gameState == GameState::OFFLINE) {
             GameMenu gameMenu(gRenderer);
-            if(gameMenu.logginScreen() == 0) {
+            if(gameMenu.logginScreen(commandSender) == 0) {
                 gameState = GameState::ONLINE;
             }
-        } 
+        }
         if (gameState == GameState::ONLINE) {
 
 			/****************************************
@@ -325,7 +330,7 @@ int main( int argc, char* args[] )
             camera.follow(ballModel);
 
             log->info("Renderizo");
-            renderizar(camera, world, quiereSalirTexto, controlled);
+            renderizar(camera, world, quiereSalirTexto, controlled, commandSender);
         }
     }
 
@@ -377,10 +382,7 @@ player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun,
     return defaultPlayer;
 }
 
-void renderizar(Camera& camera, World& world, Texto& quiereSalirTexto, PlayerController* controlled) {
-	// TEMP
-	CommandSender commandSender("127.0.0.1", 5000);
-	// FIN TEMP
+void renderizar(Camera& camera, World& world, Texto& quiereSalirTexto, PlayerController* controlled, CommandSender& commandSender) {
 
     if (true)
     {

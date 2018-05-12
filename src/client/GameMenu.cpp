@@ -16,7 +16,7 @@ GameMenu::GameMenu(SDL_Renderer *renderer):
 
 }
 
-int GameMenu::logginScreen() {
+int GameMenu::logginScreen(CommandSender& commandSender) {
     Log *log = Log::get_instance();
 
     log->info("Generando pantalla de login");
@@ -140,7 +140,35 @@ int GameMenu::logginScreen() {
             int respuestaAcceso = verificarCredenciales(userText, passText);
             if(respuestaAcceso == 0){
                 log->info("Credenciales validas");
-                running = false;
+				short login_status = commandSender.login(userText + USERNAME_DELIMETER + passText);
+				if (login_status == LOGIN_SUCCESS) {
+	                log->info("Login aceptado por server");
+	                running = false;
+				} else if (!(login_status == LOGIN_ERROR)) {
+	                log->info("Login no fue aceptado por server");
+		            usuarioOPass = EscrbiendoState::ERROR;
+		            userText = " ";
+		            passText = " ";
+					loginTerminado = false;
+					switch (login_status) {
+						case WRONG_CREDENTIALS:
+							errorText = "Credenciales invalidas";
+							break;
+						case GAME_FULL:
+							errorText = "Juego completo";
+							break;
+						case ALREADY_LOGGED_IN:
+							errorText = "Usuario conectado en otro dispositvo";
+							break;
+						case GAME_ALREADY_STARTED:
+							errorText = "El juego ya está empezado";
+							break;
+						default:
+							errorText = "Error en login";
+					}
+				} else {
+					return -1;
+				}
             } else {
                 if (respuestaAcceso == -1) {
                     log->info("Password incorrecto");

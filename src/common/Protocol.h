@@ -6,6 +6,16 @@
 #include "Request.h"
 #include "Socket.h"
 
+#define USERNAME_DELIMETER ";"
+#define LOGIN_SUCCESS 0
+#define LOGIN_INVALID 1
+#define LOGIN_ERROR 2
+#define USER_ACCEPTED 3
+#define WRONG_CREDENTIALS 4
+#define GAME_FULL 5
+#define ALREADY_LOGGED_IN 6
+#define GAME_ALREADY_STARTED 7
+
 struct header_t
 {
 	Request request;
@@ -31,9 +41,12 @@ public:
 		this->write(request, message.c_str(), message.length());
 	};
 
+	void protect();
+
 private:
 	Socket* skt; //suponemos que hay que hacerle delete
 	std::vector<char> buffer;
 	header_t header;
+	bool skt_protected = false;
 };
 
