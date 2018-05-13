@@ -21,4 +21,6 @@ public:
     int verificarCredenciales (std::string usuario, std::string pass);
 
     int logginScreen();
+
+    bool pausaMenu(SDL_Event ev);
 };
