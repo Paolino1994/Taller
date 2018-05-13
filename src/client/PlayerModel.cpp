@@ -314,18 +314,10 @@ bool PlayerModel::getHasControlOfTheBall() {
 
 // Parche feo -> Recibe ballModel por ahora // TODO VER
 void PlayerModel::changeBallState(BallModel& ballModel) {
-	if(hasControlOfTheBall&&(getVelX()!=0 || getVelY()!=0)){
-        if(ballModel.getState()!=MOVING){
-			ballModel.setState(MOVING);
-        }
-	}else {
-        if((ballModel.getVelX()!=0 || ballModel.getVelY()!=0)){
-            ballModel.setState(MOVING);
-        }else{
-			ballModel.setState(QUIESCENT);
-        }
-    }
-
+	if(hasControlOfTheBall){
+		ballModel.setVelX(getVelX());
+		ballModel.setVelY(getVelY());
+	}
 }
 
 void PlayerModel::pass(PlayerModel *pModel, BallModel& ballModel) {

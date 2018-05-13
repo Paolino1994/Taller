@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "BallController.h"
+#include "../common/Log.h"
 
 BallController::BallController(int initial_x, int initial_y, std::map<const std::string, Animation>& ballAnimMapper):
 	ballModel(BallModel(initial_x, initial_y)),
@@ -38,7 +39,10 @@ void BallController::calculateCollision(std::vector<PlayerController *> &playerC
             int yPlayer=controller->getModel()->getCenterY();
             if(abs(x-xPlayer)<20 && abs(y-yPlayer)<20){
                 if(!controller->getModel()->getHasControlOfTheBall()){
+                    Log::get_instance()->debug("Colision, un nuevo jugador toma la pelota");
                     controller->getModel()->setHasControlOfTheBall(true);
+                    ballModel.setVelX(controller->getModel()->getVelX());
+                    ballModel.setVelY(controller->getModel()->getVelY());
                     //controller->getModel()->setAngle(-90+ballModel.getAngle());
                     changeController(i,playerControllers);
                 }
@@ -49,12 +53,9 @@ void BallController::calculateCollision(std::vector<PlayerController *> &playerC
 
 void BallController::changeController(int newController, std::vector<PlayerController *> &playerControllers) {
     int counter=0;
-
     for (PlayerController* controller : playerControllers) {
         if(newController==counter){
             controller->getModel()->setHasControlOfTheBall(true);
-            ballModel.setVelX(controller->getModel()->getVelX());
-            ballModel.setVelY(controller->getModel()->getVelY());
             //std::cout<<"Agarro la pelota"<< "Ball VelX: "<<ballModel.getVelX()<<" Ball VelY: "<<ballModel.getVelY()<<std::endl;
         }else{
             controller->getModel()->setHasControlOfTheBall(false);

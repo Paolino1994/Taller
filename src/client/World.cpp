@@ -187,6 +187,7 @@ void World::update(double dt)
 	}
 
 	ball.update(dt, this->getWidth(), this->getHeight(), this->getPlayerControllers());
+	//calculateCollision();
     updateBallController();
 }
 
@@ -196,18 +197,6 @@ int World::getWidth(){
 
 int World::getHeight(){
     return height;
-}
-
-void World::swapToBallController(PlayerController *cont) {
-    Team team = cont->getModel()->getTeam();
-    std::vector<PlayerController*>& teamControllers = playerControllers[team];
-    for(PlayerController* controller : teamControllers){
-        if(controller->getModel()->getHasControlOfTheBall()){
-            cont->swap(controller);
-        }
-    }
-
-
 }
 
 void World::updateBallController() {
@@ -232,3 +221,39 @@ void World::updateBallController() {
 
 
 }
+
+void World::calculateCollision() {
+	int x=ball.getModel().getX();
+	int y=ball.getModel().getX();
+	int i=0;
+	std::vector<PlayerController *> &playerControllers=this->getPlayerControllers();
+	for (PlayerController* controller : playerControllers) {
+		int xPlayer=controller->getModel()->getCenterX();
+		int yPlayer=controller->getModel()->getCenterY();
+		if(abs(x-xPlayer)<20 && abs(y-yPlayer)<20){
+			if(!controller->getModel()->getHasControlOfTheBall()){
+				controller->getModel()->setHasControlOfTheBall(true);
+				//controller->getModel()->setAngle(-90+ballModel.getAngle());
+				changeController(i,playerControllers);
+			}
+		}
+		i++;
+	}
+}
+
+void World::changeController(int newController, std::vector<PlayerController *> &playerControllers) {
+	int counter=0;
+	for (PlayerController* controller : playerControllers) {
+		if(newController==counter){
+			controller->getModel()->setHasControlOfTheBall(true);
+			ball.getModel().setVelX(controller->getModel()->getVelX());
+			ball.getModel().setVelY(controller->getModel()->getVelY());
+			//std::cout<<"Agarro la pelota"<< "Ball VelX: "<<ballModel.getVelX()<<" Ball VelY: "<<ballModel.getVelY()<<std::endl;
+		}else{
+			controller->getModel()->setHasControlOfTheBall(false);
+		}
+		counter++;
+	}
+
+}
+

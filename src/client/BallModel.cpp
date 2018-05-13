@@ -100,6 +100,7 @@ BallState BallModel::getState() {
 
 void BallModel::setState(BallState aState) {
     state=aState;
+    //setState();
 
 }
 
@@ -184,6 +185,7 @@ double BallModel::getVelY() {
 }
 
 void BallModel::setState() {
+    //std::cout<<"VELX: "<<velX<<" VelY: "<<velX<<std::endl;
     if(velX!=0 || velY!=0){
         state=MOVING;
     }else{
