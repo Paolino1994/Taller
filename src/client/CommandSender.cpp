@@ -121,6 +121,10 @@ void CommandSender::handleEvent(SDL_Event& e)
 				command.type = CommandType::CHANGE_PLAYER;
 				break;
 			}
+			case SDLK_d: {
+				command.type = CommandType::PASS;
+				break;
+			}
 		}
 
 		if (command.key != CommandKey::__LENGTH__ && command.type != CommandType::__LENGTH__) {
