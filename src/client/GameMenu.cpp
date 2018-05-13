@@ -179,8 +179,6 @@ bool GameMenu::pausaMenu(SDL_Event ev){
     int w, h;
     quiereSalirTexto.getTextureDimensions(&w,&h); // pregunto el tamanio para el centrado
     quiereSalirTexto.display((SCREEN_WIDTH - w) / 2, (SCREEN_HEIGHT - h) / 2); // muestro la pregunta centrada
-                    SDL_FlushEvents(SDL_USEREVENT, SDL_LASTEVENT);
-
     while(!seleccionoLetraValida){
         while( SDL_PollEvent( &ev ) != 0)
             {
