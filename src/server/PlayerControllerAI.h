@@ -19,5 +19,7 @@ public:
 
 	virtual bool isControllable();
 
+	virtual User_ID getUserId();
+
 };
 

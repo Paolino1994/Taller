@@ -43,7 +43,7 @@ void World::createTeam(Team team, int defenders, int midfielders, int forwards, 
 	}
 }
 
-PlayerController* World::injectHumanController(Team team)
+PlayerController* World::injectHumanController(Team team, User_ID userId)
 {
 	std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
 
@@ -51,7 +51,7 @@ PlayerController* World::injectHumanController(Team team)
 	{
 		if (teamControllers[i]->isControllable()) {
 			PlayerController* other = teamControllers[i];
-			PlayerControllerHuman* human = new PlayerControllerHuman(other->getModel(), other->getView(), *this);
+			PlayerControllerHuman* human = new PlayerControllerHuman(other->getModel(), other->getView(), *this, userId);
 			teamControllers[i] = human;
 			human->getModel()->setIsControlledByHuman(true);
             human->getModel()->setHasControlOfTheBall(true);
@@ -183,6 +183,19 @@ void World::update(double dt)
 	std::stringstream msg;
 	msg << "Pelota esta en " << ball.getModel().getX() << ", " << ball.getModel().getY();
 	std::cout << msg.str() << std::endl;
+}
+
+void World::serialize(model_data_t & modelData)
+{
+	for (auto controllers : playerControllers) {
+		for (auto player : controllers) {
+			player_view_data_t playerData;
+			player->serialize(playerData);
+			modelData.playerViewData.push_back(playerData);
+		}
+	}
+
+	ball.serialize(modelData.ballViewData);
 }
 
 int World::getWidth(){

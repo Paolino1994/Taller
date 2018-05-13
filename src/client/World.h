@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "common/Protocol.h"
+#include "CommandSender.h"
 #include "common/GameConstants.h"
 #include "Texture.h"
 #include "Ball.h"
@@ -35,7 +35,6 @@ private:
 	player_data_t player_data;
 	std::map<const std::string, Animation> playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(Team::__LENGTH__)];
 
-	void _update(Protocol& protocol, bool goAgain);
 public:
 	//pendiente un refactor
     World(int width, int height, Texture* background, Texture* playerSelectedTexture, std::map<const std::string, Animation>& ballAnimMapper,
@@ -52,9 +51,9 @@ public:
     Texture* getBackground() ;
 	Ball& getBall();
     std::vector<Entity*>& getEntities() ;
-	const std::map<Player_ID, Player>& getPlayers() ;
+	std::map<Player_ID, Player>& getPlayers() ;
 
-	void update(Protocol& protocol);
+	void update(CommandSender& commandSender);
 
     
     int getWidth();

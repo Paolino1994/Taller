@@ -36,10 +36,16 @@ public:
 	const char* dataBuffer();
 
 	void read();
+
 	void write(Request request, const char* data, u_int32_t len);
+
+	// Para enviar texto
 	inline void write(Request request, const std::string& message) {
 		this->write(request, message.c_str(), message.length());
 	};
+
+	// Para enviar un request pelado sin datos
+	void write(Request request);
 
 	void protect();
 

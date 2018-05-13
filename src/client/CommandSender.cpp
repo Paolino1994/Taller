@@ -4,7 +4,9 @@
 
 
 CommandSender::CommandSender(std::string ip, unsigned short port):
-	protocol(Protocol(ip, port))
+	protocol(Protocol(ip, port)),
+	playerViewData(std::vector<player_view_data_t>()),
+	ballViewData({0,0,0,QUIESCENT})
 {
 
 }
@@ -17,6 +19,55 @@ CommandSender::~CommandSender()
 
 void CommandSender::assignTeam(Team team) {
 	protocol.write(Request::TEAM_ASSIGN, reinterpret_cast<const char*>(&team), sizeof(team));
+}
+
+bool CommandSender::updateModel()
+{
+	Request request;
+	protocol.write(Request::PLAYER_VIEW_UPDATE); // quizas proximamente, le pasamos datos mios de que modelo tengo actualemente u otras yerbas
+	protocol.read();
+
+	request = protocol.request();
+
+	if (request == Request::PLAYER_VIEW_UPDATE) {
+		const player_view_data_t* player_view_data = reinterpret_cast<const player_view_data_t*>(protocol.dataBuffer());
+		size_t player_view_data_len = protocol.dataLength() / sizeof(player_view_data_t);
+		playerViewData.clear();
+		playerViewData.reserve(player_view_data_len);
+		for (size_t i = 0; i < player_view_data_len; ++i) {
+			playerViewData.push_back(player_view_data[i]);
+		}
+	} /*  TODO, no siempre se actualiza
+	  else if (request == Request::WAIT){
+		this->modelUpdated = false;
+		etc....
+		return false;
+	  }
+	  
+	  */
+
+	protocol.write(Request::BALL_VIEW_UPDATE); // quizas proximamente, le pasamos datos mios de que modelo tengo actualemente u otras yerbas
+	protocol.read();
+
+	request = protocol.request();
+	if (request == Request::BALL_VIEW_UPDATE) {
+		const ball_view_data_t ball_view_data = *reinterpret_cast<const ball_view_data_t*>(protocol.dataBuffer());
+		ballViewData = ball_view_data;
+	}/*  TODO, no siempre se actualiza
+	  else if (request == Request::WAIT){
+		this->modelUpdated = false;
+		etc....
+		return false;
+	  }
+	  
+	  */
+	return true;
+}
+
+model_data_t CommandSender::getModelData()
+{
+	model_data_t model = { playerViewData, ballViewData };
+	return model;
 }
 
 void CommandSender::handleEvent(SDL_Event& e)

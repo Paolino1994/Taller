@@ -67,6 +67,11 @@ int Animation::getHeight()
     return mTexture.getHeight();
 }
 
+void Animation::setPresentFrame(size_t frame)
+{
+	this->presentFrame = frame;
+}
+
 int Animation::getFrames()
 {
     return frames;

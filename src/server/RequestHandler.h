@@ -11,6 +11,7 @@ class RequestHandler
 private:
 	Protocol protocol;
 	Game& game;
+	User_ID userId;
 	bool running;
 	bool server_exit_requested;
 	std::thread worker;
@@ -23,7 +24,7 @@ private:
 	void _run();
 
 public:
-	RequestHandler(Socket* socket, Game& game);
+	RequestHandler(Socket* socket, Game& game, User_ID userId);
 	~RequestHandler();
 	void run();
 };

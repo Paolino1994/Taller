@@ -11,6 +11,7 @@
 using namespace std;
 
 void accepter(Game& game, Socket& skt, bool* exit_requested) {
+	User_ID userId = 1;
 	vector<RequestHandler*> requestHandlers;
 	UserManager* u_manager = new UserManager();
 	try {
@@ -18,9 +19,10 @@ void accepter(Game& game, Socket& skt, bool* exit_requested) {
 			Socket* newClientSocket = skt.accept();
 			if (u_manager->login(newClientSocket) == LOGIN_SUCCESS) {
 				// Inyecto un jugador controlado por un humano
-				RequestHandler* rq = new RequestHandler(newClientSocket, game);
+				RequestHandler* rq = new RequestHandler(newClientSocket, game, userId);
 				requestHandlers.push_back(rq);
 				rq->run();
+				userId++;
 			} else {
 				delete newClientSocket;
 			}
@@ -48,7 +50,7 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 	Log::setFilenamePrefix("server");
-	Log::initialize("info");
+	Log::initialize("debug");
 	YAMLReader& yamlReader = YAMLReader::get_instance();
 	yamlReader.readYamlGeneral("");
 

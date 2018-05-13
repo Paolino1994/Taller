@@ -13,6 +13,11 @@ void PlayerControllerAI::handleEvent(Command & e)
 	//do nothing
 }
 
+User_ID PlayerControllerAI::getUserId()
+{
+	return AI_USER;
+}
+
 void PlayerControllerAI::update(double dt, int x_limit, int y_limit)
 {
 	// AI para volver a nuestra posicion inicial

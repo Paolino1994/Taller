@@ -85,8 +85,11 @@ public:
 	// TODO: Evaluar si conviene tener una referencia a la pelota cuando el PlayerModel la tiene bajo su control
     void pass(PlayerModel *pModel, BallModel& ballModel);
 
+	Player_ID getPlayerId();
+
 private:
 	Team team;
+	Player_ID playerId;
 	const std::vector<int> widths;
 	const std::vector<int> heights;
     double velX;
@@ -114,7 +117,9 @@ private:
 
     Log* log;
 
+	static Player_ID nextPlayerId[static_cast<std::underlying_type<Team>::type>(Team::__LENGTH__)];
 
+	static Player_ID getNextPlayerId(Team team);
 };
 
 

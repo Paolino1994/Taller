@@ -45,6 +45,7 @@ public:
     int getHeight();
     int getFrames();
     int getPresentFrame();
+	void setPresentFrame(size_t frame);
     
 	// el ancho (posiblemente escalado) de lo que estariamos dibujando
     int getDestinationWidth() {return mTexture.getScaledWidth();};

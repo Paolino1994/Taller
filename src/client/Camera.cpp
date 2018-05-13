@@ -84,9 +84,9 @@ void Camera::render(World& world){
 	background->render(0, 0);
 
 
-	for (const std::pair<Player_ID, Player>& pair : players)
+	for (std::pair<const Player_ID, Player>& pair : players)
 	{
-		const Player& player = pair.second;
+		Player& player = pair.second;
 		int screen_x = player.getX() - this->x;
 		int screen_y = player.getY() - this->y;
 		//TODO: check screen_x/_y esten en mi ancho/alto
@@ -94,6 +94,7 @@ void Camera::render(World& world){
 		if(player.isControlledByMe()){
 			playerSelectedTexture->render(screen_x + 5, screen_y -10);
 		}
+		player.render(screen_x, screen_y);
 	}
 
 	int screen_x = world.getBall().getX() - this->x;

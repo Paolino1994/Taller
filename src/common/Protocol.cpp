@@ -58,6 +58,12 @@ void Protocol::write(Request request, const char * data, u_int32_t len)
 	skt->send(data, len);
 }
 
+void Protocol::write(Request request)
+{
+	header_t writeHeader{ request, 0 };
+	skt->send((char*)&writeHeader, sizeof(writeHeader));
+}
+
 void Protocol::protect() {
 	skt_protected = true;
 }

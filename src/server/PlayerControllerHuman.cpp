@@ -3,9 +3,10 @@
 #include <iostream>
 using namespace std;
 
-PlayerControllerHuman::PlayerControllerHuman(PlayerModel * model, PlayerView * view, World& world):
+PlayerControllerHuman::PlayerControllerHuman(PlayerModel * model, PlayerView * view, World& world, User_ID userId):
 	PlayerController(model, view),
 	world(world),
+	userId(userId),
 	pressingUP(false),
 	pressingDOWN(false),
 	pressingLEFT(false),
@@ -163,6 +164,11 @@ void PlayerControllerHuman::handleEvent( Command& command ){
 		playerModel->setVelY(0);
 	}
 
+}
+
+User_ID PlayerControllerHuman::getUserId()
+{
+	return this->userId;
 }
 
 void PlayerControllerHuman::swap(PlayerController * otherController)

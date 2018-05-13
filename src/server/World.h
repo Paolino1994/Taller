@@ -17,45 +17,45 @@ class World
 private:
 	// Tenemos una pelota ya desde el principio (controller por ahora que funca como un struct de model + view)
 	BallController ball;
-    // Objetos comunes
-    std::vector<Entity*> entities; //queda todavia, pero pensar el uso de esto
+	// Objetos comunes
+	std::vector<Entity*> entities; //queda todavia, pero pensar el uso de esto
 
 	std::vector<PlayerController*> playerControllers[static_cast<std::underlying_type<Team>::type>(Team::__LENGTH__)];
 
-    std::vector<PlayerController*> pControllers;
-    // Las dimensiones del mapa en screen coordinates
+	std::vector<PlayerController*> pControllers;
+	// Las dimensiones del mapa en screen coordinates
 	// en x: vamos de 0 -> width
 	// en y: vamos de 0 -> height
 	// misma logica que la de renderizacion (x aumenta a derecha, y aumenta para abajo)
-    int width;
-    int height;
-	bool playerIsOnRange(PlayerController* cont,PlayerController* controllerToSwap);
+	int width;
+	int height;
+	bool playerIsOnRange(PlayerController* cont, PlayerController* controllerToSwap);
 
 public:
-    World(int width, int height, std::map<const std::string, Animation> ballAnimMapper);
-    ~World();
+	World(int width, int height, std::map<const std::string, Animation> ballAnimMapper);
+	~World();
 
 	// Creaci�n de elementos
 	void createTeam(Team team, int defenders, int midfielders, int forwards, player_data_t playerData, std::map<const std::string, Animation>& animMapper);
 
 	// Inyeccion de controller
-	PlayerController* injectHumanController(Team team);
+	PlayerController* injectHumanController(Team team, User_ID userId);
 
 	// Swap controller
 	void swap(PlayerController* playerController);
 
 	PlayerController* getPlayerToPass(PlayerController * controllerToSwap);
 
-    void addEntity(Entity* entity);
+	void addEntity(Entity* entity);
 
-    void addPlayerController(PlayerController* pController);
-    
+	void addPlayerController(PlayerController* pController);
+
 	BallController& getBall();
-    std::vector<Entity*>& getEntities() ;
-    std::vector<PlayerController*>& getPlayerControllers() ;
+	std::vector<Entity*>& getEntities();
+	std::vector<PlayerController*>& getPlayerControllers();
 
 	void update(double dt);
-
+	void serialize(model_data_t& modelData);
     
     int getWidth();
     int getHeight();

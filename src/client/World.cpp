@@ -47,46 +47,35 @@ std::vector<Entity*>& World::getEntities() {
     return entities;
 }
 
-const std::map<Player_ID, Player>& World::getPlayers() {
+std::map<Player_ID, Player>& World::getPlayers() {
 	return players;
 }
 
-void World::_update(Protocol& protocol, bool goAgain) {
+void World::update(CommandSender& commandSender) {
 
-	protocol.read();
+	if (!commandSender.updateModel()) {
+		return;
+	}
 
-	Request request = protocol.request();
+	model_data_t modelData = commandSender.getModelData();
 
-	if (request == Request::PLAYER_VIEW_UPDATE) {
-		const player_view_data_t* player_view_data = reinterpret_cast<const player_view_data_t*>(protocol.dataBuffer());
-		size_t player_view_data_len = protocol.dataLength() / sizeof(player_view_data);
-		for (size_t i = 0; i < player_view_data_len; ++i) {
-			// Faltaria chequear si me sacan algun jugador, pero no debeia pasar!
+	std::vector<player_view_data_t>& playerViewData = modelData.playerViewData;
+	ball_view_data_t& ball_view_data = modelData.ballViewData;
 
-			auto existing_player = players.find(player_view_data[i].playerId);
-			if (existing_player != players.end()) { //Existe
-				existing_player->second.update(player_view_data[i]);
-			}
-			else {
-				players.emplace(std::piecewise_construct,
-					std::make_tuple(player_view_data[i].playerId),
-					std::make_tuple(playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(player_view_data[i].team)], this->player_data));
-			}
+	for (player_view_data_t& player_view_data : playerViewData) {
+		auto existing_player = players.find(player_view_data.playerId);
+		if (existing_player != players.end()) { //Existe
+			existing_player->second.update(player_view_data);
+		}
+		else {
+			players.emplace(std::piecewise_construct,
+				std::make_tuple(player_view_data.playerId),
+				std::make_tuple(playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(player_view_data.team)], this->player_data));
 		}
 	}
-	else if (request == Request::BALL_VIEW_UPDATE) {
-		const ball_view_data_t ball_view_data = *reinterpret_cast<const ball_view_data_t*>(protocol.dataBuffer());
-		ball.update(ball_view_data);
-	}
 
-	if (goAgain) { // En una se actualizan los jugadores, en la otra la pelota. El orden no importa
-		this->_update(protocol, false); 
-	}
-}
-
-void World::update(Protocol& protocol)
-{
-	this->_update(protocol, true);
+	ball.update(ball_view_data);
+	
 }
 
 int World::getWidth(){

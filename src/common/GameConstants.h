@@ -7,6 +7,7 @@ using User_ID = int32_t;
 const User_ID AI_USER = -1;
 using pos_t = int32_t;
 using angle_t = int32_t;
+using frame_t = u_int32_t;
 
 enum class Team : u_int32_t {
 	HOME = 0, //LEFT_GOAL
@@ -119,6 +120,7 @@ typedef struct player_view_data {
 	pos_t y;
 	angle_t angle;
 	PlayerState state;
+	frame_t presentFrame;
 } player_view_data_t;
 
 typedef struct ball_view_data {
@@ -127,3 +129,9 @@ typedef struct ball_view_data {
 	angle_t angle;
 	BallState state;
 } ball_view_data_t;
+
+
+typedef struct model_data {
+	std::vector<player_view_data_t>& playerViewData;
+	ball_view_data_t& ballViewData;
+} model_data_t;

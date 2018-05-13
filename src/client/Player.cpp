@@ -27,6 +27,7 @@ void Player::update(const player_view_data_t & player_view_data)
 	this->y = player_view_data.y;
 	this->angle = player_view_data.angle;
 	this->state = player_view_data.state;
+	this->animations[this->state].setPresentFrame(player_view_data.presentFrame);
 }
 
 int Player::getWidth()

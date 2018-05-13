@@ -22,6 +22,9 @@ public:
     PlayerView();
 	void update(double dt);
     //void render(int screen_x, int screen_y);
+
+	void serialize(player_view_data_t& player_view_data);
+
 private:
     std::vector<Animation> mAnimations;
 

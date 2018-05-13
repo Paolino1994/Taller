@@ -1,5 +1,7 @@
 #include "Game.h"
 
+#include <iostream>
+
 #include "common/GameConstants.h"
 #include "common/Log.h"
 #include "common/SpriteInfoSetter.h"
@@ -80,22 +82,36 @@ void Game::_run()
 		// Render current frame
 		// TODO: Aca enviar el modelo a nuestos clientes
 		// Ojo: Enviar el modelo solo cuando cambio --> hacer algun tipo de sleep
+		//modelData.playerViewData.clear();
+		//world.serialize(modelData);
+
+		//int64_t sleep = (fixed_dt - accumulator) * 1000;
+		//std::cout << "Sleeping for " << sleep << " millis" << std::endl;
+		std::this_thread::sleep_for(std::chrono::milliseconds(10)); // fixed_dt en millisegundos
 
 		// Handle events on queue
 		// Por ahora no usamos event queue -> Permitimos que los controllers desde los RequestHandlers le pegen directo al modelo
+		// TODO falta mutexear modelo para que en update no se puedan llamar metodos a los models
 
 		//Cuando el tiempo pasado es mayor a nuestro tiempo de actualizacion
 		while (accumulator >= fixed_dt)
 		{
 			//Calcula movimientos
+			//std::cout << "Model update" << std::endl;
 			world.update(fixed_dt); //Update de todos los players (y otras entidades proximamente?)
 			accumulator -= fixed_dt;
+			modelData.playerViewData.clear();
+			//std::cout << "Model serialize" << std::endl;
+			world.serialize(modelData);
 		}
 	}
 
 }
 
 Game::Game() :
+	playerViewData(std::vector<player_view_data_t>()),
+	ballViewData({ 0,0,0,QUIESCENT }),
+	modelData({ playerViewData, ballViewData }),
 	world(World(YAML::WORLD_WIDTH, YAML::WORLD_HEIGHT, getAnimMapperBall())),
 	maxPlayers(YAML::MAX_PLAYERS),
 	playerCount(0),
@@ -180,6 +196,7 @@ Game::Game() :
 
 	world.createTeam(Team::AWAY, defensores, mediocampistas, delanteros, defaultPlayer2, animMapper2);
 
+	world.serialize(this->modelData);
 }
 
 
@@ -192,7 +209,7 @@ Game::~Game()
 	}
 }
 
-PlayerController * Game::assignToTeam(Team team)
+PlayerController * Game::assignToTeam(Team team, User_ID userId)
 {
 	this->playerCount++;
 	if (this->playerCount == maxPlayers) {
@@ -201,5 +218,10 @@ PlayerController * Game::assignToTeam(Team team)
 			running = true;
 		}
 	}
-	return this->world.injectHumanController(team);
+	return this->world.injectHumanController(team, userId);
+}
+
+model_data_t Game::getModelData()
+{
+	return modelData;
 }

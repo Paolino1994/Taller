@@ -26,4 +26,6 @@ public:
     void update(double dt, int x_limit, int y_limit, std::vector<PlayerController*>& playerControllers);
 
 	void calculateCollision(std::vector<PlayerController *> &vector);
+
+	void serialize(ball_view_data_t& ball_view_data);
 };

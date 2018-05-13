@@ -12,7 +12,6 @@
 class PlayerController {
 
 protected:
-
 	PlayerModel * playerModel;
 	PlayerView *playerView;
 
@@ -33,6 +32,10 @@ public:
 	virtual void swap(PlayerController* other);
 
 	virtual bool isControllable() = 0; //isSwappable()
+
+	virtual User_ID getUserId() = 0;
+	
+	virtual void serialize(player_view_data_t& player_view_data);
 
     bool hasControlOfTheBall();
 

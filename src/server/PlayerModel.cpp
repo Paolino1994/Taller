@@ -8,6 +8,14 @@
 #include <iostream>
 using namespace std;
 
+Player_ID PlayerModel::nextPlayerId[static_cast<std::underlying_type<Team>::type>(Team::__LENGTH__)] = { 1,100 };
+
+Player_ID PlayerModel::getNextPlayerId(Team team) {
+	const size_t teamIndex = static_cast<std::underlying_type<Team>::type>(team);
+	Player_ID pID = PlayerModel::nextPlayerId[teamIndex];
+	PlayerModel::nextPlayerId[teamIndex] += 1;
+	return pID;
+}
 
 PlayerModel::PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y) :
 	Entity(kickOff_x, kickOff_y),
@@ -16,6 +24,7 @@ PlayerModel::PlayerModel(Team team, const player_data_t player_data, double init
 	kickOff_x(kickOff_x),
 	kickOff_y(kickOff_y),
 	team(team),
+	playerId(PlayerModel::getNextPlayerId(team)),
 	widths(player_data.widths, std::end(player_data.widths)),
 	heights(player_data.heights, std::end(player_data.heights)),
 	velX(0),
@@ -45,6 +54,7 @@ PlayerModel::PlayerModel(Team team, const player_data_t player_data, double init
 	kickOff_x(initial_x),
 	kickOff_y(initial_y),
 	team(team),
+	playerId(PlayerModel::getNextPlayerId(team)),
 	widths(player_data.widths, std::end(player_data.widths)),
 	heights(player_data.heights, std::end(player_data.heights)),
 	velX(0),
@@ -340,5 +350,9 @@ void PlayerModel::pass(PlayerModel *pModel, BallModel& ballModel) {
 	//std::cout<<std::to_string(angle)<<std::endl;
 	kick(ballModel);
 
+}
+
+Player_ID PlayerModel::getPlayerId() {
+	return this->playerId;
 }
 

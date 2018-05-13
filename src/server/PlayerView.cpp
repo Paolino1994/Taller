@@ -38,6 +38,9 @@ void PlayerView::render(int screen_x, int screen_y)
     mAnimations[playerModel->getState()].render(screen_x, screen_y, playerModel->getAngle());
 }*/
 
+void PlayerView::serialize(player_view_data_t& player_view_data) {
+	player_view_data.presentFrame = mAnimations[player_view_data.state].getPresentFrame();
+}
 
 
 
