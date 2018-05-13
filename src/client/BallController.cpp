@@ -34,22 +34,36 @@ void BallController::calculateCollision(std::vector<PlayerController *> &playerC
     int y=ballModel.getY();
     int i=0;
     for (PlayerController* controller : playerControllers) {
-        //AGREGAR UN QUITAR BALLCONTROL A TODOS LOS DEMAS   takeBallControll(playerControllers,i);
             int xPlayer=controller->getModel()->getCenterX();
             int yPlayer=controller->getModel()->getCenterY();
-            //std::cout<<"X: "<<std::to_string(x)<<" X Player: "<<std::to_string(xPlayer)<<std::endl;
-            //std::cout<<"Y: "<<std::to_string(y)<<" Y Player: "<<std::to_string(yPlayer)<<std::endl;
             if(abs(x-xPlayer)<20 && abs(y-yPlayer)<20){
-                controller->getModel()->setHasControlOfTheBall(true);
-                /*for (int j=0;j<(int)playerControllers.size();j++) {
-                    if(playerControllers[j]->getModel()->getTeam()!=controller->getModel()->getTeam()){
-                        controller->getModel()->setHasControlOfTheBall(false);
-                    }
-                }*/
+                if(!controller->getModel()->getHasControlOfTheBall()){
+                    controller->getModel()->setHasControlOfTheBall(true);
+                    //controller->getModel()->setAngle(-90+ballModel.getAngle());
+                    changeController(i,playerControllers);
+                }
+
 
             }
 
         i++;
+    }
+
+}
+
+void BallController::changeController(int newController, std::vector<PlayerController *> &playerControllers) {
+    int counter=0;
+    for (PlayerController* controller : playerControllers) {
+        if(newController==counter){
+            controller->getModel()->setHasControlOfTheBall(true);
+            ballModel.setVelX(controller->getModel()->getVelX());
+            ballModel.setVelY(controller->getModel()->getVelY());
+            ballModel.setState();
+            std::cout<<"Agarro la pelota"<< "Ball VelX: "<<ballModel.getVelX()<<" Ball VelY: "<<ballModel.getVelY()<<std::endl;
+        }else{
+            controller->getModel()->setHasControlOfTheBall(false);
+        }
+        counter++;
     }
 
 }

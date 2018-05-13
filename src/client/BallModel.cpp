@@ -15,6 +15,8 @@ BallModel::BallModel(double kickOff_x, double kickOff_y, int X, int Y):
 	Entity(kickOff_x, kickOff_y) {
     x=X;
     y=Y;
+    velX=0;
+    velY=0;
     state=QUIESCENT;
 
 }
@@ -23,6 +25,8 @@ BallModel::BallModel(double kickOff_x, double kickOff_y):
 	Entity(kickOff_x, kickOff_y) ,
 	state(QUIESCENT)
 {
+    velX=0;
+    velY=0;
 }
 
 int BallModel::getWidth() {
@@ -156,12 +160,30 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
         velX=0;
         velY=0;
     }
+    setState();
+    std::cout<<"Ball VelX: "<<getVelX()<<" Ball VelY: "<<getVelY()<<std::endl;
 
 
 }
 
 int BallModel::getAngle() {
     return angleToUse;
+}
+
+double BallModel::getVelX() {
+    return velX;
+}
+
+double BallModel::getVelY() {
+    return velY;
+}
+
+void BallModel::setState() {
+    if(velX!=0 || velY!=0){
+        state=MOVING;
+    }else{
+        state=QUIESCENT;
+    }
 }
 
 
