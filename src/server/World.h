@@ -62,5 +62,13 @@ public:
 
 	void swapToBallController(PlayerController *cont);
 
+
+	void updateBallController();
+
+
+	void calculateCollision();
+
+	void changeController(int i, std::vector<PlayerController *> &pVector);
+
 };
 

@@ -27,5 +27,9 @@ public:
 
 	void calculateCollision(std::vector<PlayerController *> &vector);
 
+	void changeController(int newController, std::vector<PlayerController *> &playerControllers);
+
+	PlayerController * findActualController(std::vector<PlayerController *> &vector);
+
 	void serialize(ball_view_data_t& ball_view_data);
 };

@@ -85,6 +85,8 @@ public:
 	// TODO: Evaluar si conviene tener una referencia a la pelota cuando el PlayerModel la tiene bajo su control
     void pass(PlayerModel *pModel, BallModel& ballModel);
 
+    void setAngle(int i);
+
 private:
 	Team team;
 	const std::vector<int> widths;

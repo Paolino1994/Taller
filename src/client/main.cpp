@@ -51,13 +51,10 @@ SDL_Renderer* gRenderer = NULL;
 
 std::string getLogType(char *string);
 
-void renderizar(Camera& camera, World& world, Texto& texto, CommandSender& commandSender);
+void renderizar(Camera& camera, World& world, CommandSender& commandSender, GameMenu& gameMenu);
 
 player_data_t
 crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick);
-
-
-void addBallToWorld(World& world);
 
 //Starts up SDL and creates window
 bool init_SDL()
@@ -193,12 +190,12 @@ int main( int argc, char* args[] )
 		log->error("Falló la inicialización del SDL");
     } else {
 
-		// TEMP
-			CommandSender commandSender("127.0.0.1", 5000);
-		// FIN TEMP
+		// TODO: recibir o tomaar de algun lado ip y puerto (config, parametro, etc..)
+		CommandSender commandSender("127.0.0.1", 5000);
 
+        GameMenu gameMenu(gRenderer);
         if(gameState == GameState::OFFLINE) {
-            GameMenu gameMenu(gRenderer);
+            
             if(gameMenu.logginScreen(commandSender) == 0) {
                 gameState = GameState::ONLINE;
             }
@@ -313,17 +310,13 @@ int main( int argc, char* args[] )
 			log->info("Inyecto un jugador controlado por un humano");
 			PlayerController* controlled = world.injectHumanController(Team::HOME);
 */
-            // Agrego mensaje para salir del juego
-            log->info("Cargar Mensaje salida de juego");
-            Texto quiereSalirTexto(gRenderer, "res/Tehkan World Cup.ttf",36, "SALIR DEL JUEGO? S/N", {255,255,0,0});
-
             
 			log->info("Agrego la camara");
             Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
             camera.follow(world.getBall());
 
             log->info("Renderizo");
-            renderizar(camera, world, quiereSalirTexto, commandSender);
+            renderizar(camera, world, commandSender, gameMenu);
         }
     }
 
@@ -365,7 +358,7 @@ player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun,
     return defaultPlayer;
 }
 
-void renderizar(Camera& camera, World& world, Texto& quiereSalirTexto, CommandSender& commandSender) {
+void renderizar(Camera& camera, World& world, CommandSender& commandSender, GameMenu& gameMenu) {
 
 	commandSender.assignTeam(Team::HOME);
 
@@ -441,27 +434,15 @@ void renderizar(Camera& camera, World& world, Texto& quiereSalirTexto, CommandSe
             camera.render(world);
 
 
-            // Si seleciono la tecla escape entonces pregunto si quiere salir
+            //quit Si seleciono la tecla escape entonces pregunto si quiere salir
             if(salirJuego){
-                int w, h;
-                quiereSalirTexto.getTextureDimensions(&w,&h); // pregunto el tamanio para el centrado
-                quiereSalirTexto.display((SCREEN_WIDTH - w) / 2, (SCREEN_HEIGHT - h) / 2); // muestro la pregunta centrada
-                SDL_RenderPresent( gRenderer ); // renderizo la pantalla con la pregunta
-                while(salirJuego && SDL_WaitEvent(&e) != 0){ // mientras no haya seleccionado s o n el juego esta parado
-                    if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_s) { // Con s sale del juego
-                        quit = true;
-                        salirJuego = false;
-						log->info("SALIENDO DEL JUEGO");
-                    }
-                    if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_n) { // Con n vuelve al juego
-						log->info("Salida del juego cancelada");
-                        salirJuego = false;
-                    }
+                SDL_RenderClear( gRenderer );
+                if(gameMenu.pausaMenu(e)) {
+                    quit = true;
                 }
-            } else {
-                //Update screen
-                SDL_RenderPresent( gRenderer );
+                salirJuego = false;
             }
+            SDL_RenderPresent( gRenderer );
         }
     }
 

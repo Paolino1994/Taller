@@ -325,18 +325,10 @@ bool PlayerModel::getHasControlOfTheBall() {
 
 // Parche feo -> Recibe ballModel por ahora // TODO VER
 void PlayerModel::changeBallState(BallModel& ballModel) {
-    //std::cout<<state<<std::endl;
-	if(hasControlOfTheBall&&(getVelX()!=0 || getVelY()!=0)){
-        if(ballModel.getState()!=MOVING){
-			ballModel.setState(MOVING);
-        }
-
-	}else {
-        if (ballModel.getState() != QUIESCENT) {
-			ballModel.setState(QUIESCENT);
-        }
-    }
-
+	if (hasControlOfTheBall) {
+		ballModel.setVelX(getVelX());
+		ballModel.setVelY(getVelY());
+	}
 }
 
 void PlayerModel::pass(PlayerModel *pModel, BallModel& ballModel) {
@@ -356,3 +348,6 @@ Player_ID PlayerModel::getPlayerId() {
 	return this->playerId;
 }
 
+void PlayerModel::setAngle(int i) {
+	angle = i;
+}

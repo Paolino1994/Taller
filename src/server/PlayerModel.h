@@ -87,6 +87,8 @@ public:
 
 	Player_ID getPlayerId();
 
+	void setAngle(int i);
+
 private:
 	Team team;
 	Player_ID playerId;

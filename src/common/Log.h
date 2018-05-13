@@ -5,6 +5,8 @@
 #include <sstream>
 #include <fstream>
 #include <time.h>
+#include <mutex>
+
 
 #define LOG_DEBUG "debug"
 #define LOG_INFO "info"
@@ -27,6 +29,11 @@ private:
 		@POS: se realizo un nuevo ingreso en el log con el mensaje
 	*/
 	void log(std::string msg, std::string type);
+
+    std::mutex mtx_log;
+	
+	static std::mutex mtx_class;
+
 
 public:
 	static void setFilenamePrefix(std::string filename);

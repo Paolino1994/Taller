@@ -70,7 +70,6 @@ PlayerModel::PlayerModel(Team team, const player_data_t player_data, double init
 // IMPORTANYE: Proximamente manejar mejor esto con patron State 
 void PlayerModel::update(double dt, int x_limit, int y_limit){
     using namespace std;
-
 	//PlayerState old_state = this->state;
 	// Actualizar x:
 	x += velX * velocityMultiplier * dt;
@@ -315,18 +314,10 @@ bool PlayerModel::getHasControlOfTheBall() {
 
 // Parche feo -> Recibe ballModel por ahora // TODO VER
 void PlayerModel::changeBallState(BallModel& ballModel) {
-    //std::cout<<state<<std::endl;
-	if(hasControlOfTheBall&&(getVelX()!=0 || getVelY()!=0)){
-        if(ballModel.getState()!=MOVING){
-			ballModel.setState(MOVING);
-        }
-
-	}else {
-        if (ballModel.getState() != QUIESCENT) {
-			ballModel.setState(QUIESCENT);
-        }
-    }
-
+	if(hasControlOfTheBall){
+		ballModel.setVelX(getVelX());
+		ballModel.setVelY(getVelY());
+	}
 }
 
 void PlayerModel::pass(PlayerModel *pModel, BallModel& ballModel) {
@@ -339,6 +330,11 @@ void PlayerModel::pass(PlayerModel *pModel, BallModel& ballModel) {
 	angle=(angulo*180/M_PI) + 90;
 	//std::cout<<std::to_string(angle)<<std::endl;
 	kick(ballModel);
+
+}
+
+void PlayerModel::setAngle(int i) {
+	angle=i;
 
 }
 

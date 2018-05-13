@@ -26,4 +26,8 @@ public:
     void update(double dt, int x_limit, int y_limit, std::vector<PlayerController*>& playerControllers);
 
 	void calculateCollision(std::vector<PlayerController *> &vector);
+
+    void changeController(int newController, std::vector<PlayerController *> &playerControllers);
+
+	PlayerController * findActualController(std::vector<PlayerController *> &vector);
 };

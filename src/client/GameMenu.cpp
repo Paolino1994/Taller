@@ -194,6 +194,44 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
     return returnValue;
 }
 
+bool GameMenu::pausaMenu(SDL_Event ev){
+    Log *log = Log::get_instance();
+    Surface surface("res/soccer_field_1.6.png");
+
+    Texture background(gRenderer, "res/soccer_field_1.6.png");
+
+    background.render(0, 0);
+    // Agrego mensaje para salir del juego
+    log->info("Cargar Mensaje salida de juego");
+    Texto quiereSalirTexto(gRenderer, "res/Tehkan World Cup.ttf",36, "SALIR DEL JUEGO? S/N", {255,255,0,0});
+    bool confirmaSalir = false;
+    bool seleccionoLetraValida = false;
+    int w, h;
+    quiereSalirTexto.getTextureDimensions(&w,&h); // pregunto el tamanio para el centrado
+    quiereSalirTexto.display((SCREEN_WIDTH - w) / 2, (SCREEN_HEIGHT - h) / 2); // muestro la pregunta centrada
+    while(!seleccionoLetraValida){
+        while( SDL_PollEvent( &ev ) != 0)
+            {
+                SDL_RenderClear( gRenderer );
+                if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_s ) {
+                    log->info("Salida del juego confirmada");
+                    confirmaSalir = true;
+                    seleccionoLetraValida = true;
+                }
+                if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_n ) { // Con n vuelve al juego
+                    log->info("Salida del juego cancelada");
+                    confirmaSalir = false;
+                    seleccionoLetraValida = true;
+                }
+            }
+        background.render(0, 0);
+        quiereSalirTexto.display((SCREEN_WIDTH - w) / 2, (SCREEN_HEIGHT - h) / 2); // muestro la pregunta centrada
+        //SDL_RenderClear( gRenderer );
+        SDL_RenderPresent( gRenderer );
+    }
+    return confirmaSalir;
+}
+
 int GameMenu::verificarCredenciales (std::string usuario, std::string pass) {
     int valor = YAMLReader::get_instance().validarUsuario(usuario,pass);
     return valor;
