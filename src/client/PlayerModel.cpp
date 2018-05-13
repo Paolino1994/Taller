@@ -314,8 +314,6 @@ bool PlayerModel::getHasControlOfTheBall() {
 
 // Parche feo -> Recibe ballModel por ahora // TODO VER
 void PlayerModel::changeBallState(BallModel& ballModel) {
-    std::cout<<"VelX: "<<getVelX()<<" VelY: "<<getVelY()<<std::endl;
-    std::cout<<"Ball VelX: "<<ballModel.getVelX()<<" Ball VelY: "<<ballModel.getVelY()<<std::endl;
 	if(hasControlOfTheBall&&(getVelX()!=0 || getVelY()!=0)){
         if(ballModel.getState()!=MOVING){
 			ballModel.setState(MOVING);

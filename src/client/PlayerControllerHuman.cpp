@@ -70,8 +70,12 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 				break;
 			}
 			case SDLK_q: {
-				this->world.swap(this);
-				log->debug("PlayerControllerHuman: cambiando el jugador controlado");
+                if(this->getModel()->getHasControlOfTheBall()==false){
+                    this->world.swap(this);
+                    log->debug("PlayerControllerHuman: cambiando el jugador controlado");
+                }else{
+                    log->debug("PlayerControllerHuman: no se puede cambiar un jugador que tenga la pelota");
+                }
 				break;
 			}
 			case SDLK_d:{
@@ -117,8 +121,6 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 
 
     }
-
-    //Bastabte villero
     playerModel->changeBallState(world.getBall().getModel());
 
 

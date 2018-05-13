@@ -3,6 +3,7 @@
 #include "TeamFactory.h"
 #include "PlayerControllerHuman.h"
 #include <algorithm>
+#include <iostream>
 
 World::World(int width, int height, Texture* background, std::map<const std::string, Animation>& ballAnimMapper):
     background(background),
@@ -184,7 +185,9 @@ void World::update(double dt)
 			player->update(dt, this->getWidth(), this->getHeight());
 		}
 	}
+
 	ball.update(dt, this->getWidth(), this->getHeight(), this->getPlayerControllers());
+    updateBallController();
 }
 
 int World::getWidth(){
@@ -202,6 +205,29 @@ void World::swapToBallController(PlayerController *cont) {
         if(controller->getModel()->getHasControlOfTheBall()){
             cont->swap(controller);
         }
+    }
+
+
+}
+
+void World::updateBallController() {
+    PlayerController* priorController=NULL;
+    PlayerController* currentController=NULL;
+    for(auto controllers : playerControllers){
+        for (auto player: controllers) {
+            if (!player->isControllable()){
+                priorController=player;
+            }else{
+                if(player->hasControlOfTheBall()){
+                    currentController=player;
+                }
+            }
+        }
+
+    }
+    if(priorController!=NULL && currentController!=NULL && priorController->getModel()->getTeam()==currentController->getModel()->getTeam()){
+        //std::cout<<"ENTRE"<<priorController->getModel()->getTeam()<<currentController->getModel()->getTeam()<<std::endl;
+        priorController->swap(currentController);
     }
 
 

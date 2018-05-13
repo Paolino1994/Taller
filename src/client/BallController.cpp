@@ -42,24 +42,20 @@ void BallController::calculateCollision(std::vector<PlayerController *> &playerC
                     //controller->getModel()->setAngle(-90+ballModel.getAngle());
                     changeController(i,playerControllers);
                 }
-
-
             }
-
         i++;
     }
-
 }
 
 void BallController::changeController(int newController, std::vector<PlayerController *> &playerControllers) {
     int counter=0;
+
     for (PlayerController* controller : playerControllers) {
         if(newController==counter){
             controller->getModel()->setHasControlOfTheBall(true);
             ballModel.setVelX(controller->getModel()->getVelX());
             ballModel.setVelY(controller->getModel()->getVelY());
-            ballModel.setState();
-            std::cout<<"Agarro la pelota"<< "Ball VelX: "<<ballModel.getVelX()<<" Ball VelY: "<<ballModel.getVelY()<<std::endl;
+            //std::cout<<"Agarro la pelota"<< "Ball VelX: "<<ballModel.getVelX()<<" Ball VelY: "<<ballModel.getVelY()<<std::endl;
         }else{
             controller->getModel()->setHasControlOfTheBall(false);
         }
@@ -67,6 +63,7 @@ void BallController::changeController(int newController, std::vector<PlayerContr
     }
 
 }
+
 
 
 

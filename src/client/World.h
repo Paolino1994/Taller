@@ -69,5 +69,6 @@ public:
 
 	void swapToBallController(PlayerController *cont);
 
+	void updateBallController();
 };
 

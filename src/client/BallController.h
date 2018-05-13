@@ -28,4 +28,6 @@ public:
 	void calculateCollision(std::vector<PlayerController *> &vector);
 
     void changeController(int newController, std::vector<PlayerController *> &playerControllers);
+
+	PlayerController * findActualController(std::vector<PlayerController *> &vector);
 };

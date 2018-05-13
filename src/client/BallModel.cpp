@@ -107,19 +107,20 @@ void BallModel::kick() {
 
     double multiplierX=cos(angleToUse*PI/180.0);
     double multiplierY=sin(angleToUse*PI/180.0);
-    double xVel=250*multiplierX;
-    double yVel=250*multiplierY;
+    double xVel=500*multiplierX;
+    double yVel=500*multiplierY;
     setVelX(xVel);
     setVelY(yVel);
 }
 
 void BallModel::setVelX(double d) {
     velX=d;
-
+    setState();
 }
 
 void BallModel::setVelY(double vel) {
     velY=vel;
+    setState();
 }
 
 // TODO: pasar PlayerModels en vez de PlayerControllers
@@ -145,6 +146,8 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
     y += velY * dt;
     if ((y + this->getHeight()) > y_limit) { //limite de abajo
         y = y_limit - this->getHeight();
+        velX=0;
+        velY=0;
     }
     else if (this->y < 0) { // limite de arriba
         this->y = 0;
@@ -154,6 +157,8 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
 
     if ((x + this->getWidth()) > x_limit) { //limite de abajo
         x = x_limit - this->getWidth();
+        velX=0;
+        velY=0;
     }
     else if (this->x < 0) { // limite de arriba
         this->x = 0;
@@ -161,7 +166,7 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
         velY=0;
     }
     setState();
-    std::cout<<"Ball VelX: "<<getVelX()<<" Ball VelY: "<<getVelY()<<std::endl;
+    //std::cout<<"Ball VelX: "<<getVelX()<<" Ball VelY: "<<getVelY()<<std::endl;
 
 
 }
