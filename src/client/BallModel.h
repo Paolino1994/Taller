@@ -15,6 +15,10 @@ public:
 
     BallModel(double kickOff_x, double kickOff_y);
 
+    double getVelX();
+
+    double getVelY();
+
     int getWidth();
 
     int getHeight();
@@ -42,14 +46,16 @@ public:
 
     int getAngle();
 
+    void setVelX(double d);
+
+    void setVelY(double vel);
+
+    void setState();
+
 private:
     double angle=0;
 
     BallState state;
-
-    void setVelX(double d);
-
-    void setVelY(double vel);
 
     double velX;
 
