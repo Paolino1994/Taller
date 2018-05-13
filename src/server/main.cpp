@@ -5,20 +5,25 @@
 #include "common/Socket.h"
 #include "common/Log.h"
 #include "RequestHandler.h"
+#include "UserManager.h"
 #include "Game.h"
 
 using namespace std;
 
 void accepter(Game& game, Socket& skt, bool* exit_requested) {
 	vector<RequestHandler*> requestHandlers;
+	UserManager* u_manager = new UserManager();
 	try {
 		while (true) {
 			Socket* newClientSocket = skt.accept();
-			// Inyecto un jugador controlado por un humano
-			Log::get_instance()->info("Aceptamos un nuevo jugador");
-			RequestHandler* rq = new RequestHandler(newClientSocket, game);
-			requestHandlers.push_back(rq);
-			rq->run();
+			if (u_manager->login(newClientSocket) == LOGIN_SUCCESS) {
+				// Inyecto un jugador controlado por un humano
+				RequestHandler* rq = new RequestHandler(newClientSocket, game);
+				requestHandlers.push_back(rq);
+				rq->run();
+			} else {
+				delete newClientSocket;
+			}
 		}
 	}
 	catch (exception& e) {
@@ -33,6 +38,7 @@ void accepter(Game& game, Socket& skt, bool* exit_requested) {
 	{
 		delete rq;
 	}
+	delete u_manager;
 }
 
 int main(int argc, char *argv[]) {

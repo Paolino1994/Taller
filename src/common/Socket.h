@@ -10,10 +10,10 @@
 #include <errno.h>
 #include <string.h>
 
-#define BACKLOG 10
-#define ERROR -1
-#define SUCCESS 0
-#define FINISHED -5
+#define SKT_BACKLOG 10
+#define SKT_ERROR -1
+#define SKT_SUCCESS 0
+#define SKT_FINISHED -5
 #define SOCKET_CLOSED 0
 #define SOCKET_OPENED 1
 

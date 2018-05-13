@@ -3,16 +3,20 @@
 #include "common/Request.h"
 
 
-CommandSender::CommandSender(std::string ip, unsigned short port, Team team):
+CommandSender::CommandSender(std::string ip, unsigned short port):
 	protocol(Protocol(ip, port))
 {
-	protocol.write(Request::TEAM_ASSIGN, reinterpret_cast<const char*>(&team), sizeof(team));
+
 }
 
 
 CommandSender::~CommandSender()
 {
 	protocol.shutdown();
+}
+
+void CommandSender::assignTeam(Team team) {
+	protocol.write(Request::TEAM_ASSIGN, reinterpret_cast<const char*>(&team), sizeof(team));
 }
 
 void CommandSender::handleEvent(SDL_Event& e)
@@ -71,5 +75,20 @@ void CommandSender::handleEvent(SDL_Event& e)
 		if (command.key != CommandKey::__LENGTH__ && command.type != CommandType::__LENGTH__) {
 			protocol.write(request, reinterpret_cast<const char*>(&command), sizeof(command));
 		}
+	}
+}
+
+short CommandSender::login(std::string credentials) {
+	protocol.write(Request::LOGIN, credentials.c_str(), credentials.length());
+	protocol.read();
+	if (protocol.request() == Request::LOGIN) {
+		int result = std::stoi(protocol.dataBuffer());
+		if (result == USER_ACCEPTED) {
+			return LOGIN_SUCCESS;
+		} else {
+			return result;
+		}
+	} else {
+		return LOGIN_ERROR;
 	}
 }

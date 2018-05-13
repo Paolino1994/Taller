@@ -2,10 +2,10 @@
 #include "SocketException.h"
 
 int Socket::control_output(int control){
-	if (control == ERROR){
+	if (control == SKT_ERROR){
 		throw SocketException();
 	}
-	return SUCCESS;
+	return SKT_SUCCESS;
 }
 
 Socket::Socket(){
@@ -47,8 +47,8 @@ int Socket::bind_and_listen(unsigned short port){
 
         control = ::bind(fd, (struct sockaddr *) &sktaddr,
                 sizeof(struct sockaddr_in));
-	if (control != ERROR){
-        	control = listen(fd, BACKLOG);
+	if (control != SKT_ERROR){
+        	control = listen(fd, SKT_BACKLOG);
 	}
 	status = control_output(control);
     return status;
@@ -57,7 +57,7 @@ int Socket::bind_and_listen(unsigned short port){
 Socket* Socket::accept(){
 	int client_fd = ::accept(fd, 0, 0);
 	status = control_output(client_fd);
-	if (status == ERROR)
+	if (status == SKT_ERROR)
 		return NULL;
 	Socket* client = new Socket(client_fd);
 	return client;
@@ -72,31 +72,31 @@ int Socket::shutdown(){
 int Socket::send(const char* msg, u_int32_t len, int flags) {
 	int bytes = SOCKET_OPENED;
 	u_int32_t bytes_sent = 0;
-	while (bytes_sent < len && bytes != ERROR && bytes != SOCKET_CLOSED){
+	while (bytes_sent < len && bytes != SKT_ERROR && bytes != SOCKET_CLOSED){
 		bytes = ::send(fd, msg + bytes_sent, len - bytes_sent, flags);
 		if (bytes > 0){
 			bytes_sent += bytes;
 		}
 	}
-	status = control_output(bytes == SOCKET_CLOSED ? ERROR : bytes);
-	return (bytes == FINISHED)? FINISHED : control_output(bytes);
+	status = control_output(bytes == SOCKET_CLOSED ? SKT_ERROR : bytes);
+	return (bytes == SKT_FINISHED)? SKT_FINISHED : control_output(bytes);
 }
 
 int Socket::receive(char* buff, u_int32_t len, int flags){
 	int bytes = SOCKET_OPENED;
 	u_int32_t bytes_recv = 0;
-	while(bytes_recv < len && bytes != ERROR && bytes != SOCKET_CLOSED){
+	while(bytes_recv < len && bytes != SKT_ERROR && bytes != SOCKET_CLOSED){
 		bytes = ::recv(fd, buff + bytes_recv, len - bytes_recv,
 			flags);
 		if (bytes > 0){
 			bytes_recv += bytes;
 		}
 	}
-	status = control_output(bytes == SOCKET_CLOSED? ERROR: bytes);
-	if (bytes == ERROR){
+	status = control_output(bytes == SOCKET_CLOSED? SKT_ERROR: bytes);
+	if (bytes == SKT_ERROR){
 		return control_output(bytes);
 	}
-	return (bytes == SOCKET_CLOSED && bytes_recv == 0)? FINISHED : bytes_recv;
+	return (bytes == SOCKET_CLOSED && bytes_recv == 0)? SKT_FINISHED : bytes_recv;
 }
 
 int Socket::get_status() {
