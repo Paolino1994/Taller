@@ -25,7 +25,8 @@ Bibliotecas para compilar el proyecto:
 
 - Movimientos			-->			Flechas
 - Cambiar Jugador		-->			Q
-- Barrer				-->			Barra Espaciadora
-- Correr				-->			R
-- Patear				-->			Enter
+- Barrer				-->			A
+- Correr				-->			Barra Espaciadora
+- Patear				-->			S
+- Pasar                 -->         D
 - Salir del juego				-->			ESC

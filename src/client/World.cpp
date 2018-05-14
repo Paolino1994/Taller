@@ -64,12 +64,17 @@ PlayerController* World::injectHumanController(Team team)
 }
 
 bool World::playerIsOnRange(PlayerController* cont,PlayerController* controllerToSwap){
-	PlayerModel* model=cont->getModel();
-	int x=model->getX();
-	int y=model->getY();
-	int xCon=controllerToSwap->getModel()->getX();
-	int yCon=controllerToSwap->getModel()->getY();
-	if((x<xCon+200 || x>xCon-200) && (y<yCon+150 || y>yCon-150)){
+	//PlayerModel* model=cont->getModel();
+	int x=ball.getModel().getX();
+	int y=ball.getModel().getY();
+	int xCon=cont->getModel()->getCenterX();
+	int yCon=cont->getModel()->getCenterY();
+    //std::cout<<"BALL X:"<<x<<" Y:"<<y<<std::endl;
+    //std::cout<<"X:"<<xCon<<" Y:"<<yCon<<std::endl;
+	//int xRange=getRangeToChange(x,200);
+	//int yRange=getRangeToChange(y,150);
+	if(abs(x-xCon)<YAML::SCREEN_WIDTH/2 && abs(y-yCon)<YAML::SCREEN_HEIGHT/2){
+		//std::cout<<"vale Controllador"<<std::endl;
 		return true;
 	}
 	return false;
@@ -88,6 +93,7 @@ PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
     }
 
     //size_t controllerToSwapIndex = index;
+	bool comparacion;
 
     do
     { // en el peor caso volvemos a el que estabamos controlando recien
@@ -95,9 +101,13 @@ PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
         if (index == (long long)teamControllers.size()) {
             index = 0;
         }
-
-    } while (teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable() && playerIsOnRange(teamControllers[index],controllerToSwap)); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
-    return teamControllers[index];
+		comparacion=!playerIsOnRange(teamControllers[index],controllerToSwap);
+		comparacion=(comparacion==(teamControllers[index] != controllerToSwap));
+		comparacion=(comparacion==!teamControllers[index]->isControllable());
+		comparacion=comparacion==false;
+	} //while (!playerIsOnRange(teamControllers[index],controllerToSwap) && teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable()); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
+	while(comparacion);
+	return teamControllers[index];
 
 }
 
@@ -114,16 +124,22 @@ void World::swap(PlayerController * controllerToSwap)
 	}
 
 	size_t controllerToSwapIndex = index;
-
+	//std::cout<<"-----------------------------------------------------"<<std::endl;
+	bool comparacion;
 	do
 	{ // en el peor caso volvemos a el que estabamos controlando recien
 		++index;
 		if (index == (long long)teamControllers.size()) {
-			index = 0;
+			index = controllerToSwapIndex;
+			break;
 		}
-
-	} while (teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable() && playerIsOnRange(teamControllers[index],controllerToSwap)); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
-
+		//playerIsOnRange(teamControllers[index],controllerToSwap);
+		comparacion=!playerIsOnRange(teamControllers[index],controllerToSwap);
+		comparacion=(comparacion==(teamControllers[index] != controllerToSwap));
+		comparacion=(comparacion==!teamControllers[index]->isControllable());
+		comparacion=comparacion==false;
+	} //while (!playerIsOnRange(teamControllers[index],controllerToSwap) && teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable()); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
+	while(comparacion);
 	if (teamControllers[index] != controllerToSwap) {
 		controllerToSwap->swap(teamControllers[index]);
 		// camera.follow(controlled->getEntity()); lo hacemos en el main
@@ -255,5 +271,16 @@ void World::changeController(int newController, std::vector<PlayerController *> 
 		counter++;
 	}
 
+}
+
+int World::getRangeToChange(int value, int maxValue) {
+	if(value<maxValue){
+		return 2*maxValue-value;
+	}
+	else if(value>(YAML::SCREEN_WIDTH-maxValue)){
+		return 2*maxValue-(YAML::SCREEN_WIDTH-value);
+	}else{
+		return maxValue;
+	}
 }
 

@@ -107,7 +107,7 @@ void Camera::render(World& world){
     if(rendered==0){
         int screen_x = world.getBall().getModel().getX() - this->x;
         int screen_y = world.getBall().getModel().getY() - this->y;
-		Log::get_instance()->info("X: "+ std::to_string(screen_x) + " Y: " + std::to_string(screen_y));
+		//Log::get_instance()->info("X: "+ std::to_string(screen_x) + " Y: " + std::to_string(screen_y));
         world.getBall().getView().render(screen_x, screen_y);
     }
 }

@@ -72,9 +72,9 @@ void PlayerControllerHuman::handleEvent( SDL_Event& e )
 			case SDLK_q: {
                 if(this->getModel()->getHasControlOfTheBall()==false){
                     this->world.swap(this);
-                    log->debug("PlayerControllerHuman: cambiando el jugador controlado");
+                    log->info("PlayerControllerHuman: cambiando el jugador controlado");
                 }else{
-                    log->debug("PlayerControllerHuman: no se puede cambiar un jugador que tenga la pelota");
+                    log->info("PlayerControllerHuman: no se puede cambiar un jugador que tenga la pelota");
                 }
 				break;
 			}

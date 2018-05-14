@@ -73,5 +73,7 @@ public:
 	void calculateCollision();
 
 	void changeController(int i, std::vector<PlayerController *> &pVector);
+
+    int getRangeToChange(int value, int maxValue);
 };
 
