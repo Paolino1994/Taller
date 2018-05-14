@@ -10,6 +10,7 @@ Log::Log(std::string t){
 	time_t rawtime;
   	struct tm * timeinfo;
   	char charTime [80];
+	setType(t);
   	time (&rawtime);
   	timeinfo = localtime (&rawtime);
   	strftime (charTime,80,"[%F]-%X",timeinfo);
