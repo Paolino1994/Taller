@@ -28,6 +28,7 @@
 #include "BallView.h"
 #include "BallController.h"
 #include "GameMenu.h"
+#include "GameSelectTeam.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
@@ -191,6 +192,14 @@ int main( int argc, char* args[] )
         if(gameState == GameState::OFFLINE) {
             if(gameMenu.logginScreen() == 0) {
                 gameState = GameState::ONLINE;
+                std::string user = gameMenu.getUser();
+                // selecionar equipo
+				GameSelectTeam gameSelectTeam(gRenderer);
+				int selectedTeam = gameSelectTeam.selectTeamScreen();
+				std::cout << "equipo seleccionado: " << selectedTeam << std::endl;
+				// pasar usuario y equipo al servidor
+				log->info("enviando Usuario~~Equipo al servidor: " + user + " Equipo: " + std::to_string(selectedTeam));
+				std::cout << "enviando info al servidor: user: " << user << ", equipo: " << selectedTeam << std::endl;
             }
         } 
         if (gameState == GameState::ONLINE) {

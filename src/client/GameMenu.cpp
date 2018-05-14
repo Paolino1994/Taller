@@ -139,6 +139,7 @@ int GameMenu::logginScreen() {
             int respuestaAcceso = verificarCredenciales(userText, passText);
             if(respuestaAcceso == 0){
                 log->info("Credenciales validas");
+                user = userText;
                 running = false;
             } else {
                 if (respuestaAcceso == -1) {
@@ -205,4 +206,8 @@ bool GameMenu::pausaMenu(SDL_Event ev){
 int GameMenu::verificarCredenciales (std::string usuario, std::string pass) {
     int valor = YAMLReader::get_instance().validarUsuario(usuario,pass);
     return valor;
+}
+
+string GameMenu::getUser(){
+	return user;
 }
