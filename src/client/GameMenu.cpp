@@ -141,10 +141,12 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
             int respuestaAcceso = verificarCredenciales(userText, passText);
             if(respuestaAcceso == 0){
                 log->info("Credenciales validas");
+                user = userText;
 				short login_status = commandSender.login(userText + USERNAME_DELIMETER + passText);
 				if (login_status == LOGIN_SUCCESS) {
 	                log->info("Login aceptado por server");
 	                running = false;
+                    user = userText;
 				} else if (!(login_status == LOGIN_ERROR)) {
 	                log->info("Login no fue aceptado por server");
 		            usuarioOPass = EscrbiendoState::ERROR;
@@ -235,4 +237,8 @@ bool GameMenu::pausaMenu(SDL_Event ev){
 int GameMenu::verificarCredenciales (std::string usuario, std::string pass) {
     int valor = YAMLReader::get_instance().validarUsuario(usuario,pass);
     return valor;
+}
+
+string GameMenu::getUser(){
+    return user;
 }
