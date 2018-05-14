@@ -51,6 +51,16 @@ void Protocol::read()
 	}
 }
 
+void Protocol::readText()
+{
+	skt->receive((char*)&header, sizeof(header));
+	if (header.len > 0) {
+		buffer.reserve(header.len + 1);
+		int len = skt->receive(buffer.data(), header.len);
+		buffer[len] = '\0';
+	}
+}
+
 void Protocol::write(Request request, const char * data, u_int32_t len)
 {
 	header_t writeHeader{ request, len };

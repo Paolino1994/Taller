@@ -30,13 +30,14 @@ bool UserManager::is_reconecting(std::string name) {
 short UserManager::_login(Socket* skt){
 	Protocol com(skt);
 	com.protect();
-	com.read();
+	com.readText();
 	if (com.request() != Request::LOGIN){
 		Log::get_instance()->error("Error reciviendo info de login");
 		return LOGIN_ERROR;
 	}
 
 	std::string buffer = com.dataBuffer();
+	Log::get_instance()->debug(buffer);
 	std::string name = get_name(buffer.c_str());
 	std::string pwd = get_password(buffer.c_str());
 
@@ -47,7 +48,6 @@ short UserManager::_login(Socket* skt){
 	Log::get_instance()->debug(log);
 
 	YAMLReader& yamlReader = YAMLReader::get_instance();
-    yamlReader.readYamlGeneral("");
 	if (yamlReader.validarUsuario(name, pwd)) {
 		com.write(Request::LOGIN, std::to_string(WRONG_CREDENTIALS).c_str(), sizeof(int));
 		Log::get_instance()->info("Credenciales invalidas");

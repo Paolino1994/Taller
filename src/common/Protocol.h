@@ -37,6 +37,8 @@ public:
 
 	void read();
 
+	void readText();
+
 	void write(Request request, const char* data, u_int32_t len);
 
 	// Para enviar texto

@@ -134,7 +134,7 @@ void CommandSender::handleEvent(SDL_Event& e)
 }
 
 short CommandSender::login(std::string credentials) {
-	protocol.write(Request::LOGIN, credentials.c_str(), credentials.length());
+	protocol.write(Request::LOGIN, credentials);
 	protocol.read();
 	if (protocol.request() == Request::LOGIN) {
 		int result = std::stoi(protocol.dataBuffer());
