@@ -32,6 +32,7 @@
 //#include "BallController.h"
 #include "CommandSender.h"
 #include "GameMenu.h"
+#include "GameSelectTeam.h"
 
 
 //Screen dimension constants
@@ -198,6 +199,14 @@ int main( int argc, char* args[] )
             
             if(gameMenu.logginScreen(commandSender) == 0) {
                 gameState = GameState::ONLINE;
+                std::string user = gameMenu.getUser();
+				// selecionar equipo
+				GameSelectTeam gameSelectTeam(gRenderer);
+				int selectedTeam = gameSelectTeam.selectTeamScreen();
+				std::cout << "equipo seleccionado: " << selectedTeam << std::endl;
+				// pasar usuario y equipo al servidor
+				log->info("enviando Usuario y equipo al servidor: " + user + " Equipo: " + std::to_string(selectedTeam));
+				std::cout << "enviando info al servidor: user: " << user << ", equipo: " << selectedTeam << std::endl;
             }
         }
         if (gameState == GameState::ONLINE) {
