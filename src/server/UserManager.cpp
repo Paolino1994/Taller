@@ -52,7 +52,7 @@ short UserManager::_login(Socket* skt){
 		com.write(Request::LOGIN, std::to_string(WRONG_CREDENTIALS).c_str(), sizeof(int));
 		Log::get_instance()->info("Credenciales invalidas");
 		return LOGIN_INVALID;
-	} else if (users.size() > 4) {
+	} else if (users.size() >= 4) {
 		com.write(Request::LOGIN, std::to_string(GAME_FULL).c_str(), sizeof(int));
 		Log::get_instance()->info("Juego Completo");
 		return LOGIN_INVALID;
