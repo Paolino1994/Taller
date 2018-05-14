@@ -3,20 +3,22 @@
 
 #include "World.h"
 
-World::World(int width, int height, Texture* background, Texture* playerSelectedTexture, std::map<const std::string, Animation>& ballAnimMapper,
+World::World(int width, int height, Texture* background, std::vector<Texture*>& _playerIndicators, std::map<const std::string, Animation>& ballAnimMapper,
 	std::map<const std::string, Animation>& teamAnimMapperHOME, std::map<const std::string, Animation>& teamAnimMapperAWAY,
 	player_data_t player_data):
 	width(width),
 	height(height),
     background(background),
-	playerSelectedTexture(playerSelectedTexture),
 	ball(Ball(ballAnimMapper)),
     entities(std::vector<Entity*>()),
 	players(std::map<Player_ID, Player>()),
-	player_data(player_data)
+	player_data(player_data),
+	playerIndicators(std::vector<Texture*>())
 {
+	this->playerIndicators.reserve(4); // REFACTOR
 	playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(Team::HOME)] = teamAnimMapperHOME;
 	playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(Team::AWAY)] = teamAnimMapperAWAY;
+	playerIndicators = _playerIndicators;
 }
 
 World::~World()
@@ -34,14 +36,6 @@ Texture* World::getBackground() {
 Ball& World::getBall()
 {
 	return ball;
-}
-
-Texture* World::getPlayerSelectedTexture() {
-    return playerSelectedTexture;
-}
-
-void World::setPlayerSelectedTexture(Texture* texture) {
-    playerSelectedTexture = texture;
 }
 
 std::vector<Entity*>& World::getEntities() {
@@ -71,7 +65,7 @@ void World::update(CommandSender& commandSender) {
 		else {
 			players.emplace(std::piecewise_construct,
 				std::make_tuple(player_view_data.playerId),
-				std::make_tuple(playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(player_view_data.team)], this->player_data));
+				std::make_tuple(playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(player_view_data.team)], this->player_data, playerIndicators));
 		}
 	}
 

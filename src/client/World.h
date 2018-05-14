@@ -22,8 +22,6 @@ private:
 
     // El fondo (la cancha)
     Texture* background;
-    // Jugador selecionado
-    Texture* playerSelectedTexture;
 	// Tenemos una pelota ya desde el principio (controller por ahora que funca como un struct de model + view)
 	Ball ball;
     // Objetos comunes
@@ -35,20 +33,18 @@ private:
 	player_data_t player_data;
 	std::map<const std::string, Animation> playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(Team::__LENGTH__)];
 
+	std::vector<Texture*> playerIndicators;
+
 public:
 	//pendiente un refactor
-    World(int width, int height, Texture* background, Texture* playerSelectedTexture, std::map<const std::string, Animation>& ballAnimMapper,
+    World(int width, int height, Texture* background, std::vector<Texture*>& playerIndicators, std::map<const std::string, Animation>& ballAnimMapper,
 		std::map<const std::string, Animation>& teamAnimMapperHOME, std::map<const std::string, Animation>& teamAnimMapperAWAY,
 		player_data_t player_data);
     ~World();
 
     void addEntity(Entity* entity);
-
-    void setPlayerSelectedTexture(Texture* texture) ;
-
     
-    Texture* getPlayerSelectedTexture() ;
-    Texture* getBackground() ;
+    Texture* getBackground();
 	Ball& getBall();
     std::vector<Entity*>& getEntities() ;
 	std::map<Player_ID, Player>& getPlayers() ;

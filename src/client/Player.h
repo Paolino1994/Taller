@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Animation.h"
+#include "Texture.h"
 #include "Entity.h"
 #include <map>
 #include <vector>
@@ -8,7 +9,7 @@
 class Player: public Entity {
 
 public:
-	Player(std::map<const std::string, Animation> animationMapper, player_data_t player_data);
+	Player(std::map<const std::string, Animation> animationMapper, player_data_t player_data, std::vector<Texture*> playerIndicators);
 
 	void render(int screen_x, int screen_y);
 
@@ -28,4 +29,6 @@ private:
 	double angle;
 	PlayerState state;
 	bool controlledByMe;
+	std::vector<Texture*> indicators;
+	int userId;
 };

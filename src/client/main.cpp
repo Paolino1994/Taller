@@ -209,13 +209,23 @@ int main( int argc, char* args[] )
             std::map<const std::string, Animation> animMapperHOME;
             std::map<const std::string, Animation> animMapperAWAY;
             std::map<const std::string, Animation> animMapperBall;
+            std::vector<Texture*> playerIndicators;
             // CARGAR La configuracion del YAML y de constantes nuestras:
             // TODO
 
             //Background:
             Texture background(gRenderer, YAML::background_path);
             // Jugador Seleccionado:
-            Texture selectedPlayerTexture(gRenderer, YAML::selectedPlayer_path);
+            Texture indicatorRed(gRenderer, YAML::indicators_path + "/red.png");
+            Texture indicatorBlue(gRenderer, YAML::indicators_path + "/blue.png");
+            Texture indicatorGreen(gRenderer, YAML::indicators_path + "/green.png");
+            Texture indicatorPink(gRenderer, YAML::indicators_path + "/pink.png");
+
+
+            playerIndicators.push_back(&indicatorRed);
+            playerIndicators.push_back(&indicatorBlue);
+            playerIndicators.push_back(&indicatorGreen);
+            playerIndicators.push_back(&indicatorPink);
 
             //Las texturas:
             log->info("Cargando Texturas");
@@ -280,7 +290,7 @@ int main( int argc, char* args[] )
 
 			// Agrego jugadores al mundo
 			log->info("Creo el mundo con su pelota");
-			World world(background.getWidth(), background.getHeight(), &background, &selectedPlayerTexture, animMapperBall, animMapperHOME, animMapperAWAY,
+			World world(background.getWidth(), background.getHeight(), &background, playerIndicators, animMapperBall, animMapperHOME, animMapperAWAY,
 						crearDefaultPlayer(PlayerStill, PlayerRun, PlayerSweep, PlayerKick));
 			//world.setPlayerSelectedTexture(&selectedPlayerTecture);
 		
