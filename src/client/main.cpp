@@ -227,13 +227,13 @@ int main( int argc, char* args[] )
             // Jugador Seleccionado:
             Texture indicatorRed(gRenderer, YAML::indicators_path + "/red.png");
             Texture indicatorBlue(gRenderer, YAML::indicators_path + "/blue.png");
-            Texture indicatorGreen(gRenderer, YAML::indicators_path + "/green.png");
+            Texture indicatorYellow(gRenderer, YAML::indicators_path + "/yellow.png");
             Texture indicatorPink(gRenderer, YAML::indicators_path + "/pink.png");
 
 
             playerIndicators.push_back(&indicatorRed);
             playerIndicators.push_back(&indicatorBlue);
-            playerIndicators.push_back(&indicatorGreen);
+            playerIndicators.push_back(&indicatorYellow);
             playerIndicators.push_back(&indicatorPink);
 
             //Las texturas:

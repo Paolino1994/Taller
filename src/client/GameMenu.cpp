@@ -23,11 +23,11 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
 
     log->info("Generando pantalla de login");
 
-    Surface surface("res/soccer_field_1.6.png");
+    Surface surface("res/login_background.jpg");
 
-    Texture background(gRenderer, "res/soccer_field_1.6.png");
+    Texture background(gRenderer, "res/login_background.jpg");
 
-    background.render( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+    background.render(0,0);
     int tituloW, tituloH, usuarioW, usuarioH, passW, passH, errorH, errorW;
 
     EscrbiendoState usuarioOPass = EscrbiendoState::USUARIO;
@@ -129,7 +129,7 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
             errorTexto.getTextureDimensions(&errorW,&errorH); 
             errorTexto.display((SCREEN_WIDTH - errorW) / 2, ((SCREEN_HEIGHT - errorH) / 4) * 3 );
         }
-        tituloTexto.display((SCREEN_WIDTH - tituloW) / 2, (SCREEN_HEIGHT - tituloH) / 4);
+        tituloTexto.display((SCREEN_WIDTH - tituloW) / 2, ((SCREEN_HEIGHT - tituloH) / 4) + 20);
         usuarioTexto.display((SCREEN_WIDTH - usuarioW) / 3, (SCREEN_HEIGHT - usuarioH) / 2);
         passTexto.display((SCREEN_WIDTH - passW) / 3, ((SCREEN_HEIGHT - passH) / 2) + 70);
 
