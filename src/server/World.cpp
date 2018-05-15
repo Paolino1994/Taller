@@ -44,31 +44,43 @@ void World::createTeam(Team team, int defenders, int midfielders, int forwards, 
 	}
 }
 
+bool World::noOneHasControlOfTheBall(std::vector<PlayerController*>& teamControllers){
+    for(PlayerController* player : teamControllers){
+        if(player->hasControlOfTheBall()){
+            return false;
+        }
+    }
+    return true;
+}
+
 PlayerController* World::injectHumanController(Team team, User_ID userId)
 {
-	std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
+    std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
 
-	for (size_t i = teamControllers.size() - 1 ; i >= 0; i--)
-	{
-		if (teamControllers[i]->isControllable()) {
-			PlayerController* other = teamControllers[i];
-			PlayerControllerHuman* human = new PlayerControllerHuman(other->getModel(), other->getView(), *this, userId);
-			teamControllers[i] = human;
-			human->getModel()->setIsControlledByHuman(true);
-			delete other;
-			return human;
-		}
-	}
+    for (size_t i = 0; i < teamControllers.size(); i++)
+    {
+        if (teamControllers[i]->isControllable()) {
+            PlayerController* other = teamControllers[i];
+            PlayerControllerHuman* human = new PlayerControllerHuman(other->getModel(), other->getView(), *this, userId);
+            teamControllers[i] = human;
+            human->getModel()->setIsControlledByHuman(true);
+            //if(noOneHasControlOfTheBall(teamControllers)){
+                human->getModel()->setHasControlOfTheBall(true);
+            //}
+            delete other;
+            return human;
+        }
+    }
 
-	return nullptr;
+    return nullptr;
 }
 
 bool World::playerIsOnRange(PlayerController* cont,PlayerController* controllerToSwap){
 	PlayerModel* model=cont->getModel();
-	int x=model->getX();
-	int y=model->getY();
-	int xCon=controllerToSwap->getModel()->getX();
-	int yCon=controllerToSwap->getModel()->getY();
+	int x=model->getCenterX();
+	int y=model->getCenterY();
+	int xCon=controllerToSwap->getModel()->getCenterX();
+	int yCon=controllerToSwap->getModel()->getCenterY();
 	if((x<xCon+200 || x>xCon-200) && (y<yCon+150 || y>yCon-150)){
 		return true;
 	}

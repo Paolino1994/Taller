@@ -30,6 +30,7 @@ private:
 	int width;
 	int height;
 	bool playerIsOnRange(PlayerController* cont, PlayerController* controllerToSwap);
+    bool noOneHasControlOfTheBall(std::vector<PlayerController*>& teamControllers);
 
 public:
 	World(int width, int height, std::map<const std::string, Animation> ballAnimMapper);
