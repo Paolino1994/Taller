@@ -12,6 +12,8 @@
 #define LOG_INFO "info"
 #define LOG_ERROR "error"
 
+#define LOG_SERVER "server"
+
 class Log {
 private:
 	static std::string filename;

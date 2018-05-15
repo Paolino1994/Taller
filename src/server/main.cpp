@@ -42,16 +42,40 @@ void accepter(Game& game, Socket& skt, bool* exit_requested) {
 	}
 }
 
+std::string getLogType(std::string str) {
+    if( str.compare(LOG_ERROR)==0 || str.compare(LOG_DEBUG)==0 || str.compare(LOG_INFO)==0){
+        return str;
+    }
+    return LOG_ERROR;
+}
+
+
 int main(int argc, char *argv[]) {
 	// Ussage: argv[1] = port 
 	if (argc < 2) {
 		cerr << "Uso: " << argv[0] << " puerto" << endl;
 		return 0;
 	}
-	Log::setFilenamePrefix("server");
-	Log::initialize("debug");
+
+    std::string yamlConfigFile = "";
+	Log::setFilenamePrefix(LOG_SERVER);
+	for (int i = 2; i+1 < argc; i++) {
+		if (strcmp(argv[i],"-lg") == 0) {
+            std::string logType=getLogType(argv[i+1]);
+            Log::initialize(logType);
+            Log::get_instance()->error("Log cargado en modo " + logType);
+        } else if (strcmp(argv[i],"-yaml") == 0) {
+            yamlConfigFile = argv[i+1];
+        }
+	}
 	YAMLReader& yamlReader = YAMLReader::get_instance();
-	yamlReader.readYamlGeneral("");
+	yamlReader.readYamlGeneral(yamlConfigFile);
+	if (!Log::is_initialized()) {
+        std::string logType = yamlReader.getLogLevel();
+        logType = getLogType(logType);
+        Log::initialize(logType);
+        Log::get_instance()->error("Log cargado en modo " + logType);
+    }
 
 	Log::get_instance()->info("Iniciamos el servidor...");
 	unsigned short port = atoi(argv[1]);
@@ -75,4 +99,3 @@ int main(int argc, char *argv[]) {
 	acc.join();
 	return 0;
 }
-
