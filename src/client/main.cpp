@@ -154,6 +154,8 @@ typedef std::chrono::steady_clock Clock;
 int main( int argc, char* args[] )
 {
     std::string yamlConfigFile = "";
+	std::string server_ip = "127.0.0.1";
+	std::string server_port = "5000";
     // Inicializar log con parametro de line de comando
     for (int i = 1; i+1 < argc; i++) {
         if (strcmp(args[i],"-lg") == 0) {
@@ -169,7 +171,11 @@ int main( int argc, char* args[] )
             }
         } else if (strcmp(args[i],"-yaml") == 0) {
             yamlConfigFile = args[i+1];
-        }
+        } else if (strcmp(args[i], "-ip") == 0) {
+			server_ip = args[i + 1];
+		} else if (strcmp(args[i], "-port") == 0) {
+			server_port = args[i + 1];
+		}
     }
     YAMLReader& yamlReader = YAMLReader::get_instance();
     yamlReader.readYamlGeneral(yamlConfigFile);
@@ -192,7 +198,7 @@ int main( int argc, char* args[] )
     } else {
 
 		// TODO: recibir o tomaar de algun lado ip y puerto (config, parametro, etc..)
-		CommandSender commandSender("127.0.0.1", 5000);
+		CommandSender commandSender(server_ip, std::stoul (server_port,nullptr,0));
 
         GameMenu gameMenu(gRenderer);
         if(gameState == GameState::OFFLINE) {
