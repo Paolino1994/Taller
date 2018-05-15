@@ -35,18 +35,21 @@ void BallController::calculateCollision(std::vector<PlayerController *> &playerC
 	int y = ballModel.getY();
 	int i = 0;
 	for (PlayerController* controller : playerControllers) {
-		int xPlayer = controller->getModel()->getCenterX();
-		int yPlayer = controller->getModel()->getCenterY();
-		if (abs(x - xPlayer)<20 && abs(y - yPlayer)<20) {
-			if (!controller->getModel()->getHasControlOfTheBall()) {
-				Log::get_instance()->debug("Colision, un nuevo jugador toma la pelota");
-				controller->getModel()->setHasControlOfTheBall(true);
-				ballModel.setVelX(controller->getModel()->getVelX());
-				ballModel.setVelY(controller->getModel()->getVelY());
-				//controller->getModel()->setAngle(-90+ballModel.getAngle());
-				changeController(i, playerControllers);
+		if(controller->getModel()->isColisionable){
+			int xPlayer = controller->getModel()->getCenterX();
+			int yPlayer = controller->getModel()->getCenterY();
+			if (abs(x - xPlayer)<20 && abs(y - yPlayer)<20) {
+				if (!controller->getModel()->getHasControlOfTheBall()) {
+					Log::get_instance()->debug("Colision, un nuevo jugador toma la pelota");
+					controller->getModel()->setHasControlOfTheBall(true);
+					ballModel.setVelX(controller->getModel()->getVelX());
+					ballModel.setVelY(controller->getModel()->getVelY());
+					//controller->getModel()->setAngle(-90+ballModel.getAngle());
+					changeController(i, playerControllers);
+				}
 			}
 		}
+
 		i++;
 	}
 }

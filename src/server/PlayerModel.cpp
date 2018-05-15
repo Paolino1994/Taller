@@ -79,6 +79,12 @@ PlayerModel::PlayerModel(Team team, const player_data_t player_data, double init
 
 // IMPORTANYE: Proximamente manejar mejor esto con patron State 
 void PlayerModel::update(double dt, int x_limit, int y_limit){
+    colisionableCounter++;
+    if(colisionableCounter<10){
+        isColisionable=false;
+    }else{
+        isColisionable=true;
+    }
     using namespace std;
 
 	//PlayerState old_state = this->state;
@@ -317,6 +323,8 @@ void PlayerModel::stopSprinting()
 
 void PlayerModel::setHasControlOfTheBall(bool control) {
 	hasControlOfTheBall=control;
+    isColisionable=false;
+    colisionableCounter=0;
 }
 
 bool PlayerModel::getHasControlOfTheBall() {
@@ -332,15 +340,19 @@ void PlayerModel::changeBallState(BallModel& ballModel) {
 }
 
 void PlayerModel::pass(PlayerModel *pModel, BallModel& ballModel) {
-	int x2=pModel->getX();
-	int y2=pModel->getY();
+	int x2=pModel->getCenterX();
+	int y2=pModel->getCenterY();
 	int x1=ballModel.getX();
 	int y1=ballModel.getY();
 	double angulo=atan2(y2-y1,x2-x1);
 	//std::cout<<std::to_string(angulo)<<std::endl;
+    double priorangle=angle;
 	angle=(angulo*180/M_PI) + 90;
+    setVelX(0);
+    setVelY(0);
 	//std::cout<<std::to_string(angle)<<std::endl;
 	kick(ballModel);
+    angle=priorangle;
 
 }
 

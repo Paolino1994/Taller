@@ -107,8 +107,8 @@ void BallModel::kick() {
 
     double multiplierX=cos(angleToUse*PI/180.0);
     double multiplierY=sin(angleToUse*PI/180.0);
-	double xVel = 500 * multiplierX;
-	double yVel = 500 * multiplierY;
+	double xVel = 750 * multiplierX;
+	double yVel = 750 * multiplierY;
     setVelX(xVel);
     setVelY(yVel);
 }

@@ -79,8 +79,10 @@ void PlayerControllerHuman::handleEvent( Command& command ){
 			case CommandType::PASS:{
                 if(playerModel->getHasControlOfTheBall()){
                     PlayerController* passController=world.getPlayerToPass(this);
-                    playerModel->pass(passController->getModel(), world.getBall().getModel());
-                    this->world.swap(this);
+                    if(passController!=this){
+                        playerModel->pass(passController->getModel(), world.getBall().getModel());
+                        this->world.swap(this);
+                    }
                 }
 				log->debug("PlayerControllerHuman: apretando pasar");
 				break;

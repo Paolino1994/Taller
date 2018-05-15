@@ -89,6 +89,8 @@ public:
 
 	void setAngle(int i);
 
+    bool isColisionable=true;
+
 private:
 	Team team;
 	Player_ID playerId;
@@ -122,6 +124,10 @@ private:
 	static Player_ID nextPlayerId[static_cast<std::underlying_type<Team>::type>(Team::__LENGTH__)];
 
 	static Player_ID getNextPlayerId(Team team);
+
+
+
+	int colisionableCounter=10;
 };
 
 

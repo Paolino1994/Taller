@@ -64,9 +64,9 @@ PlayerController* World::injectHumanController(Team team, User_ID userId)
             PlayerControllerHuman* human = new PlayerControllerHuman(other->getModel(), other->getView(), *this, userId);
             teamControllers[i] = human;
             human->getModel()->setIsControlledByHuman(true);
-            if(noOneHasControlOfTheBall(teamControllers)){
-                human->getModel()->setHasControlOfTheBall(true);
-            }
+            //if(noOneHasControlOfTheBall(teamControllers)){
+            //    human->getModel()->setHasControlOfTheBall(true);
+            //}
             delete other;
             return human;
         }
@@ -296,6 +296,7 @@ void World::updateBallController() {
 	if (priorController != NULL && currentController != NULL && priorController->getModel()->getTeam() == currentController->getModel()->getTeam()) {
 		//std::cout<<"ENTRE"<<priorController->getModel()->getTeam()<<currentController->getModel()->getTeam()<<std::endl;
 		priorController->swap(currentController);
+		controlCounter=0;
 	}
 
 
@@ -309,7 +310,7 @@ void World::calculateCollision() {
 	for (PlayerController* controller : playerControllers) {
 		int xPlayer = controller->getModel()->getCenterX();
 		int yPlayer = controller->getModel()->getCenterY();
-		if (abs(x - xPlayer)<20 && abs(y - yPlayer)<20) {
+		if (abs(x - xPlayer)<10 && abs(y - yPlayer)<10) {
 			if (!controller->getModel()->getHasControlOfTheBall()) {
 				controller->getModel()->setHasControlOfTheBall(true);
 				//controller->getModel()->setAngle(-90+ballModel.getAngle());

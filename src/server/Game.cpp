@@ -218,7 +218,12 @@ PlayerController * Game::assignToTeam(Team team, User_ID userId)
 			running = true;
 		}
 	}
-	return this->world.injectHumanController(team, userId);
+
+	PlayerController* controller= this->world.injectHumanController(team, userId);
+	if(playerCount==1){
+		controller->getModel()->setHasControlOfTheBall(true);
+	}
+	return controller;
 }
 
 model_data_t Game::getModelData()
