@@ -377,8 +377,6 @@ player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun,
 
 void renderizar(Camera& camera, World& world, CommandSender& commandSender, GameMenu& gameMenu) {
 
-//	commandSender.assignTeam(Team::HOME);
-
     if (true)
     {
         //Main loop flag

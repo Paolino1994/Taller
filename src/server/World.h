@@ -41,6 +41,10 @@ public:
 	// Inyeccion de controller
 	PlayerController* injectHumanController(Team team, User_ID userId);
 
+	// Reseteamos un controller al default (actualmente controller AI)
+	// if return  == true : invalido el playerController, le hicimos delete
+	bool ejectController(PlayerController* playerController, User_ID userId);
+
 	// Swap controller
 	void swap(PlayerController* playerController);
 

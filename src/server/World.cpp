@@ -2,6 +2,7 @@
 #include "BallController.h"
 #include "TeamFactory.h"
 #include "PlayerControllerHuman.h"
+#include "PlayerControllerAI.h"
 #include <algorithm>
 #include <iostream>
 
@@ -99,6 +100,25 @@ PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
     } while (teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable() && playerIsOnRange(teamControllers[index],controllerToSwap)); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
     return teamControllers[index];
 
+}
+
+bool World::ejectController(PlayerController * playerController, User_ID userId)
+{
+	std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(playerController->getModel()->getTeam())];
+
+	for (size_t i = 0; i < teamControllers.size(); i++)
+	{
+		if (teamControllers[i] == playerController) {
+			PlayerControllerAI* aiController = new PlayerControllerAI(playerController->getModel(), playerController->getView());
+			teamControllers[i] = aiController;
+			aiController->getModel()->setIsControlledByHuman(false);
+			aiController->getModel()->setHasControlOfTheBall(false);
+			delete playerController;
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void World::swap(PlayerController * controllerToSwap)
