@@ -12,6 +12,7 @@
 #include "common/GameConstants.h"
 #include "Surface.h"
 #include "common/Log.h"
+#include "CommandSender.h"
 
 class GameSelectTeam {
 
@@ -22,7 +23,7 @@ private:
 public:
     GameSelectTeam(SDL_Renderer *renderer);
 
-    int selectTeamScreen();
+    int selectTeamScreen(CommandSender& commandSender);
 
     int getSelectedTeam();
 

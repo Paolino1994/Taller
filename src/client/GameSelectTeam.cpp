@@ -18,7 +18,7 @@ int GameSelectTeam::getSelectedTeam(){
     return selectedTeam;
 }
 
-int GameSelectTeam::selectTeamScreen() {
+int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
     Log *log = Log::get_instance();
 
     log->info("Generando pantalla de selección de equipo");
@@ -117,9 +117,16 @@ int GameSelectTeam::selectTeamScreen() {
 
         if(done) {
             log->info("equipo seleccionado: " + teamText);
-            selectedTeam = std::stoi( teamText );
-            returnValue = selectedTeam;
+            returnValue = 0;
             running = false;
+            selectedTeam = std::stoi( teamText );
+            if(selectedTeam == 1){
+                commandSender.assignTeam(Team::HOME);
+                std::cout << "equipo 1" << std::endl;
+            }else{
+                commandSender.assignTeam(Team::AWAY);
+                std::cout << "equipo 2" << std::endl;
+            }
 
         }
         SDL_RenderPresent( gRenderer );
