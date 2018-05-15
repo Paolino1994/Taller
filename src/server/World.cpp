@@ -64,9 +64,9 @@ PlayerController* World::injectHumanController(Team team, User_ID userId)
             PlayerControllerHuman* human = new PlayerControllerHuman(other->getModel(), other->getView(), *this, userId);
             teamControllers[i] = human;
             human->getModel()->setIsControlledByHuman(true);
-            //if(noOneHasControlOfTheBall(teamControllers)){
+            if(noOneHasControlOfTheBall(teamControllers)){
                 human->getModel()->setHasControlOfTheBall(true);
-            //}
+            }
             delete other;
             return human;
         }
@@ -76,15 +76,20 @@ PlayerController* World::injectHumanController(Team team, User_ID userId)
 }
 
 bool World::playerIsOnRange(PlayerController* cont,PlayerController* controllerToSwap){
-	PlayerModel* model=cont->getModel();
-	int x=model->getCenterX();
-	int y=model->getCenterY();
-	int xCon=controllerToSwap->getModel()->getCenterX();
-	int yCon=controllerToSwap->getModel()->getCenterY();
-	if((x<xCon+200 || x>xCon-200) && (y<yCon+150 || y>yCon-150)){
-		return true;
-	}
-	return false;
+    //PlayerModel* model=cont->getModel();
+    int x=ball.getModel().getX();
+    int y=ball.getModel().getY();
+    int xCon=cont->getModel()->getCenterX();
+    int yCon=cont->getModel()->getCenterY();
+    //std::cout<<"BALL X:"<<x<<" Y:"<<y<<std::endl;
+    //std::cout<<"X:"<<xCon<<" Y:"<<yCon<<std::endl;
+    //int xRange=getRangeToChange(x,200);
+    //int yRange=getRangeToChange(y,150);
+    if(abs(x-xCon)<YAML::SCREEN_WIDTH/2 && abs(y-yCon)<YAML::SCREEN_HEIGHT/2){
+        //std::cout<<"vale Controllador "<<std::endl;
+        return true;
+    }
+    return false;
 
 }
 
@@ -92,24 +97,35 @@ PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
     Team team = controllerToSwap->getModel()->getTeam();
     std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
 
-    ptrdiff_t index = std::distance(teamControllers.begin(), std::find(teamControllers.begin(), teamControllers.end(), controllerToSwap));
+	ptrdiff_t index = std::distance(teamControllers.begin(), std::find(teamControllers.begin(), teamControllers.end(), controllerToSwap));
 
-    if (index >= (long long)teamControllers.size()) {
-        Log::get_instance()->info("El controller que se quiso swapear no esta en mi listado de controllers del equipo correspondiente");
+	if (index >= (long long)teamControllers.size()) {
+		Log::get_instance()->info("El controller que se quiso swapear no esta en mi listado de controllers del equipo correspondiente");
 
-    }
+	}
 
-    //size_t controllerToSwapIndex = index;
+	size_t controllerToSwapIndex = index;
+	//bool comparacion;
+	index=-1;
+	do
+	{ // en el peor caso volvemos a el que estabamos controlando recien
+		//++index;
+		index++;
+		if (index == (long long)teamControllers.size()) {
+			index = controllerToSwapIndex;
+			break;
+		}
+		if(teamControllers[index] != controllerToSwap && playerIsOnRange(teamControllers[index],controllerToSwap) /*&& teamControllers[index]->isControllable()*/){
+			break;
+		}
+		/*comparacion=!playerIsOnRange(teamControllers[index],controllerToSwap);
+		comparacion=(comparacion==(teamControllers[index] != controllerToSwap));
+		comparacion=(comparacion==!teamControllers[index]->isControllable());*/
+		//comparacion=comparacion==false;
 
-    do
-    { // en el peor caso volvemos a el que estabamos controlando recien
-        ++index;
-        if (index == (long long)teamControllers.size()) {
-            index = 0;
-        }
-
-    } while (teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable() && playerIsOnRange(teamControllers[index],controllerToSwap)); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
-    return teamControllers[index];
+	} //while (!playerIsOnRange(teamControllers[index],controllerToSwap) && teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable()); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
+	while(true);
+	return teamControllers[index];
 
 }
 
@@ -145,16 +161,26 @@ void World::swap(PlayerController * controllerToSwap)
 	}
 
 	size_t controllerToSwapIndex = index;
-
+	//std::cout<<"-----------------------------------------------------"<<std::endl;
+	index=-1;
 	do
 	{ // en el peor caso volvemos a el que estabamos controlando recien
-		++index;
+		//++index;
+		index++;
 		if (index == (long long)teamControllers.size()) {
-			index = 0;
+			index = controllerToSwapIndex;
+			break;
 		}
+		if(teamControllers[index] != controllerToSwap && playerIsOnRange(teamControllers[index],controllerToSwap) && teamControllers[index]->isControllable()){
+			break;
+		}
+		/*comparacion=!playerIsOnRange(teamControllers[index],controllerToSwap);
+		comparacion=(comparacion==(teamControllers[index] != controllerToSwap));
+		comparacion=(comparacion==!teamControllers[index]->isControllable());*/
+		//comparacion=comparacion==false;
 
-	} while (teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable() && playerIsOnRange(teamControllers[index],controllerToSwap)); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
-
+	} //while (!playerIsOnRange(teamControllers[index],controllerToSwap) && teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable()); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
+	while(true);
 	if (teamControllers[index] != controllerToSwap) {
 		controllerToSwap->swap(teamControllers[index]);
 		// camera.follow(controlled->getEntity()); lo hacemos en el main
@@ -206,7 +232,7 @@ void World::update(double dt)
 			if (player->getModel()->getIsControlledByHuman()) {
 				std::stringstream msg;
 				msg << "Jugador Controlado: esta en " << player->getModel()->getX() << ", " << player->getModel()->getY();
-				std::cout << msg.str() << std::endl;
+				//std::cout << msg.str() << std::endl;
 			}
 		}
 	}
@@ -215,7 +241,7 @@ void World::update(double dt)
 	updateBallController();
 	std::stringstream msg;
 	msg << "Pelota esta en " << ball.getModel().getX() << ", " << ball.getModel().getY();
-	std::cout << msg.str() << std::endl;
+	//std::cout << msg.str() << std::endl;
 }
 
 void World::serialize(model_data_t & modelData)
