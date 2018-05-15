@@ -77,3 +77,7 @@ void Protocol::write(Request request)
 void Protocol::protect() {
 	skt_protected = true;
 }
+
+bool Protocol::hasSkt(Socket* s) {
+	return s == skt;
+}

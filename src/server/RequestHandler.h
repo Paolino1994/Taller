@@ -5,6 +5,7 @@
 #include "common/Socket.h"
 #include "common/Protocol.h"
 #include "Game.h"
+#include "UserManager.h"
 
 class RequestHandler
 {

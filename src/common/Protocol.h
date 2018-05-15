@@ -50,6 +50,7 @@ public:
 	void write(Request request);
 
 	void protect();
+	bool hasSkt(Socket* s);
 
 private:
 	Socket* skt; //suponemos que hay que hacerle delete

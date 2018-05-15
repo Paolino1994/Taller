@@ -58,6 +58,8 @@ void RequestHandler::_run()
 		}
 		else {
 			Log::get_instance()->error("Conexion con el cliente finalizo de la sig. forma: " + std::string(e.what()));
+			UserManager& u_manager = UserManager::get_instance();
+			u_manager.logout(protocol);
 		}
 	}
 	running = false;

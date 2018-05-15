@@ -27,8 +27,11 @@ private:
 	bool is_logged_in(std::string name);
 	bool is_reconecting(std::string name);
 	short _login(Socket* skt);
+	
+	UserManager();
 
 public:
+	static UserManager& get_instance();
 	/**
 		@PRE: Receives a skt already connected to a client, which is about to send the user and password
 		@POS: Returns LOGIN_SUCCESS if the user was added and LOGIN_ERROR if it wasn't
@@ -36,10 +39,10 @@ public:
 	short login(Socket* com);
 
 	/**
-		@PRE: Receives a skt already connected to a logged in client
+		@PRE: Receives a protocol with a socket already connected to a logged in client
 		@POS: The client is no longer logged in
 	*/
-	void logout(Socket* com);
+	void logout(Protocol& p);
 
 	/**
 		Sets the manager to game on functions

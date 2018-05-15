@@ -1,5 +1,12 @@
 #include "UserManager.h"
 
+UserManager::UserManager() {}
+
+UserManager& UserManager::get_instance() {
+    static UserManager instance;
+    return instance;
+}
+
 std::string UserManager::get_name(std::string buff) {
 	return buff.substr(0, buff.find(USERNAME_DELIMETER));
 }
@@ -89,9 +96,9 @@ short UserManager::login(Socket* skt){
 	return status;	
 }
 
-void UserManager::logout(Socket* skt) {
+void UserManager::logout(Protocol& p) {
 	for (unsigned int i = 0; i < users.size(); i++) {
-		if (users[i].skt == skt) {
+		if (p.hasSkt(users[i].skt)) {
 			if (playing) {
 				logged_out.push_back(users[i]);
 			}
