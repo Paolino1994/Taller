@@ -62,6 +62,17 @@ void YAMLReader::readYamlGeneral(std::string file){
         }
     }
 
+    if(configNode["MaxJugadores"]){
+        int maxJugadoresAux = std::stoi(configNode["MaxJugadores"].as<std::string>());
+        if(maxJugadoresAux >= 1 && maxJugadoresAux <= 4) {
+            maxJugadores = maxJugadoresAux;
+        } else {
+            Log* log=Log::get_instance();
+            log->error("Valor invalido ingresado en el archivo de configutacion: MaxJugadores " + configNode["MaxJugadores"].as<std::string>() + " se utilizara el valor 4");
+            maxJugadores = 4;
+        }
+    }
+
     leerEquipo("EquipoA", 1);
     leerEquipo("EquipoB", 2);
 
@@ -107,6 +118,10 @@ int YAMLReader::getMediocampistas(int equipo) {
 
 int YAMLReader::getDelanteros(int equipo) {
     return std::stoi(infoEquipo[equipo]["Delanteros"]);
+}
+
+int YAMLReader::getMaxJugadores() {
+    return maxJugadores;
 }
 
 // 0 -> Ok, -1 Password incorrecta, -2 usuario no encontrado

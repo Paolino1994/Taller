@@ -52,6 +52,8 @@ public:
 
     int validarUsuario(std::string user, std::string pass);
 
+    int getMaxJugadores();
+
     // C++11 singleton
     static YAMLReader& get_instance();
     YAMLReader(YAMLReader const&) = delete;
@@ -83,6 +85,8 @@ private:
 
     std::string Equipo="Local";
     std::string LogLevel="info";
+
+    int maxJugadores = 4;
 };
 
 
