@@ -62,6 +62,15 @@ void RequestHandler::_run()
 	}
 	running = false;
 	if (!this->server_exit_requested) protocol.shutdown(); //Por problemas con la conexion con este cliente
+
+	// Me voy del juego!
+	if (this->game.withdrawUser(this->player, this->userId)) {
+		this->player = nullptr;
+	}
+	else {
+		Log::get_instance()->error("Al desconectar a un cliente, no pudimos expulsar su controlador del juego");
+	}
+	
 }
 
 RequestHandler::RequestHandler(Socket * socket, Game& game, User_ID userId) :

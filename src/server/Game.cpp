@@ -225,3 +225,8 @@ model_data_t Game::getModelData()
 {
 	return modelData;
 }
+
+bool Game::withdrawUser(PlayerController * playerController, User_ID userId)
+{
+	return this->world.ejectController(playerController, userId);
+}

@@ -26,5 +26,7 @@ public:
 
 	PlayerController* assignToTeam(Team team, User_ID userId);
 	model_data_t getModelData();
+	// invalida el contoller, le hacemos delete
+	bool withdrawUser(PlayerController* playerController, User_ID userId);
 };
 
