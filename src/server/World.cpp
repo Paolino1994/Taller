@@ -48,7 +48,7 @@ PlayerController* World::injectHumanController(Team team, User_ID userId)
 {
 	std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
 
-	for (size_t i = 0; i < teamControllers.size(); i++)
+	for (size_t i = teamControllers.size() - 1 ; i >= 0; i--)
 	{
 		if (teamControllers[i]->isControllable()) {
 			PlayerController* other = teamControllers[i];

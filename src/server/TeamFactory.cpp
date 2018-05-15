@@ -161,8 +161,8 @@ bool TeamFactory::add_forwards(int quantity, Team goal, int field_length, int fi
 			case 2:
 				position_y = ((field_width * 5 / 8) * (1 + 4 * i) / 5) + field_width / 8;
 				if(goal == LEFT_GOAL && i == quantity - 1) {
-					kickOff_y = field_width / 2;
-					kickOff_x = field_length / 2;
+					kickOff_y = 504; //HARDCODEADO PORQUE SE QUE ES EL PUNTO CENTRAL
+					kickOff_x = 761;
 				} else {
 					kickOff_y = position_y;
 				}
