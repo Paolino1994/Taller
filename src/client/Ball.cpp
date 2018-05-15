@@ -20,6 +20,7 @@ void Ball::update(const ball_view_data_t & ball_view_data)
 	this->y = ball_view_data.y;
 	this->angle = ball_view_data.angle;
 	this->state = ball_view_data.state;
+	this->animations[this->state].setPresentFrame(ball_view_data.presentFrame);
 }
 
 int Ball::getWidth()

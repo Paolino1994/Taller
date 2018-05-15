@@ -71,6 +71,7 @@ void BallController::serialize(ball_view_data_t& ball_view_data) {
 	ball_view_data.y = this->ballModel.getY();
 	ball_view_data.angle = this->ballModel.getAngle();
 	ball_view_data.state = this->ballModel.getState();
+	this->getView().serialize(ball_view_data);
 }
 
 

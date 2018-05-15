@@ -20,7 +20,7 @@ public:
 
     void update(double d);
 
-
+	void serialize(ball_view_data_t& ball_view_data);
 
 private:
     std::vector<Animation> animation;

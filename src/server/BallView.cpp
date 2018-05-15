@@ -37,6 +37,10 @@ void BallView::render(int screen_x, int screen_y) {
 }*/
 
 
+void BallView::serialize(ball_view_data_t& ball_view_data) {
+	ball_view_data.presentFrame = animation[ball_view_data.state].getPresentFrame();
+}
+
 
 
 
