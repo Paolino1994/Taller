@@ -33,6 +33,7 @@
 #include "CommandSender.h"
 #include "GameMenu.h"
 #include "GameSelectTeam.h"
+#include "ListenStart.h"
 
 
 //Screen dimension constants
@@ -167,7 +168,7 @@ int main( int argc, char* args[] )
             } else {
                 Log::initialize(LOG_ERROR);
                 Log* log=Log::get_instance();
-                log->error("Log ingresado invalido. Log cargado en modo error");
+                log->error("Log ingresado inválido. Log cargado en modo error");
             }
         } else if (strcmp(args[i],"-yaml") == 0) {
             yamlConfigFile = args[i+1];
@@ -189,7 +190,7 @@ int main( int argc, char* args[] )
         } else {
             Log::initialize(LOG_ERROR);
             Log* log=Log::get_instance();
-            log->error("Log ingresado invalido. Log cargado en modo error");
+            log->error("Log en archivo de configuración inválido. Log cargado en modo error");
         }
     }
     
@@ -217,6 +218,8 @@ int main( int argc, char* args[] )
 				if (gameSelectTeam.selectTeamScreen(commandSender) == 0 ) {
 					log->info("se seleccionó correctamente el equipo");
 				}
+				ListenStart listenStart(gRenderer);
+				listenStart.listenStartScreen(commandSender);
             }
         }
         if (gameState == GameState::ONLINE) {

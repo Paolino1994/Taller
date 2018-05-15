@@ -1,6 +1,7 @@
 #pragma once
 
 #include <thread>
+#include <chrono>
 
 #include "common/Socket.h"
 #include "common/Protocol.h"

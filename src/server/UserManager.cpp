@@ -35,6 +35,7 @@ bool UserManager::is_reconecting(std::string name) {
 }
 
 short UserManager::_login(Socket* skt){
+	std::unique_lock<std::mutex> lck(this->mtx);
 	Protocol com(skt);
 	com.protect();
 	com.readText();
@@ -93,10 +94,11 @@ short UserManager::login(Socket* skt){
 	for (int i = 0; status == LOGIN_INVALID && i < MAX_LOGIN_ATTEMPTS; i++) {
 		status = _login(skt);
 	}
-	return status;	
+	return status;
 }
 
 void UserManager::logout(Protocol& p) {
+	std::unique_lock<std::mutex> lck(this->mtx);
 	for (unsigned int i = 0; i < users.size(); i++) {
 		if (p.hasSkt(users[i].skt)) {
 			if (playing) {
@@ -108,6 +110,11 @@ void UserManager::logout(Protocol& p) {
 			log.append(name);
 			log.append(" desconectado");
 
+			for(unsigned int j = 0; j < ready_users.size(); j++) {
+				if ( (ready_users[j].name).compare(users[i].name) == 0) {
+					ready_users.erase(ready_users.begin() + j);
+				}
+			}
 			users.erase(users.begin() + i);
 			Log::get_instance()->info(log);
 
@@ -116,9 +123,30 @@ void UserManager::logout(Protocol& p) {
 	}
 }
 
-void UserManager::game_started() {
-	Log::get_instance()->debug("UserManager: partido iniciado");
-	playing = true;
+void UserManager::user_ready(Protocol& p) {
+	for (unsigned int i = 0; i < users.size(); i++) {
+		if (p.hasSkt(users[i].skt)) {
+			bool exists = false;
+			for(unsigned int j = 0; j < ready_users.size(); j++) {
+				if ( (ready_users[j].name).compare(users[i].name) == 0) {
+					exists = true;
+				}
+			}
+			if (!exists) {
+			  ready_users.push_back(users[i]);
+			}
+		}
+	}
+
+	YAMLReader& yamlReader = YAMLReader::get_instance();
+	if (ready_users.size() >= (unsigned int)yamlReader.getMaxJugadores()){
+		Log::get_instance()->debug("UserManager: partido iniciado");
+		playing = true;
+	}
+}
+
+bool UserManager::game_started() {
+	return playing;
 }
 
 void UserManager::game_finished() {

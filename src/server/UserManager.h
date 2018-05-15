@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <cstring>
+#include <mutex>
 
 #define MAX_LOGIN_ATTEMPTS 100000
 
@@ -20,6 +21,7 @@ typedef struct {
 class UserManager {
 private:
 	std::vector<user> users;
+	std::vector<user> ready_users;
 	std::vector<user> logged_out;
 	bool playing = false;
 	std::string get_name(std::string buff);
@@ -27,6 +29,8 @@ private:
 	bool is_logged_in(std::string name);
 	bool is_reconecting(std::string name);
 	short _login(Socket* skt);
+
+	std::mutex mtx;
 	
 	UserManager();
 
@@ -45,12 +49,18 @@ public:
 	void logout(Protocol& p);
 
 	/**
-		Sets the manager to game on functions
+		@PRE: Receives a protocol with a socket already connected to a logged in client
+		@POS: The client is counted as ready
 	*/
-	void game_started();
+	void user_ready(Protocol& p);
 
 	/**
-		Sets the manager to game off functions
+		Returns true if the manager is set to playing functions
+	*/
+	bool game_started();
+
+	/**
+		Sets the manager to not playing functions
 	*/
 	void game_finished();
 };

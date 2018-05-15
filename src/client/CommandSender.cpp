@@ -147,3 +147,9 @@ short CommandSender::login(std::string credentials) {
 		return LOGIN_ERROR;
 	}
 }
+
+Request CommandSender::listenStart() {
+	protocol.write(Request::START);
+	protocol.read();
+	return protocol.request();
+}

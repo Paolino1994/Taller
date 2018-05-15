@@ -25,6 +25,7 @@ public:
 	~CommandSender();
 	void handleEvent(SDL_Event& e);
 	short login(std::string credentials);
+	Request listenStart();
 	void assignTeam(Team team);
 	bool updateModel();
 	model_data_t getModelData();

@@ -44,6 +44,19 @@ void RequestHandler::_run()
 					protocol.write(Request::BALL_VIEW_UPDATE, (const char*)&model_data.ballViewData, sizeof(model_data.ballViewData));
 					break;
 				}
+				case Request::START: {
+					bool started = false;
+					(UserManager::get_instance()).user_ready(protocol);
+					do {
+						if ((UserManager::get_instance()).game_started()) {
+							started = true;
+							protocol.write(Request::START);
+						} else {
+							std::this_thread::sleep_for (std::chrono::seconds(2));
+						}
+					} while (! started);
+					break;
+				}
 				default: {
 					Log::get_instance()->info("Unhandled request");
 					break;
