@@ -146,14 +146,16 @@ bool TeamFactory::add_forwards(int quantity, Team goal, int field_length, int fi
 
 	PlayerModel* model;
 	player forward;
+	bool setBallToPlayer = false;
 
 	for (int i = 0; i < quantity; i++){
 		switch (quantity) {
 			case 1:
 				position_y = field_width / 2;
 				if(goal == LEFT_GOAL) {
-					kickOff_y = position_y;
-					kickOff_x = field_length / 2;
+					kickOff_y = 504; //HARDCODEADO PORQUE SE QUE ES EL PUNTO CENTRAL
+					kickOff_x = 761;
+					setBallToPlayer = true;
 				} else {
 					kickOff_y = position_y;
 				}
@@ -163,6 +165,7 @@ bool TeamFactory::add_forwards(int quantity, Team goal, int field_length, int fi
 				if(goal == LEFT_GOAL && i == quantity - 1) {
 					kickOff_y = 504; //HARDCODEADO PORQUE SE QUE ES EL PUNTO CENTRAL
 					kickOff_x = 761;
+					setBallToPlayer = true;
 				} else {
 					kickOff_y = position_y;
 				}
@@ -171,6 +174,9 @@ bool TeamFactory::add_forwards(int quantity, Team goal, int field_length, int fi
 				return false;
 		}
 		model = new PlayerModel(goal, BasePlayer, position_x, position_y, kickOff_x, kickOff_y);
+		if (setBallToPlayer) {
+			model->setHasControlOfTheBall(true);
+		}
 		forward.model = model;
 		team.push_back(forward);
 	}

@@ -55,7 +55,6 @@ PlayerController* World::injectHumanController(Team team, User_ID userId)
 			PlayerControllerHuman* human = new PlayerControllerHuman(other->getModel(), other->getView(), *this, userId);
 			teamControllers[i] = human;
 			human->getModel()->setIsControlledByHuman(true);
-            human->getModel()->setHasControlOfTheBall(true);
 			delete other;
 			return human;
 		}
