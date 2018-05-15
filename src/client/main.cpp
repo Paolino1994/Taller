@@ -200,13 +200,11 @@ int main( int argc, char* args[] )
             if(gameMenu.logginScreen(commandSender) == 0) {
                 gameState = GameState::ONLINE;
                 std::string user = gameMenu.getUser();
-				// selecionar equipo
+                // selecionar equipo
 				GameSelectTeam gameSelectTeam(gRenderer);
-				int selectedTeam = gameSelectTeam.selectTeamScreen();
-				std::cout << "equipo seleccionado: " << selectedTeam << std::endl;
-				// pasar usuario y equipo al servidor
-				log->info("enviando Usuario y equipo al servidor: " + user + " Equipo: " + std::to_string(selectedTeam));
-				std::cout << "enviando info al servidor: user: " << user << ", equipo: " << selectedTeam << std::endl;
+				if (gameSelectTeam.selectTeamScreen(commandSender) == 0 ) {
+					log->info("se seleccionó correctamente el equipo");
+				}
             }
         }
         if (gameState == GameState::ONLINE) {
@@ -379,7 +377,7 @@ player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun,
 
 void renderizar(Camera& camera, World& world, CommandSender& commandSender, GameMenu& gameMenu) {
 
-	commandSender.assignTeam(Team::HOME);
+//	commandSender.assignTeam(Team::HOME);
 
     if (true)
     {
