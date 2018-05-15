@@ -182,9 +182,15 @@ int main( int argc, char* args[] )
     if (!Log::is_initialized()) {
         std::string logLevel = yamlReader.getLogLevel();
         std::string logType=getLogType((char *) logLevel.c_str());
-        Log::initialize(logType);
-        Log* log=Log::get_instance();
-        log->error("Log cargado en modo " + logLevel);
+		if(logType.compare("NOT_FOUND") != 0) {
+            Log::initialize(logType);
+            Log* log=Log::get_instance();
+            log->error("Log cargado en modo " + logType);
+        } else {
+            Log::initialize(LOG_ERROR);
+            Log* log=Log::get_instance();
+            log->error("Log ingresado invalido. Log cargado en modo error");
+        }
     }
     
 	Log* log = Log::get_instance();
