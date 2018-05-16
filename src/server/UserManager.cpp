@@ -1,5 +1,12 @@
 #include "UserManager.h"
 
+User_ID UserManager::userIdToAssign = 1;
+
+User_ID UserManager::getNextUserId()
+{
+	return UserManager::userIdToAssign++;
+}
+
 UserManager::UserManager() {}
 
 UserManager& UserManager::get_instance() {
@@ -26,6 +33,7 @@ bool UserManager::is_logged_in(std::string name) {
 bool UserManager::is_reconecting(std::string name) {
 	for (unsigned int i = 0; i < logged_out.size(); i++) {
 		if (name.compare(logged_out[i].name) == 0) {
+			this->reconnectedUserId = logged_out[i].id;
 			logged_out.erase(logged_out.begin() + i);
 			Log::get_instance()->info("Jugador reconectandose");
 			return true;
@@ -79,7 +87,10 @@ short UserManager::_login(Socket* skt){
 	user u;
 	u.skt = skt;
 	u.name = name;
+	u.id = playing? this->reconnectedUserId: UserManager::getNextUserId();
 	users.push_back(u);
+
+	this->lastUserId = u.id; // para poder pasarselo al RequestHandler!
 	
 	log = "Usuario ";
 	log.append(name);
@@ -153,4 +164,9 @@ void UserManager::game_finished() {
 	Log::get_instance()->debug("UserManager: partido finalizado");
 	playing = false;
 	logged_out.clear();
+}
+
+User_ID UserManager::getLastUserId()
+{
+	return this->lastUserId;
 }

@@ -3,6 +3,7 @@
 
 #include "common/Protocol.h"
 #include "common/Request.h"
+#include "common/GameConstants.h"
 #include "common/Socket.h"
 #include "common/YAMLReader.h"
 #include "common/Log.h"
@@ -16,6 +17,7 @@
 typedef struct {
 	Socket* skt;
 	std::string name;
+	User_ID id;
 } user;
 
 class UserManager {
@@ -31,7 +33,14 @@ private:
 	short _login(Socket* skt);
 
 	std::mutex mtx;
-	
+
+	static User_ID userIdToAssign;
+	static User_ID getNextUserId();
+
+	// Cabeceadas para solución rapida
+	User_ID lastUserId;
+	User_ID reconnectedUserId;
+
 	UserManager();
 
 public:
@@ -63,6 +72,12 @@ public:
 		Sets the manager to not playing functions
 	*/
 	void game_finished();
+
+	/**
+		Get User_ID assigned to the user with the last successful login
+		CABECEADA para solucion rapida: ESTO FUNCIONA PORQUE ESTO TRABAJA SECUENCIALMENTE (ver main.cpp)
+	*/
+	User_ID getLastUserId();
 };
 
 #endif
