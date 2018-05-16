@@ -189,13 +189,13 @@ int main( int argc, char* args[] )
 	Log* log = Log::get_instance();
 
     GameState gameState = GameState::OFFLINE;
+	std::unique_ptr<CommandSender> commandSenderPtr(nullptr);
 
     //Start up SDL and create window
     if ( !init_SDL() ) {
         std::cout << "Failed to initialize!\n" << std::endl;
 		log->error("Falló la inicialización del SDL");
     } else {
-		std::unique_ptr<CommandSender> commandSenderPtr(nullptr);
 
 		try {
 			commandSenderPtr = std::unique_ptr<CommandSender>(new CommandSender(server_ip, std::stoul(server_port, nullptr, 0)));
@@ -367,6 +367,8 @@ int main( int argc, char* args[] )
     //Free resources and close SDL
     close();
 
+    commandSenderPtr->protocol.shutdown();
+
     return 0;
 }
 
@@ -472,6 +474,7 @@ void renderizar(Camera& camera, World& world, CommandSender& commandSender, Game
 				accumulator = 0;
 
 
+			}
 				//Renderizamos solo despues de un update
 				//std::cout << "--Renderizando--" << std::endl;
 
@@ -482,7 +485,6 @@ void renderizar(Camera& camera, World& world, CommandSender& commandSender, Game
 				//Render current frame
 				//std::cout << "Renderizamos ahora" << std::endl;
 				camera.render(world);
-			}
 
             //quit Si seleciono la tecla escape entonces pregunto si quiere salir
             if(salirJuego){

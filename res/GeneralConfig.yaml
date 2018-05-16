@@ -4,7 +4,7 @@ EquipoA:
 EquipoB:
     Color: "Rojo"
     Formacion: "3-2-1"
-LogLevel: "info"
+LogLevel: "error"
 MaxJugadores: "2"
 usuarios:
 -
