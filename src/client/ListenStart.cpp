@@ -19,9 +19,9 @@ void ListenStart::listenStartScreen(CommandSender& commandSender) {
 
     log->info("Generando pantalla de espera a inicio del partidos");
 
-    Surface surface("res/soccer_field_1.6.png");
+    Surface surface("res/locker_room.jpg");
 
-    Texture background(gRenderer, "res/soccer_field_1.6.png");
+    Texture background(gRenderer, "res/locker_room.jpg");
 
     background.render( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
     int tituloW, tituloH, start, startH;
@@ -45,7 +45,5 @@ void ListenStart::listenStartScreen(CommandSender& commandSender) {
     SDL_RenderPresent( gRenderer );
 
 	while (commandSender.listenStart() != Request::START);
-
-    SDL_StopTextInput();
 }
 

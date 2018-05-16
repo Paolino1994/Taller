@@ -23,9 +23,9 @@ int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
 
     log->info("Generando pantalla de selección de equipo");
 
-    Surface surface("res/soccer_field_1.6.png");
+    Surface surface("res/choose_team.jpg");
 
-    Texture background(gRenderer, "res/soccer_field_1.6.png");
+    Texture background(gRenderer, "res/choose_team.jpg");
 
     background.render( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
     int tituloW, tituloH, equipo, equipoH, errorH, errorW;
