@@ -15,21 +15,13 @@
 #include "Texture.h"
 #include "Surface.h"
 
-//#include "Entity.h"
 #include "Camera.h"
 
-//#include "Player.h"
+#include "common/SocketException.h"
 #include "common/Log.h"
-//#include "PlayerModel.h"
-//#include "PlayerView.h"
-//#include "PlayerControllerHuman.h"
-//#include "TeamFactory.h"
 #include "common/YAMLReader.h"
 #include "Texto.h"
 #include "TextureSetter.h"
-//#include "BallModel.h"
-//#include "BallView.h"
-//#include "BallController.h"
 #include "CommandSender.h"
 #include "GameMenu.h"
 #include "GameSelectTeam.h"
@@ -203,24 +195,38 @@ int main( int argc, char* args[] )
         std::cout << "Failed to initialize!\n" << std::endl;
 		log->error("Falló la inicialización del SDL");
     } else {
+		std::unique_ptr<CommandSender> commandSenderPtr(nullptr);
 
-		// TODO: recibir o tomaar de algun lado ip y puerto (config, parametro, etc..)
-		CommandSender commandSender(server_ip, std::stoul (server_port,nullptr,0));
+		try {
+			commandSenderPtr = std::unique_ptr<CommandSender>(new CommandSender(server_ip, std::stoul(server_port, nullptr, 0)));
+		}
+		catch (SocketException& ex) {
+			Log::get_instance()->error("No nos pudimos conectar al servidor, causa: " + std::string(ex.what()));
+			std::cout << "No nos pudimos conectar al servidor. Ver el log" << std::endl;
+			return 1;
+		}
 
         GameMenu gameMenu(gRenderer);
         if(gameState == GameState::OFFLINE) {
-            
-            if(gameMenu.logginScreen(commandSender) == 0) {
-                gameState = GameState::ONLINE;
-                std::string user = gameMenu.getUser();
-                // selecionar equipo
-				GameSelectTeam gameSelectTeam(gRenderer);
-				if (gameSelectTeam.selectTeamScreen(commandSender) == 0 ) {
-					log->info("se seleccionó correctamente el equipo");
+			try {
+				CommandSender& commandSender = *commandSenderPtr;
+				if (gameMenu.logginScreen(commandSender) == 0) {
+					gameState = GameState::ONLINE;
+					std::string user = gameMenu.getUser();
+					// selecionar equipo
+					GameSelectTeam gameSelectTeam(gRenderer);
+					if (gameSelectTeam.selectTeamScreen(commandSender) == 0) {
+						log->info("se seleccionó correctamente el equipo");
+					}
+					ListenStart listenStart(gRenderer);
+					listenStart.listenStartScreen(commandSender);
 				}
-				ListenStart listenStart(gRenderer);
-				listenStart.listenStartScreen(commandSender);
-            }
+			}
+			catch (SocketException& ex){
+				Log::get_instance()->error("Error de conexión con el servidor, causa: " + std::string(ex.what()));
+				std::cout << "Error de conexión con el servidor. Salimos. Ver el log" << std::endl;
+				return 1;
+			}
         }
         if (gameState == GameState::ONLINE) {
 
@@ -348,7 +354,14 @@ int main( int argc, char* args[] )
             camera.follow(world.getBall());
 
             log->info("Renderizo");
-            renderizar(camera, world, commandSender, gameMenu);
+			try {
+				CommandSender& commandSender = *commandSenderPtr;
+				renderizar(camera, world, commandSender, gameMenu);
+			} catch (SocketException& ex) {
+				Log::get_instance()->error("Error de conexión con el servidor, causa: " + std::string(ex.what()));
+				std::cout << "Error de conexión con el servidor. Salimos. Ver el log" << std::endl;
+				return 1;
+			}
         }
     }
 
