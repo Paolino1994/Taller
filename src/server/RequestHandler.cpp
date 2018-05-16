@@ -55,6 +55,7 @@ void RequestHandler::_run()
 							std::this_thread::sleep_for (std::chrono::seconds(2));
 						}
 					} while (! started);
+					protocol.set_rcv_timeout(30);
 					break;
 				}
 				default: {

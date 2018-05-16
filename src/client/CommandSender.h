@@ -29,5 +29,6 @@ public:
 	void assignTeam(Team team);
 	bool updateModel();
 	model_data_t getModelData();
+	int set_rcv_timeout(time_t seconds);
 };
 

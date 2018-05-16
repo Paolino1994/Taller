@@ -423,6 +423,8 @@ void renderizar(Camera& camera, World& world, CommandSender& commandSender, Game
         bool salirJuego = false;
 
 		Log* log = Log::get_instance();
+	
+	commandSender.set_rcv_timeout(30);
 
         //While application is running
         while( !quit )

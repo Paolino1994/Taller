@@ -21,6 +21,9 @@ Protocol::~Protocol()
 	}
 }
 
+int Protocol::set_rcv_timeout(time_t seconds){
+	return this->skt->set_rcv_timeout(seconds);
+}
 
 void Protocol::shutdown()
 {

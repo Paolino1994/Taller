@@ -17,6 +17,10 @@ CommandSender::~CommandSender()
 	protocol.shutdown();
 }
 
+int CommandSender::set_rcv_timeout(time_t seconds){
+	return this->protocol.set_rcv_timeout(seconds);
+}
+
 void CommandSender::assignTeam(Team team) {
 	protocol.write(Request::TEAM_ASSIGN, reinterpret_cast<const char*>(&team), sizeof(team));
 }

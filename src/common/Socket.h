@@ -55,6 +55,8 @@ public:
 	}
 
 	int get_status();
+
+	int set_rcv_timeout(time_t seconds);
 };
 
 #endif

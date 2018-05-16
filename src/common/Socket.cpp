@@ -23,6 +23,18 @@ Socket::~Socket(){
 	status = control_output(control);
 }
 
+int Socket::set_rcv_timeout(time_t seconds){
+    	int control;
+    	struct timeval timeout;
+    	timeout.tv_sec = seconds; //segundos
+    	timeout.tv_usec = 0; //microsegundos
+   	control = setsockopt(this->fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+    	status = control_output(control);
+	return status;
+}
+
+
+
 int Socket::connect(const char* ip, unsigned short port){
 	int control;
 	struct sockaddr_in sktaddr;

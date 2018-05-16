@@ -52,6 +52,8 @@ public:
 	void protect();
 	bool hasSkt(Socket* s);
 
+	int set_rcv_timeout(time_t seconds);
+
 private:
 	Socket* skt; //suponemos que hay que hacerle delete
 	std::vector<char> buffer;
