@@ -423,21 +423,24 @@ void renderizar(Camera& camera, World& world, CommandSender& commandSender, Game
             accumulator += frametime;
 
             //Handle events on queue
-            while( SDL_PollEvent( &e ) != 0)
+            while (SDL_PollEvent( &e ) != 0) //Ver si conviene limitar este while con un for con limite de ciclos aparte del PollEvent
             {
                 //User requests quit
                 if( e.type == SDL_QUIT )
                 {
                     quit = true;
+					break;
                 }
 
                 if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
 					log->info("Se selecciono ESC, juego pausado");
                     salirJuego = true;
+					break;
                 }
 
                 //controlled->handleEvent(e);
 
+				//std::cout << "Enviando un comando" << std::endl;
 				commandSender.handleEvent(e);
 				/*if (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_q) {
 					camera.follow(controlled->getEntity());
@@ -445,24 +448,27 @@ void renderizar(Camera& camera, World& world, CommandSender& commandSender, Game
             }
 
             //Cuando el tiempo pasado es mayor a nuestro tiempo de actualizacion
-            while ( accumulator >= fixed_dt )
-            {
-                //Calcula movimientos
+			if (accumulator >= fixed_dt)
+			{
+				//Calcula movimientos
 				//std::cout << "Vamos a actualizar el modelo con lo que venga" << std::endl;
-                world.update(commandSender); //Update de todos los players (y otras entidades proximamente?)
+				world.update(commandSender); //Update de todos los players (y otras entidades proximamente?)
 				//std::cout << "Terminamos de actualizar el modelo" << std::endl;
-                camera.update(fixed_dt);
-                accumulator -= fixed_dt;
-            }
+				camera.update(fixed_dt);
+				accumulator = 0;
 
-            //Clear screen
-            SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-            SDL_RenderClear( gRenderer );
 
-            //Render current frame
-			//std::cout << "Renderizamos ahora" << std::endl;
-            camera.render(world);
+				//Renderizamos solo despues de un update
+				//std::cout << "--Renderizando--" << std::endl;
 
+				//Clear screen
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+				SDL_RenderClear(gRenderer);
+
+				//Render current frame
+				//std::cout << "Renderizamos ahora" << std::endl;
+				camera.render(world);
+			}
 
             //quit Si seleciono la tecla escape entonces pregunto si quiere salir
             if(salirJuego){
