@@ -15,7 +15,6 @@ using namespace std;
 class GameMenu {
 private:
     SDL_Renderer *gRenderer;
-    string user;
 public:
     GameMenu(SDL_Renderer *renderer);
 
@@ -25,5 +24,4 @@ public:
 
     bool pausaMenu(SDL_Event ev);
 
-    string getUser();
 };

@@ -2,6 +2,8 @@
 
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
 const int SCREEN_HEIGHT = YAML::SCREEN_HEIGHT;
+const int TEAM_LOCAL = 1;
+const int TEAM_VISITANTE = 2;
 
 enum WriteState{
     TEAM = 0,
@@ -40,7 +42,7 @@ int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
     tituloTxt.getTextureDimensions(&tituloW,&tituloH);
     selectTeamTxt.getTextureDimensions(&equipo,&equipoH);
 
-    std::string teamText = " ";
+    std::string teamText = "";
     Texto teamTexture(gRenderer, "res/Tehkan World Cup.ttf",22,teamText , {255,255,0,0});
 
     std::string errorText = " ";
@@ -62,7 +64,7 @@ int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
             if ( ev.type == SDL_TEXTINPUT ) {
                 switch (state) {
                     case WriteState::TEAM:
-                        if(teamText.compare(" ") == 0){
+                        if(teamText.compare("") == 0){
                             teamText = ev.text.text;
                         } else {
                             teamText += ev.text.text;
@@ -89,7 +91,7 @@ int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
                             done = true;
                         case WriteState::ERROR:
                             state = WriteState::TEAM;
-//                            teamText = " ";
+//                            teamText = "";
                             errorText = " ";
                         default:
                         break;
@@ -116,18 +118,35 @@ int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
         teamTexture.display(((SCREEN_WIDTH - equipo) / 3) + equipo, (SCREEN_HEIGHT - equipoH) / 2);
 
         if(done) {
-            log->info("equipo seleccionado: " + teamText);
-            returnValue = 0;
-            running = false;
-            selectedTeam = std::stoi( teamText );
-            if(selectedTeam == 1){
-                commandSender.assignTeam(Team::HOME);
-                std::cout << "equipo 1" << std::endl;
-            }else{
-                commandSender.assignTeam(Team::AWAY);
-                std::cout << "equipo 2" << std::endl;
-            }
+			// validacion de input
+			try {
+				selectedTeam = std::stoi(teamText);
+			}
+			catch(std::invalid_argument& e){
+				selectedTeam = 0;
+			}
 
+			if(selectedTeam != TEAM_LOCAL && selectedTeam != TEAM_VISITANTE){
+				selectedTeam = 0;
+			}
+
+			if(selectedTeam == 0){
+				std::cout << "equipo inválido" << std::endl;
+				log->info("equipo seleccionado inválido");
+				state = WriteState::ERROR;
+				teamText = "";
+				done = false;
+				errorText = "Equipo invalido, presione enter.";
+			}else{
+				std::cout << "Equipo seleccionado: " << selectedTeam << std::endl;
+				returnValue = 0;
+				running = false;
+				if( selectedTeam == TEAM_LOCAL){
+					commandSender.assignTeam(Team::HOME);
+				}else{
+					commandSender.assignTeam(Team::AWAY);
+				}
+			}
         }
         SDL_RenderPresent( gRenderer );
     }

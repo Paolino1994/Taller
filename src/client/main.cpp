@@ -212,7 +212,6 @@ int main( int argc, char* args[] )
 				CommandSender& commandSender = *commandSenderPtr;
 				if (gameMenu.logginScreen(commandSender) == 0) {
 					gameState = GameState::ONLINE;
-					std::string user = gameMenu.getUser();
 					// selecionar equipo
 					GameSelectTeam gameSelectTeam(gRenderer);
 					if (gameSelectTeam.selectTeamScreen(commandSender) == 0) {
