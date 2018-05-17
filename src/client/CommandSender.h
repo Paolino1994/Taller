@@ -10,6 +10,7 @@
 class CommandSender
 {
 private:
+	Protocol protocol;
 	std::vector<player_view_data_t> playerViewData;
 	ball_view_data_t ballViewData;
 
@@ -29,7 +30,6 @@ public:
 	bool updateModel();
 	model_data_t getModelData();
 	int set_rcv_timeout(time_t seconds);
-	Protocol protocol;
 
 };
 

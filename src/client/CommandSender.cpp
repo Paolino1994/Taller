@@ -4,17 +4,16 @@
 
 
 CommandSender::CommandSender(std::string ip, unsigned short port):
+	protocol(Protocol(ip, port)),
 	playerViewData(std::vector<player_view_data_t>()),
-	ballViewData({0,0,0,QUIESCENT}),
-	protocol(Protocol(ip, port))
+	ballViewData({0,0,0,QUIESCENT})
 {
-
 }
 
 
 CommandSender::~CommandSender()
 {
-	//protocol.shutdown();
+	protocol.shutdown();
 }
 
 int CommandSender::set_rcv_timeout(time_t seconds){

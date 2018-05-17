@@ -189,13 +189,13 @@ int main( int argc, char* args[] )
 	Log* log = Log::get_instance();
 
     GameState gameState = GameState::OFFLINE;
-	std::unique_ptr<CommandSender> commandSenderPtr(nullptr);
 
     //Start up SDL and create window
     if ( !init_SDL() ) {
         std::cout << "Failed to initialize!\n" << std::endl;
 		log->error("Falló la inicialización del SDL");
     } else {
+	    std::unique_ptr<CommandSender> commandSenderPtr(nullptr);
 
 		try {
 			commandSenderPtr = std::unique_ptr<CommandSender>(new CommandSender(server_ip, std::stoul(server_port, nullptr, 0)));
@@ -366,8 +366,6 @@ int main( int argc, char* args[] )
 
     //Free resources and close SDL
     close();
-
-    commandSenderPtr->protocol.shutdown();
 
     return 0;
 }
