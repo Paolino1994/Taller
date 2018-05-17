@@ -150,7 +150,7 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
 		velY = 0;
 	}
 	else if (this->y < 0) { // limite de arriba
-		this->y = 0;
+		this->y = 10;
 		velX = 0;
 		velY = 0;
 	}
@@ -161,7 +161,7 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
 		velY = 0;
 	}
 	else if (this->x < 0) { // limite de arriba
-		this->x = 0;
+		this->x = 25;
 		velX = 0;
 		velY = 0;
 	}
