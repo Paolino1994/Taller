@@ -5,6 +5,8 @@
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
 const int SCREEN_HEIGHT = YAML::SCREEN_HEIGHT;
 
+typedef std::chrono::steady_clock Clock;
+
 
 enum EscrbiendoState {
     USUARIO = 0,
@@ -23,8 +25,6 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
 
     log->info("Generando pantalla de login");
 
-    Surface surface("res/login_background.jpg");
-
     Texture background(gRenderer, "res/login_background.jpg");
 
     background.render(0,0);
@@ -38,6 +38,9 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
     tituloTexto.getTextureDimensions(&tituloW,&tituloH); 
     usuarioTexto.getTextureDimensions(&usuarioW,&usuarioH); 
     passTexto.getTextureDimensions(&passW,&passH); 
+    
+    Texture indicatorRed(gRenderer, "res/write_here.png");
+    Animation writeHereAnimation(indicatorRed, 2,2);
     
     std::string userText = " ";
     Texto userTextTexture(gRenderer, "res/Tehkan World Cup.ttf",22,userText , {255,255,0,0});
@@ -57,6 +60,15 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
 
     bool running = true;
     bool loginTerminado = false;
+
+    Clock::time_point currentTime, newTime;
+    currentTime = Clock::now();
+    std::chrono::milliseconds milli;
+    const double fixed_dt = 0.5; 
+    double accumulator = 0;
+    double frametime;
+
+
     while ( running ) {
         SDL_Event ev;
         while ( SDL_PollEvent( &ev ) ) {
@@ -135,6 +147,31 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
 
         userTextTexture.display(((SCREEN_WIDTH - usuarioW) / 3) + usuarioW, (SCREEN_HEIGHT - usuarioH) / 2);
         passTextTexture.display(((SCREEN_WIDTH - usuarioW) / 3) + passW, ((SCREEN_HEIGHT - passH) / 2) + 70);
+
+        newTime = Clock::now();
+        milli = std::chrono::duration_cast<std::chrono::milliseconds>(newTime - currentTime);
+        currentTime = newTime;
+        frametime = milli.count()/1000.0;
+
+        accumulator += frametime;
+
+        if (accumulator >= fixed_dt)
+        {
+            writeHereAnimation.update(fixed_dt);
+            accumulator = 0;
+        }
+        
+            switch (usuarioOPass) {
+                case EscrbiendoState::USUARIO:
+                    writeHereAnimation.render(((SCREEN_WIDTH - usuarioW) / 3) + usuarioW + (userText.size() * 22), (SCREEN_HEIGHT - usuarioH) / 2 - 10);
+                    break;
+                case EscrbiendoState::PASS:
+                    writeHereAnimation.render(((SCREEN_WIDTH - usuarioW) / 3) + usuarioW + (passText.size() * 22), (SCREEN_HEIGHT - passH) / 2 + 60);
+                    break;
+                default:
+                break;
+            }
+
 
         if(loginTerminado) {
             log->info("Intento de ingreso~~Usuario: " + userText + " Password: " + passText);

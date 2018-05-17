@@ -4,7 +4,9 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <chrono>
 
+#include "Animation.h"
 #include "Texto.h"
 #include "Texture.h"
 #include "Surface.h"
