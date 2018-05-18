@@ -1,7 +1,9 @@
 EquipoA:
+    Nombre: "Fiuba"
     Color: "Verde"
     Formacion: "3-1-2"
 EquipoB:
+    Nombre: "UTN"
     Color: "Rojo"
     Formacion: "3-2-1"
 LogLevel: "error"

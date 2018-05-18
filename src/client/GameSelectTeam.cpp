@@ -16,6 +16,8 @@ int GameSelectTeam::getSelectedTeam(){
 }
 
 int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
+    YAMLReader& yamlReader = YAMLReader::get_instance();
+
     Log *log = Log::get_instance();
 
     log->info("Generando pantalla de selección de equipo");
@@ -23,18 +25,24 @@ int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
     Texture background(gRenderer, "res/choose_team.jpg");
 
     background.render( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-    int tituloW, tituloH;
+    int tituloW, tituloH, localW, awayW, nameH;
 
     Texto tituloTxt(gRenderer, "res/Tehkan World Cup.ttf",36, "SELECCIONAR EQUIPO", {255,255,0,0});
 
-    Texture localKit(gRenderer, "res/Rojo/shirt.png");
-    Texture awayKit(gRenderer, "res/Verde/shirt.png");
+    Texto nameLocalTxt(gRenderer, "res/Tehkan World Cup.ttf",36, yamlReader.getTeamNombre(1), {255,255,0,0});
+    Texto nameAwayTxt(gRenderer, "res/Tehkan World Cup.ttf",36, yamlReader.getTeamNombre(2), {255,255,0,0});
+
+    Texture localKit(gRenderer, "res/" + yamlReader.getTeamColor(1) + "/shirt.png");
+    Texture awayKit(gRenderer, "res/" + yamlReader.getTeamColor(2) + "/shirt.png");
 
     Texture selectTeam(gRenderer, "res/select_team.png");
 
     Animation selectTeamAnimation(selectTeam, 2, 2);
 
     tituloTxt.getTextureDimensions(&tituloW,&tituloH);
+    nameLocalTxt.getTextureDimensions(&localW,&nameH);
+    nameAwayTxt.getTextureDimensions(&awayW,&nameH);
+
 
     log->info("se crea las texturas para la selección de equipo");
 
@@ -85,8 +93,11 @@ int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
        
         tituloTxt.display((SCREEN_WIDTH - tituloW) / 2, (SCREEN_HEIGHT - tituloH) / 8);
 
-        localKit.render( 50, SCREEN_HEIGHT / 3);
-        awayKit.render(SCREEN_WIDTH - 350 , SCREEN_HEIGHT / 3);
+        nameLocalTxt.display((SCREEN_WIDTH / 4) - (localW / 2), SCREEN_HEIGHT / 3);
+        nameAwayTxt.display(SCREEN_WIDTH - (SCREEN_WIDTH / 4) - (awayW / 2), SCREEN_HEIGHT / 3);
+
+        localKit.render( (SCREEN_WIDTH / 2) - 350, (SCREEN_HEIGHT / 2) - 25);
+        awayKit.render((SCREEN_WIDTH / 2) + 50 , (SCREEN_HEIGHT / 2)  - 25);
 
         if(team == Team::HOME){
             selectTeamAnimation.render(20, (SCREEN_HEIGHT / 3) - 20);

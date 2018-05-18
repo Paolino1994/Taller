@@ -12,6 +12,7 @@
 #include "Texto.h"
 #include "Texture.h"
 #include "common/GameConstants.h"
+#include "common/YAMLReader.h"
 #include "Surface.h"
 #include "common/Log.h"
 #include "CommandSender.h"

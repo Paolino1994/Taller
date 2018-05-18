@@ -27,7 +27,9 @@ public:
 
     void destroy();
 
-    std::string getNombre(int equipo);
+    std::string getTeamNombre(int equipo);
+
+    std::string getTeamColor(int equipo);
 
     std::string getSpriteStill(int equipo);
 

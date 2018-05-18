@@ -78,12 +78,16 @@ void YAMLReader::readYamlGeneral(std::string file){
 
 }
 
-std::string YAMLReader::getNombre(int equipo){
+std::string YAMLReader::getTeamNombre(int equipo){
     return infoEquipo[equipo]["Nombre"];
 }
 
 std::string YAMLReader::getFormacion(int equipo){
     return Formacion;
+}
+
+std::string YAMLReader::getTeamColor(int equipo){
+    return infoEquipo[equipo]["Color"];
 }
 
 
@@ -212,6 +216,7 @@ std::string YAMLReader::getLogType(char *cadena) {
 
 void YAMLReader::leerEquipo(std::string equipo, int posicionEnMapa) {
     if(configNode[equipo]["Color"]){
+        infoEquipo[posicionEnMapa]["Color"] = configNode[equipo]["Color"].as<std::string>();
         infoEquipo[posicionEnMapa]["SpriteStill"] = "res/" + configNode[equipo]["Color"].as<std::string>() + "/player_still.png";
         infoEquipo[posicionEnMapa]["SpriteRunning"] = "res/" + configNode[equipo]["Color"].as<std::string>() + "/player_run.png";
         infoEquipo[posicionEnMapa]["SpriteKicking"] = "res/" + configNode[equipo]["Color"].as<std::string>() + "/player_kick.png";
@@ -233,6 +238,14 @@ void YAMLReader::leerEquipo(std::string equipo, int posicionEnMapa) {
         infoEquipo[posicionEnMapa]["Mediocampistas"] = "2";
         infoEquipo[posicionEnMapa]["Delanteros"] = "1";
     }
+    if(configNode[equipo]["Nombre"]){
+        infoEquipo[posicionEnMapa]["Nombre"] = configNode[equipo]["Nombre"].as<std::string>();
+    } else {
+        Log* log=Log::get_instance();
+        log->error("No se encontro nombre para el " + equipo);
+        infoEquipo[posicionEnMapa]["Nombre"] = equipo;        
+    }
+
 }
 
 
