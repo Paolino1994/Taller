@@ -2,13 +2,8 @@
 
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
 const int SCREEN_HEIGHT = YAML::SCREEN_HEIGHT;
-const int TEAM_LOCAL = 1;
-const int TEAM_VISITANTE = 2;
 
-enum WriteState{
-    TEAM = 0,
-    ERROR
-};
+typedef std::chrono::steady_clock Clock;
 
 GameSelectTeam::GameSelectTeam(SDL_Renderer *renderer):
             gRenderer(renderer)
@@ -25,77 +20,46 @@ int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
 
     log->info("Generando pantalla de selección de equipo");
 
-    Surface surface("res/choose_team.jpg");
-
     Texture background(gRenderer, "res/choose_team.jpg");
 
     background.render( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-    int tituloW, tituloH, equipo, equipoH, errorH, errorW;
+    int tituloW, tituloH;
 
-    WriteState state = WriteState::TEAM;
+    Texto tituloTxt(gRenderer, "res/Tehkan World Cup.ttf",36, "SELECCIONAR EQUIPO", {255,255,0,0});
 
-    // TODO - cambiar por algo mas copado: como mostrar la camiseta de los 2 equipos
+    Texture localKit(gRenderer, "res/Rojo/shirt.png");
+    Texture awayKit(gRenderer, "res/Verde/shirt.png");
 
-    Texto tituloTxt(gRenderer, "res/Tehkan World Cup.ttf",36, "Tekhan Fiuba Cup", {255,255,0,0});
-    Texto selectTeamTxt(gRenderer, "res/Tehkan World Cup.ttf",22, "Seleccione equipo: ", {255,255,0,0});
+    Texture selectTeam(gRenderer, "res/select_team.png");
+
+    Animation selectTeamAnimation(selectTeam, 2, 2);
 
     tituloTxt.getTextureDimensions(&tituloW,&tituloH);
-    selectTeamTxt.getTextureDimensions(&equipo,&equipoH);
-
-    std::string teamText = "";
-    Texto teamTexture(gRenderer, "res/Tehkan World Cup.ttf",22,teamText , {255,255,0,0});
-
-    std::string errorText = " ";
-    Texto errorTxt(gRenderer, "res/Tehkan World Cup.ttf",22,errorText , {255,0,0,0});
 
     log->info("se crea las texturas para la selección de equipo");
-
-    SDL_StartTextInput();
-
-    log->info("inicio selección de equipo");
 
     int returnValue = 0;
 
     bool running = true;
     bool done = false;
+    Team team = Team::HOME;
+
+    Clock::time_point currentTime, newTime;
+    currentTime = Clock::now();
+    std::chrono::milliseconds milli;
+    const double fixed_dt = 0.5; 
+    double accumulator = 0;
+    double frametime;
+
     while ( running ) {
         SDL_Event ev;
         while ( SDL_PollEvent( &ev ) ) {
-            if ( ev.type == SDL_TEXTINPUT ) {
-                switch (state) {
-                    case WriteState::TEAM:
-                        if(teamText.compare("") == 0){
-                            teamText = ev.text.text;
-                        } else {
-                            teamText += ev.text.text;
-                        }
-                    break;
-                    case WriteState::ERROR:
-                    break;
-                    default:
-                    break;
-                }
-            } else if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_BACKSPACE && teamText.size()) {
-                switch (state) {
-                    case WriteState::TEAM:
-                            teamText.pop_back();
-                        break;
-                        case WriteState::ERROR:
-                        break;
-                        default:
-                        break;
-                }
+            if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_LEFT) {
+                team = Team::HOME;
+            } else if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_RIGHT) {
+                team = Team::AWAY;
             } else if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_RETURN) {
-                switch (state) {
-                        case WriteState::TEAM:
-                            done = true;
-                        case WriteState::ERROR:
-                            state = WriteState::TEAM;
-//                            teamText = "";
-                            errorText = " ";
-                        default:
-                        break;
-                }
+                done = true;
             } else if ( ev.type == SDL_QUIT ) {
                 running = false;
                 returnValue = -1;
@@ -105,53 +69,39 @@ int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
         SDL_RenderClear( gRenderer );
         background.render(0, 0);
 
-        if(state == WriteState::TEAM) {
-            teamTexture.updateText(teamText, {255,0,0,0});
-        } else if (state == WriteState::ERROR){
-            errorTxt.updateText(errorText, {255,0,0,0});
-            errorTxt.getTextureDimensions(&errorW,&errorH);
-            errorTxt.display((SCREEN_WIDTH - errorW) / 2, ((SCREEN_HEIGHT - errorH) / 4) * 3 );
-        }
-        tituloTxt.display((SCREEN_WIDTH - tituloW) / 2, (SCREEN_HEIGHT - tituloH) / 4);
-        selectTeamTxt.display((SCREEN_WIDTH - equipo) / 3, (SCREEN_HEIGHT - equipoH) / 2);
+        newTime = Clock::now();
+        milli = std::chrono::duration_cast<std::chrono::milliseconds>(newTime - currentTime);
+        currentTime = newTime;
+        frametime = milli.count()/1000.0;
 
-        teamTexture.display(((SCREEN_WIDTH - equipo) / 3) + equipo, (SCREEN_HEIGHT - equipoH) / 2);
+        accumulator += frametime;
+
+        if (accumulator >= fixed_dt)
+        {
+            selectTeamAnimation.update(fixed_dt);
+            accumulator = 0;
+        }
+
+       
+        tituloTxt.display((SCREEN_WIDTH - tituloW) / 2, (SCREEN_HEIGHT - tituloH) / 8);
+
+        localKit.render( 50, SCREEN_HEIGHT / 3);
+        awayKit.render(SCREEN_WIDTH - 350 , SCREEN_HEIGHT / 3);
+
+        if(team == Team::HOME){
+            selectTeamAnimation.render(20, (SCREEN_HEIGHT / 3) - 20);
+        } else if (team == Team::AWAY) {
+            selectTeamAnimation.render(SCREEN_WIDTH - 380, (SCREEN_HEIGHT / 3) - 20);
+        }
 
         if(done) {
-			// validacion de input
-			try {
-				selectedTeam = std::stoi(teamText);
-			}
-			catch(std::invalid_argument& e){
-				selectedTeam = 0;
-			}
-
-			if(selectedTeam != TEAM_LOCAL && selectedTeam != TEAM_VISITANTE){
-				selectedTeam = 0;
-			}
-
-			if(selectedTeam == 0){
-				std::cout << "equipo inválido" << std::endl;
-				log->info("equipo seleccionado inválido");
-				state = WriteState::ERROR;
-				teamText = "";
-				done = false;
-				errorText = "Equipo invalido, presione enter.";
-			}else{
-				std::cout << "Equipo seleccionado: " << selectedTeam << std::endl;
-				returnValue = 0;
-				running = false;
-				if( selectedTeam == TEAM_LOCAL){
-					commandSender.assignTeam(Team::HOME);
-				}else{
-					commandSender.assignTeam(Team::AWAY);
-				}
-			}
+            log->info("se selecciono un equipo.");
+            returnValue = 0;
+            running = false;
+            commandSender.assignTeam(team);
         }
         SDL_RenderPresent( gRenderer );
     }
-
-    SDL_StopTextInput();
 
     return returnValue;
 }
