@@ -26,6 +26,7 @@
 #include "GameMenu.h"
 #include "GameSelectTeam.h"
 #include "ListenStart.h"
+#include "GameConnectionError.h"
 
 
 //Screen dimension constants
@@ -357,9 +358,12 @@ int main( int argc, char* args[] )
 				CommandSender& commandSender = *commandSenderPtr;
 				renderizar(camera, world, commandSender, gameMenu);
 			} catch (SocketException& ex) {
+                // pantalla que muestra la desconexion
+				GameConnectionError gameConnectionError(gRenderer);
+				gameConnectionError.connectionErrorScreen();
 				Log::get_instance()->error("Error de conexión con el servidor, causa: " + std::string(ex.what()));
 				std::cout << "Error de conexión con el servidor. Salimos. Ver el log" << std::endl;
-				return 1;
+                close();
 			}
         }
     }
