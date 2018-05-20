@@ -28,8 +28,8 @@ typedef struct sprite_info {
 namespace YAML {
 	// Identicos a nuestra imagen de background en el cliente
 	// Si lo quieren manejar por separado hay que aplicar logica de escalado del mundo logico al background -> no es la idea
-	const int WORLD_WIDTH = 1600;
-	const int WORLD_HEIGHT = 1000;
+	const int WORLD_WIDTH = 1700;
+	const int WORLD_HEIGHT = 1050;
 
 	const size_t MAX_PLAYERS = 1; //TODO: Esto recibirlo desde el YAMLReader
 

@@ -141,7 +141,7 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
 		velY = 0;
 	}
 	else if (this->y < 0) { // limite de arriba
-		this->y = 10;
+		this->y = 25;
 		velX = 0;
 		velY = 0;
 	}
