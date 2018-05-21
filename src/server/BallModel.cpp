@@ -176,10 +176,10 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
             z=0;
         }
 	}
-    double velMultiplier=0.999;//1-getCurrentDistanceToOriginal()/startDistance;
+    /*double velMultiplier=0.999;//1-getCurrentDistanceToOriginal()/startDistance;
     if(getCurrentDistanceToOriginal()==0){
         velMultiplier=0.9;
-    }
+    }*/
     //std::cout<<"startDistance "<<startDistance<<" current "<<getCurrentDistanceToOriginal()<<" multiplier "<<velMultiplier<<std::endl;
 
 
