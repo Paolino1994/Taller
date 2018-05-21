@@ -51,6 +51,13 @@ public:
 
 	void setState();
 
+    void kick(double distance, int type);
+
+    static const int GOAL=3;
+
+    static const int HIGH=2;
+
+    static const int LOW=1;
 private:
     double angle=0;
 
@@ -60,5 +67,26 @@ private:
 
     double velY;
 
+    double velZ;
+
+    double z;
+
     double angleToUse;
+
+    double heigthAngle;
+
+    int originalX;
+
+    int originalY;
+
+    double startDistance;
+
+    double getCurrentDistanceToOriginal();
+
+    int passType=0;
+
+
+    void setVelZ(double i);
+
+
 };

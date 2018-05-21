@@ -28,6 +28,7 @@ enum class CommandType : u_int32_t {
 	SWEEP,
 	PASS,
 	CHANGE_PLAYER,
+	LONG_PASS,
 	__LENGTH__
 };
 

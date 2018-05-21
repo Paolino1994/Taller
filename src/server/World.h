@@ -76,5 +76,6 @@ public:
 
 	void changeController(int i, std::vector<PlayerController *> &pVector);
 
+    PlayerController *getPlayerToPassLong(PlayerController *controllerToSwap);
 };
 

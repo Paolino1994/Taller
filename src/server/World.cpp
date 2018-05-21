@@ -129,6 +129,42 @@ PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
 
 }
 
+PlayerController* World::getPlayerToPassLong(PlayerController * controllerToSwap){
+	Team team = controllerToSwap->getModel()->getTeam();
+	std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
+
+	ptrdiff_t index = std::distance(teamControllers.begin(), std::find(teamControllers.begin(), teamControllers.end(), controllerToSwap));
+
+	if (index >= (long long)teamControllers.size()) {
+		Log::get_instance()->info("El controller que se quiso swapear no esta en mi listado de controllers del equipo correspondiente");
+
+	}
+
+	size_t controllerToSwapIndex = index;
+	//bool comparacion;
+	index=-1;
+	do
+	{ // en el peor caso volvemos a el que estabamos controlando recien
+		//++index;
+		index++;
+		if (index == (long long)teamControllers.size()) {
+			index = controllerToSwapIndex;
+			break;
+		}
+		if(teamControllers[index] != controllerToSwap && !playerIsOnRange(teamControllers[index],controllerToSwap) /*&& teamControllers[index]->isControllable()*/){
+			break;
+		}
+		/*comparacion=!playerIsOnRange(teamControllers[index],controllerToSwap);
+		comparacion=(comparacion==(teamControllers[index] != controllerToSwap));
+		comparacion=(comparacion==!teamControllers[index]->isControllable());*/
+		//comparacion=comparacion==false;
+
+	} //while (!playerIsOnRange(teamControllers[index],controllerToSwap) && teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable()); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
+	while(true);
+	return teamControllers[index];
+
+}
+
 bool World::ejectController(PlayerController * playerController, User_ID userId)
 {
 	std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(playerController->getModel()->getTeam())];
@@ -280,19 +316,32 @@ void World::swapToBallController(PlayerController *cont) {
 void World::updateBallController() {
 	PlayerController* priorController = NULL;
 	PlayerController* currentController = NULL;
+    int i=0;
 	for (auto controllers : playerControllers) {
 		for (auto player : controllers) {
 			if (!player->isControllable()) {
 				priorController = player;
+				//std::cout<<"PLAYER"<<std::to_string(i)<<std::endl;
 			}
 			else {
 				if (player->hasControlOfTheBall()) {
 					currentController = player;
+					//std::cout<<"New Controller"<<std::to_string(i)<<std::endl;
 				}
 			}
+            if (priorController != NULL && currentController != NULL && priorController->getModel()->getTeam() == currentController->getModel()->getTeam()) {
+                //std::cout<<"ENTRE"<<priorController->getModel()->getTeam()<<currentController->getModel()->getTeam()<<std::endl;
+                priorController->swap(currentController);
+                priorController = NULL;
+                currentController = NULL;
+                controlCounter=0;
+            }
+            i++;
 		}
 
 	}
+	//std::cout<<"ENTRE"<<priorController->getModel()->getTeam()<<currentController->getModel()->getTeam()<<std::endl;
+
 	if (priorController != NULL && currentController != NULL && priorController->getModel()->getTeam() == currentController->getModel()->getTeam()) {
 		//std::cout<<"ENTRE"<<priorController->getModel()->getTeam()<<currentController->getModel()->getTeam()<<std::endl;
 		priorController->swap(currentController);

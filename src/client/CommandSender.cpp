@@ -128,6 +128,9 @@ void CommandSender::handleEvent(SDL_Event& e)
 				command.type = CommandType::PASS;
 				break;
 			}
+			case SDLK_f:{
+				command.type = CommandType::LONG_PASS;
+			}
 		}
 
 		if (command.key != CommandKey::__LENGTH__ && command.type != CommandType::__LENGTH__) {

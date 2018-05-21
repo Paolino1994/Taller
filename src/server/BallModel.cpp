@@ -7,6 +7,7 @@
 #include "BallModel.h"
 #include "BallController.h"
 #include "common/Log.h"
+#include "../common/GameConstants.h"
 
 #define PI 3.14159265
 
@@ -15,6 +16,7 @@ BallModel::BallModel(double kickOff_x, double kickOff_y, int X, int Y):
 	Entity(kickOff_x, kickOff_y) {
     x=X;
     y=Y;
+	z=0;
 	velX = 0;
 	velY = 0;
     state=QUIESCENT;
@@ -30,11 +32,11 @@ BallModel::BallModel(double kickOff_x, double kickOff_y):
 }
 
 int BallModel::getWidth() {
-    return 20; // TODO: pasarlos desde un ball_data_t o algo asi
+    return 20;//*(1+z); // TODO: pasarlos desde un ball_data_t o algo asi
 }
 
 int BallModel::getHeight() {
-    return 20; // TODO: pasarlos desde un ball_data_t o algo asi
+    return 20;//*(1+z); // TODO: pasarlos desde un ball_data_t o algo asi
 }
 
 void BallModel::setX(double d) {
@@ -43,7 +45,6 @@ void BallModel::setX(double d) {
 
 void BallModel::setY(double d) {
     y=d;
-
 }
 
 
@@ -103,16 +104,6 @@ void BallModel::setState(BallState aState) {
 
 }
 
-void BallModel::kick() {
-
-    double multiplierX=cos(angleToUse*PI/180.0);
-    double multiplierY=sin(angleToUse*PI/180.0);
-	double xVel = 750 * multiplierX;
-	double yVel = 750 * multiplierY;
-    setVelX(xVel);
-    setVelY(yVel);
-}
-
 void BallModel::setVelX(double d) {
 	velX = d;
 	setState();
@@ -159,12 +150,55 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
 		x = x_limit - this->getWidth();
 		velX = 0;
 		velY = 0;
+        velZ = 0;
 	}
 	else if (this->x < 0) { // limite de arriba
 		this->x = 25;
 		velX = 0;
 		velY = 0;
+        velZ = 0;
 	}
+
+	if(z>0){
+		double currentDistance = getCurrentDistanceToOriginal();
+		if(currentDistance>=startDistance/2){
+			heigthAngle--;
+		}
+	}
+
+
+	if(heigthAngle>=0){
+		z=z+velZ*dt;
+	}else{
+		if(z>=0){
+            z=z-velZ*dt;
+		}else{
+            z=0;
+        }
+	}
+    double velMultiplier=0.999;//1-getCurrentDistanceToOriginal()/startDistance;
+    if(getCurrentDistanceToOriginal()==0){
+        velMultiplier=0.9;
+    }
+    //std::cout<<"startDistance "<<startDistance<<" current "<<getCurrentDistanceToOriginal()<<" multiplier "<<velMultiplier<<std::endl;
+
+
+    /*if(velX>0){
+        velX*=velMultiplier;
+    }else{
+        velX=0;
+    }
+    if(velY>0){
+        velY*=velMultiplier;
+    }else{
+        velY=0;
+    }
+    if(velZ>0){
+        velZ*=velMultiplier;
+    }else{
+        velZ=0;
+    }*/
+    //std::cout<<"Xvel: "<<std::to_string(velX)<<" Yvel: "<<std::to_string(velY)<<" Zvel: "<<std::to_string(velZ)<<std::endl;
 	setState();
 	//std::cout<<"Ball VelX: "<<getVelX()<<" Ball VelY: "<<getVelY()<<std::endl;
 }
@@ -189,6 +223,35 @@ void BallModel::setState() {
 	else {
 		state = QUIESCENT;
 	}
+}
+
+void BallModel::kick(double distance, int type) {
+	double multiplierX=cos(angleToUse*PI/180.0);
+	double multiplierY=sin(angleToUse*PI/180.0);
+	double xVel = 750 * multiplierX;
+	double yVel = 750 * multiplierY;
+    //double yVel = 750 * multiplierZ;
+	setVelX(xVel);
+	setVelY(yVel);
+    setVelZ(10);
+	originalX=this->getX();
+	originalY=this->getY();
+    if(type==HIGH){
+        heigthAngle=45;
+    }
+	startDistance=distance;
+    passType=type;
+}
+
+double BallModel::getCurrentDistanceToOriginal() {
+	double distance=pow(pow(abs(originalX-x),2) + pow(abs(originalY-y),2),0.5);
+	return distance;
+
+}
+
+void BallModel::setVelZ(double i) {
+    velZ=i;
+
 }
 
 

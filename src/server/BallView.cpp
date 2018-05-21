@@ -20,6 +20,7 @@ void BallView::update(double deltaTime) {
 		animation[newState].reset();
 		this->ballState = newState;
 	}
+	//animation[this->ballState].
 	animation[this->ballState].update(deltaTime);
 }
 

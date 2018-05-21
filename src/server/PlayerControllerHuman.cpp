@@ -1,4 +1,6 @@
 #include "PlayerControllerHuman.h"
+#include "../common/Request.h"
+#include "../common/Log.h"
 #include <math.h>
 #include <iostream>
 using namespace std;
@@ -87,6 +89,16 @@ void PlayerControllerHuman::handleEvent( Command& command ){
 				log->debug("PlayerControllerHuman: apretando pasar");
 				break;
 			}
+            case CommandType::LONG_PASS:{
+                if(playerModel->getHasControlOfTheBall()){
+                    PlayerController* passController=world.getPlayerToPassLong(this);
+                    if(passController!=this){
+                        playerModel->longPass(passController->getModel(), world.getBall().getModel());
+                        this->world.swap(this);
+                    }
+                }
+            break;
+            };
 			default: {
 				// do Nothing
 				Log::get_instance()->info("Unhandled command type");

@@ -57,7 +57,7 @@ public:
     void sweep();
 
 	// TODO: Evaluar si conviene tener una referencia a la pelota cuando el PlayerModel la tiene bajo su control
-    void kick(BallModel& ballModel);
+    void kick(BallModel& ballModel,double distance);
 
     void sprint();
     void stopSprinting();
@@ -90,6 +90,10 @@ public:
 	void setAngle(int i);
 
     bool isColisionable=true;
+
+    void longPass(PlayerModel *pModel, BallModel &model);
+
+	void kick(BallModel &model);
 
 private:
 	Team team;
@@ -128,6 +132,12 @@ private:
 
 
 	int colisionableCounter=10;
+
+    void kickHigh(double model, BallModel &ballModel);
+
+	double getAngleToGoal();
+
+	double getDistanceToGoal();
 };
 
 
