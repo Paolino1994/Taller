@@ -9,7 +9,7 @@
 class Player: public Entity {
 
 public:
-	Player(std::map<const std::string, Animation> animationMapper, player_data_t player_data, std::vector<Texture*> playerIndicators);
+	Player(std::map<const std::string, Animation> animationMapper, player_data_t player_data, std::vector<Texture*> playerIndicators, Texture *miniMapIndicator);
 
 	void render(int screen_x, int screen_y);
 
@@ -30,5 +30,6 @@ private:
 	PlayerState state;
 	bool controlledByMe;
 	std::vector<Texture*> indicators;
+	Texture* miniMapIndicator;
 	int userId;
 };

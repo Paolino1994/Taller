@@ -1,12 +1,13 @@
 #include "Player.h"
 
-Player::Player(std::map<const std::string, Animation> animationMapper, player_data_t player_data, std::vector<Texture*> playerIndicators):
+Player::Player(std::map<const std::string, Animation> animationMapper, player_data_t player_data, std::vector<Texture*> playerIndicators, Texture *miniMapIndicator):
 	Entity(),
 	animations(std::vector<Animation>()),
 	angle(0.0),
 	state(PlayerState::STILL),
 	controlledByMe(false),
-	indicators(std::vector<Texture*>())
+	indicators(std::vector<Texture*>()),
+	miniMapIndicator(miniMapIndicator)
 {
 	this->animations.reserve(PlayerState::_LENGTH_);
 	this->indicators.reserve(4); // REFACTOR
@@ -27,6 +28,9 @@ void Player::render(int screen_x, int screen_y)
 		indicators[this->userId]->render(screen_x, screen_y);
 	}
     animations[state].render(screen_x, screen_y, angle);
+	miniMapIndicator->render(this->x / 10,this->y / 10); 
+	// aca se renderiza el minimapa, todavia no pongo bien los calculos para que quede donde tiene que quedar porque todavia no se donde va a quedar
+	// y no quiero hacer cuentas de pixels al pedo, cuando este definido el tamanio del minimapa y la posicion lo acomodo
 }
 
 void Player::update(const player_view_data_t & player_view_data)

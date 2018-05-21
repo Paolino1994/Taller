@@ -255,7 +255,6 @@ int main( int argc, char* args[] )
             Texture indicatorYellow(gRenderer, YAML::indicators_path + "/yellow.png");
             Texture indicatorPink(gRenderer, YAML::indicators_path + "/pink.png");
 
-
             playerIndicators.push_back(&indicatorRed);
             playerIndicators.push_back(&indicatorBlue);
             playerIndicators.push_back(&indicatorYellow);
@@ -317,6 +316,9 @@ int main( int argc, char* args[] )
 			animMapperBall.emplace(std::make_pair(ballStill.spriteid, Animation(ballStillT, ballStill)));
 			animMapperBall.emplace(std::make_pair(ballMoving.spriteid, Animation(ballMovingT, ballMoving)));
 
+            Texture miniMapIndicatorHome(gRenderer, "res/Rojo/mini_map_indicator.png");
+            Texture miniMapIndicatorAway(gRenderer, "res/Verde/mini_map_indicator.png");
+
 			/*
 			** FIN CREACION TEXTURAS Y ANIMACIONES
 			**************************************/
@@ -324,7 +326,7 @@ int main( int argc, char* args[] )
 
 			// Agrego jugadores al mundo
 			log->info("Creo el mundo con su pelota");
-			World world(background.getWidth(), background.getHeight(), &background, playerIndicators, animMapperBall, animMapperHOME, animMapperAWAY,
+			World world(background.getWidth(), background.getHeight(), &background, playerIndicators, animMapperBall, animMapperHOME, animMapperAWAY, &miniMapIndicatorHome, &miniMapIndicatorAway,
 						crearDefaultPlayer(PlayerStill, PlayerRun, PlayerSweep, PlayerKick));
 			//world.setPlayerSelectedTexture(&selectedPlayerTecture);
 		

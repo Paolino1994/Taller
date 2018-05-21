@@ -4,7 +4,7 @@
 #include "World.h"
 
 World::World(int width, int height, Texture* background, std::vector<Texture*>& _playerIndicators, std::map<const std::string, Animation>& ballAnimMapper,
-	std::map<const std::string, Animation>& teamAnimMapperHOME, std::map<const std::string, Animation>& teamAnimMapperAWAY,
+	std::map<const std::string, Animation>& teamAnimMapperHOME, std::map<const std::string, Animation>& teamAnimMapperAWAY, Texture* miniMapIndicatorHOME, Texture* miniMapIndicatorAWAY,
 	player_data_t player_data):
 	width(width),
 	height(height),
@@ -13,12 +13,16 @@ World::World(int width, int height, Texture* background, std::vector<Texture*>& 
     entities(std::vector<Entity*>()),
 	players(std::map<Player_ID, Player>()),
 	player_data(player_data),
-	playerIndicators(std::vector<Texture*>())
-{
+	playerIndicators(std::vector<Texture*>()),
+	miniMapIndicators(std::map<char, Texture*>())
+	{
 	this->playerIndicators.reserve(4); // REFACTOR
 	playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(Team::HOME)] = teamAnimMapperHOME;
 	playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(Team::AWAY)] = teamAnimMapperAWAY;
 	playerIndicators = _playerIndicators;
+	miniMapIndicators['H'] = miniMapIndicatorHOME;
+	miniMapIndicators['A'] = miniMapIndicatorAWAY;
+
 }
 
 World::~World()
@@ -65,7 +69,7 @@ void World::update(CommandSender& commandSender) {
 		else {
 			players.emplace(std::piecewise_construct,
 				std::make_tuple(player_view_data.playerId),
-				std::make_tuple(playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(player_view_data.team)], this->player_data, playerIndicators));
+				std::make_tuple(playerAnimationMappers[static_cast<std::underlying_type<Team>::type>(player_view_data.team)], this->player_data, playerIndicators, (player_view_data.team == Team::HOME) ? miniMapIndicators.at('H') : miniMapIndicators.at('A')));
 		}
 	}
 

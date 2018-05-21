@@ -35,10 +35,13 @@ private:
 
 	std::vector<Texture*> playerIndicators;
 
+	std::map<char, Texture*> miniMapIndicators;
+
 public:
 	//pendiente un refactor
     World(int width, int height, Texture* background, std::vector<Texture*>& playerIndicators, std::map<const std::string, Animation>& ballAnimMapper,
 		std::map<const std::string, Animation>& teamAnimMapperHOME, std::map<const std::string, Animation>& teamAnimMapperAWAY,
+		Texture* miniMapIndicatorHome, Texture* miniMapIndicatorAway,
 		player_data_t player_data);
     ~World();
 

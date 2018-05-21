@@ -7,7 +7,7 @@ EquipoB:
     Color: "Rojo"
     Formacion: "3-2-1"
 LogLevel: "error"
-MaxJugadores: "2"
+MaxJugadores: "1"
 usuarios:
 -
     -messi
