@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Entity.h"
+#include "Texture.h"
 #include "Animation.h"
 
 
 class Ball : public Entity {
 public:
-	Ball(std::map<const std::string, Animation>& animMapperBall);
+	Ball(std::map<const std::string, Animation>& animMapperBall, Texture *miniMapIndicator);
 
 	void render(int screen_x,int screen_y);
 
@@ -22,4 +23,5 @@ private:
     std::vector<Animation> animations;
 	double angle;
 	BallState state;
+	Texture* miniMapIndicator;
 };

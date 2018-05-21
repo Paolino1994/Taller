@@ -286,6 +286,9 @@ int main( int argc, char* args[] )
             log->debug("Crear Animacion Kick");
             animMapperHOME.emplace(std::make_pair(PlayerKick.spriteid, Animation(kickT, PlayerKick)));
 
+            // Textura de minimapa
+            Texture miniMapIndicatorHome(gRenderer, "res/" + yamlReader.getTeamColor(1) + "/mini_map_indicator.png");
+
             TextureSetter textures2(2, gRenderer);
             sprite_info PlayerRun2=textures2.getPlayerRunInfo();
             Texture runT2=textures2.getPLayerRunTexture();
@@ -305,6 +308,8 @@ int main( int argc, char* args[] )
             animMapperAWAY.emplace(std::make_pair(PlayerSweep2.spriteid, Animation(sweepT2, PlayerSweep2)));
             log->debug("Crear Animacion Kick");
             animMapperAWAY.emplace(std::make_pair(PlayerKick2.spriteid, Animation(kickT2, PlayerKick2)));
+            // Textura de minimapa
+            Texture miniMapIndicatorAway(gRenderer, "res/" + yamlReader.getTeamColor(2) + "/mini_map_indicator.png");
 
 			log->info("Crear Animaciones de la pelota");
 			TextureSetter texturesBall(BALL, gRenderer);
@@ -316,8 +321,9 @@ int main( int argc, char* args[] )
 			animMapperBall.emplace(std::make_pair(ballStill.spriteid, Animation(ballStillT, ballStill)));
 			animMapperBall.emplace(std::make_pair(ballMoving.spriteid, Animation(ballMovingT, ballMoving)));
 
-            Texture miniMapIndicatorHome(gRenderer, "res/Rojo/mini_map_indicator.png");
-            Texture miniMapIndicatorAway(gRenderer, "res/Verde/mini_map_indicator.png");
+            Texture miniMapIndicatorBall(gRenderer, "res/Ball/mini_map_indicator.png");
+
+
 
 			/*
 			** FIN CREACION TEXTURAS Y ANIMACIONES
@@ -326,36 +332,9 @@ int main( int argc, char* args[] )
 
 			// Agrego jugadores al mundo
 			log->info("Creo el mundo con su pelota");
-			World world(background.getWidth(), background.getHeight(), &background, playerIndicators, animMapperBall, animMapperHOME, animMapperAWAY, &miniMapIndicatorHome, &miniMapIndicatorAway,
+			World world(background.getWidth(), background.getHeight(), &background, playerIndicators, animMapperBall, &miniMapIndicatorBall, animMapperHOME, animMapperAWAY, &miniMapIndicatorHome, &miniMapIndicatorAway,
 						crearDefaultPlayer(PlayerStill, PlayerRun, PlayerSweep, PlayerKick));
-			//world.setPlayerSelectedTexture(&selectedPlayerTecture);
-		
-/*
-            // Creo jugadores:
-            player_data_t defaultPlayer=crearDefaultPlayer(PlayerStill,PlayerRun,PlayerSweep,PlayerKick);
-            log->info("Crear Jugadores");
-            //TeamFactory* tfactory = new TeamFactory(defaultPlayer);
-            int defensores=YAMLReader::get_instance().getDefensores(equipo);
-            int mediocampistas=YAMLReader::get_instance().getMediocampistas(equipo);
-            int delanteros=YAMLReader::get_instance().getDelanteros(equipo);
 
-			world.createTeam(Team::HOME, defensores, mediocampistas, delanteros, defaultPlayer, animMapper);
-
-
-			//agrego equipo 2
-			player_data_t defaultPlayer2 = crearDefaultPlayer(PlayerStill2, PlayerRun2, PlayerSweep2, PlayerKick2);
-			//TeamFactory* tfactory2 = new TeamFactory(defaultPlayer2);
-			log->info("Crear Jugadores del team 2");
-			defensores = YAMLReader::get_instance().getDefensores(2);
-			mediocampistas = YAMLReader::get_instance().getMediocampistas(2);
-			delanteros = YAMLReader::get_instance().getDelanteros(2);
-
-			world.createTeam(Team::AWAY, defensores, mediocampistas, delanteros, defaultPlayer2, animMapper2);
-
-			// Inyecto un jugador controlado por un humano
-			log->info("Inyecto un jugador controlado por un humano");
-			PlayerController* controlled = world.injectHumanController(Team::HOME);
-*/
             
 			log->info("Agrego la camara");
             Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);

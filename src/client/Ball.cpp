@@ -1,9 +1,10 @@
 #include "Ball.h"
 
-Ball::Ball(std::map<const std::string, Animation>& animMapperBall):
+Ball::Ball(std::map<const std::string, Animation>& animMapperBall, Texture * miniMapIndicator):
 	Entity(),
 	angle(0.0),
-	state(QUIESCENT)
+	state(QUIESCENT),
+	miniMapIndicator(miniMapIndicator)
 {
 	for (auto elem : animMapperBall) {
 		animations.push_back(elem.second);
@@ -12,6 +13,7 @@ Ball::Ball(std::map<const std::string, Animation>& animMapperBall):
 
 void Ball::render(int screen_x, int screen_y) {
 	animations[state].render(screen_x, screen_y, angle);
+	miniMapIndicator->render(this->x / 10, this->y /10);
 }
 
 void Ball::update(const ball_view_data_t & ball_view_data)

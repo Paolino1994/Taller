@@ -3,13 +3,13 @@
 
 #include "World.h"
 
-World::World(int width, int height, Texture* background, std::vector<Texture*>& _playerIndicators, std::map<const std::string, Animation>& ballAnimMapper,
+World::World(int width, int height, Texture* background, std::vector<Texture*>& _playerIndicators, std::map<const std::string, Animation>& ballAnimMapper, Texture* ballMiniMap,
 	std::map<const std::string, Animation>& teamAnimMapperHOME, std::map<const std::string, Animation>& teamAnimMapperAWAY, Texture* miniMapIndicatorHOME, Texture* miniMapIndicatorAWAY,
 	player_data_t player_data):
 	width(width),
 	height(height),
     background(background),
-	ball(Ball(ballAnimMapper)),
+	ball(Ball(ballAnimMapper, ballMiniMap)),
     entities(std::vector<Entity*>()),
 	players(std::map<Player_ID, Player>()),
 	player_data(player_data),
@@ -22,7 +22,6 @@ World::World(int width, int height, Texture* background, std::vector<Texture*>& 
 	playerIndicators = _playerIndicators;
 	miniMapIndicators['H'] = miniMapIndicatorHOME;
 	miniMapIndicators['A'] = miniMapIndicatorAWAY;
-
 }
 
 World::~World()
