@@ -202,8 +202,11 @@ int main( int argc, char* args[] )
 			commandSenderPtr = std::unique_ptr<CommandSender>(new CommandSender(server_ip, std::stoul(server_port, nullptr, 0)));
 		}
 		catch (SocketException& ex) {
+			//std::cout << "No nos pudimos conectar al servidor. Ver el log" << std::endl;
 			Log::get_instance()->error("No nos pudimos conectar al servidor, causa: " + std::string(ex.what()));
-			std::cout << "No nos pudimos conectar al servidor. Ver el log" << std::endl;
+			GameConnectionError gameConnectionError(gRenderer);
+			gameConnectionError.connectionErrorScreen();
+			close();
 			return 1;
 		}
 
@@ -223,8 +226,11 @@ int main( int argc, char* args[] )
 				}
 			}
 			catch (SocketException& ex){
+				//std::cout << "Error de conexión con el servidor. Salimos. Ver el log" << std::endl;
 				Log::get_instance()->error("Error de conexión con el servidor, causa: " + std::string(ex.what()));
-				std::cout << "Error de conexión con el servidor. Salimos. Ver el log" << std::endl;
+				GameConnectionError gameConnectionError(gRenderer);
+				gameConnectionError.connectionErrorScreen();
+				close();
 				return 1;
 			}
         }
@@ -359,11 +365,12 @@ int main( int argc, char* args[] )
 				renderizar(camera, world, commandSender, gameMenu);
 			} catch (SocketException& ex) {
                 // pantalla que muestra la desconexion
+				//std::cout << "Error de conexión con el servidor. Salimos. Ver el log" << std::endl;
+				Log::get_instance()->error("Error de conexión con el servidor, causa: " + std::string(ex.what()));
 				GameConnectionError gameConnectionError(gRenderer);
 				gameConnectionError.connectionErrorScreen();
-				Log::get_instance()->error("Error de conexión con el servidor, causa: " + std::string(ex.what()));
-				std::cout << "Error de conexión con el servidor. Salimos. Ver el log" << std::endl;
                 close();
+				return 1;
 			}
         }
     }
