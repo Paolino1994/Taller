@@ -1,6 +1,8 @@
 #include "CommandSender.h"
 
+#include "common/Log.h"
 #include "common/Request.h"
+#include "common/SocketException.h"
 
 
 CommandSender::CommandSender(std::string ip, unsigned short port):
@@ -13,7 +15,15 @@ CommandSender::CommandSender(std::string ip, unsigned short port):
 
 CommandSender::~CommandSender()
 {
-	protocol.shutdown();
+	// Si falla el shutdown no nos importa mucho ya que igual estamos destruyendo este CommandSender...
+	// Medio chancho pero bueno..
+	try {
+		protocol.shutdown();
+	}
+	catch (SocketException& ex) {
+		Log::get_instance()->error("Error al enviar el shutdown al socket: " + std::string(ex.what()));
+	}
+	
 }
 
 int CommandSender::set_rcv_timeout(time_t seconds){
