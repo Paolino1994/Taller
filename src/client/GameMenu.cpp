@@ -93,7 +93,7 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
                     default:
                     break;
                 }
-            } else if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_BACKSPACE && userText.size()) {
+            } else if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_BACKSPACE && userText.size() && passText.size()) {
                 switch (usuarioOPass) {
                     case EscrbiendoState::USUARIO:
                             userText.pop_back();
