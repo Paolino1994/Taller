@@ -40,14 +40,14 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
     passTexto.getTextureDimensions(&passW,&passH); 
     
     Texture indicatorRed(gRenderer, "res/write_here.png");
-    Animation writeHereAnimation(indicatorRed, 2,2);
+    Animation writeHereAnimation(indicatorRed, 2,4);
     
-    std::string userText = " ";
+    std::string userText = "";
     Texto userTextTexture(gRenderer, "res/Tehkan World Cup.ttf",22,userText , {255,255,0,0});
-    std::string passText = " ";
+    std::string passText = "";
     Texto passTextTexture(gRenderer, "res/Tehkan World Cup.ttf",22,passText , {255,255,0,0});
 
-    std::string errorText = " ";
+    std::string errorText = "";
     Texto errorTexto(gRenderer, "res/Tehkan World Cup.ttf",22,errorText , {255,0,0,0});
 
     log->info("Texturas del login creadas");
@@ -64,7 +64,7 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
     Clock::time_point currentTime, newTime;
     currentTime = Clock::now();
     std::chrono::milliseconds milli;
-    const double fixed_dt = 0.5; 
+    const double fixed_dt = 0.25; 
     double accumulator = 0;
     double frametime;
 
@@ -75,14 +75,14 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
             if ( ev.type == SDL_TEXTINPUT ) {
                 switch (usuarioOPass) {
                     case EscrbiendoState::USUARIO:
-                        if(userText.compare(" ") == 0){
+                        if(userText.compare("") == 0){
                             userText = ev.text.text;
                         } else {
                             userText += ev.text.text;
                         }
                     break;
                     case EscrbiendoState::PASS:
-                        if(passText.compare(" ") == 0){
+                        if(passText.compare("") == 0){
                             passText = ev.text.text;
                         } else {
                             passText += ev.text.text;
@@ -93,13 +93,17 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
                     default:
                     break;
                 }
-            } else if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_BACKSPACE && userText.size() && passText.size()) {
+            } else if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_BACKSPACE) {
                 switch (usuarioOPass) {
                     case EscrbiendoState::USUARIO:
+                        if(userText.size()) {
                             userText.pop_back();
+                        }
                         break;
                         case EscrbiendoState::PASS:
+                        if(passText.size()){
                             passText.pop_back();
+                        }
                         break;
                         case EscrbiendoState::ERROR:
                         break;
@@ -116,9 +120,9 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
                         break;
                         case EscrbiendoState::ERROR:
                             usuarioOPass = EscrbiendoState::USUARIO;
-                            userText = " ";
-                            passText = " ";
-                            errorText = " ";
+                            userText = "";
+                            passText = "";
+                            errorText = "";
                         default:
                         break;
                 }
