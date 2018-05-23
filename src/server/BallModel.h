@@ -61,6 +61,10 @@ public:
 
 	double getZ();
 
+    void setZ(double i);
+
+    void setVelZ(double i);
+
 private:
     double angle=0;
 
@@ -89,7 +93,5 @@ private:
     int passType=0;
 
 
-    void setVelZ(double i);
-
-
+    double getSpeed(double distance);
 };

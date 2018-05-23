@@ -132,7 +132,8 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
 	* --> SI ESTOY A x_diff, y_diff cerca, entonces seteo a ese playerModel.setHasControlOfTheBall(true)
 	* --> ojo! si hay varios cerca!
 	*/
-
+    velX*=0.995;
+    velY*=0.995;
 	x += velX * dt;
 	y += velY * dt;
 	if ((y + this->getHeight()) > y_limit) { //limite de abajo
@@ -170,7 +171,7 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
 	if(heigthAngle>=0){
 		z=z+velZ*dt;
 	}else{
-		if(z>=0){
+		if(z>0){
             z=z-velZ*dt;
 		}else{
             z=0;
@@ -198,9 +199,13 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
     }else{
         velZ=0;
     }*/
+    if(abs(velX)<50 && abs(velY)<50){
+        velX=0;
+        velY=0;
+    }
     //std::cout<<"Xvel: "<<std::to_string(velX)<<" Yvel: "<<std::to_string(velY)<<" Zvel: "<<std::to_string(velZ)<<std::endl;
 	setState();
-	std::cout<<"Z: "<<z<<std::endl;
+	//std::cout<<"Z: "<<z<<std::endl;
 }
 
 int BallModel::getAngle() {
@@ -228,8 +233,9 @@ void BallModel::setState() {
 void BallModel::kick(double distance, int type) {
 	double multiplierX=cos(angleToUse*PI/180.0);
 	double multiplierY=sin(angleToUse*PI/180.0);
-	double xVel = 750 * multiplierX;
-	double yVel = 750 * multiplierY;
+    double speed=getSpeed(distance);
+	double xVel = speed * multiplierX;
+	double yVel = speed * multiplierY;
     //double yVel = 750 * multiplierZ;
 	setVelX(xVel);
 	setVelY(yVel);
@@ -256,6 +262,17 @@ void BallModel::setVelZ(double i) {
 
 double BallModel::getZ() {
     return z;
+}
+
+void BallModel::setZ(double i) {
+    z=i;
+}
+
+double BallModel::getSpeed(double distance) {
+    if(distance*2>1000){
+        return 1000;
+    }
+    return distance*2;
 }
 
 

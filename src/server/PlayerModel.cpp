@@ -423,5 +423,5 @@ double PlayerModel::getAngleToGoal() {
 }
 
 double PlayerModel::getDistanceToGoal() {
-    return 200;
+    return 500;
 }

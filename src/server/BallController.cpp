@@ -43,6 +43,8 @@ void BallController::calculateCollision(std::vector<PlayerController *> &playerC
 					controller->getModel()->setHasControlOfTheBall(true);
 					ballModel.setVelX(controller->getModel()->getVelX());
 					ballModel.setVelY(controller->getModel()->getVelY());
+                    ballModel.setZ(0);
+                    ballModel.setVelZ(0);
 					//controller->getModel()->setAngle(-90+ballModel.getAngle());
 					changeController(i, playerControllers);
 				}
