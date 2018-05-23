@@ -24,4 +24,5 @@ private:
 	double angle;
 	BallState state;
 	Texture* miniMapIndicator;
+    double z;
 };

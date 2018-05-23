@@ -52,10 +52,18 @@ void Animation::render(int x, int y, double angle)
 	mTexture.render(x, y, angle, &rotationCentre, SDL_FLIP_NONE);
 }
 
+void Animation::render(int x, int y, double angle, double zoom)
+{
+    mTexture.setSrcRect(presentFrame * frameWidth, 0, frameWidth, mTexture.getHeight());
+    mTexture.setScaling(mTexture.getHeight()/2.5+5*zoom,mTexture.getHeight()/2.5+5*zoom);
+    mTexture.render(x, y, angle, &rotationCentre, SDL_FLIP_NONE);
+}
+
 void Animation::render(int x, int y, double angle, SDL_Point* centre, SDL_RendererFlip flip){
     mTexture.setSrcRect(presentFrame * frameWidth, 0, frameWidth, mTexture.getHeight());
     mTexture.render(x,y, angle, centre, flip);
 }
+
 
 int Animation::getWidth()
 {

@@ -126,6 +126,7 @@ typedef struct player_view_data {
 typedef struct ball_view_data {
 	pos_t x;
 	pos_t y;
+	pos_t z;
 	angle_t angle;
 	BallState state;
 	frame_t presentFrame;

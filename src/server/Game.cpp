@@ -110,7 +110,7 @@ void Game::_run()
 
 Game::Game() :
 	playerViewData(std::vector<player_view_data_t>()),
-	ballViewData({ 0,0,0,QUIESCENT }),
+	ballViewData({ 0,0,0,0,QUIESCENT }),
 	modelData({ playerViewData, ballViewData }),
 	world(World(YAML::WORLD_WIDTH, YAML::WORLD_HEIGHT, getAnimMapperBall())),
 	maxPlayers(YAML::MAX_PLAYERS),

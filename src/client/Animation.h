@@ -52,5 +52,7 @@ public:
 
 	// el alto (posiblemente escalado) de lo que estariamos dibujando
     int getDestinationHeight() {return mTexture.getScaledHeight();};
+
+    void render(int x, int y, double angle, double zoom);
 };
 

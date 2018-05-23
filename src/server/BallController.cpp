@@ -73,6 +73,7 @@ void BallController::changeController(int newController, std::vector<PlayerContr
 void BallController::serialize(ball_view_data_t& ball_view_data) {
 	ball_view_data.x = this->ballModel.getX();
 	ball_view_data.y = this->ballModel.getY();
+	ball_view_data.z = this->ballModel.getZ();
 	ball_view_data.angle = this->ballModel.getAngle();
 	ball_view_data.state = this->ballModel.getState();
 	this->getView().serialize(ball_view_data);
