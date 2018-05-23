@@ -31,12 +31,13 @@ void BallController::update(double dt, int x_limit, int y_limit, std::vector<Pla
 void BallController::calculateCollision(std::vector<PlayerController *> &playerControllers) {
 	int x = ballModel.getX();
 	int y = ballModel.getY();
+	double z =ballModel.getZ();
 	int i = 0;
 	for (PlayerController* controller : playerControllers) {
 		if(controller->getModel()->isColisionable){
 			int xPlayer = controller->getModel()->getCenterX();
 			int yPlayer = controller->getModel()->getCenterY();
-			if (abs(x - xPlayer)<20 && abs(y - yPlayer)<20) {
+			if (abs(x - xPlayer)<20 && abs(y - yPlayer)<20 && z<2) {
 				if (!controller->getModel()->getHasControlOfTheBall()) {
 					Log::get_instance()->debug("Colision, un nuevo jugador toma la pelota");
 					controller->getModel()->setHasControlOfTheBall(true);

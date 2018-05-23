@@ -91,6 +91,7 @@ void PlayerControllerHuman::handleEvent( Command& command ){
 			}
             case CommandType::LONG_PASS:{
                 if(playerModel->getHasControlOfTheBall()){
+					std::cout<<"LOngpass-------------------- "<<std::endl;
                     PlayerController* passController=world.getPlayerToPassLong(this);
                     if(passController!=this){
                         playerModel->longPass(passController->getModel(), world.getBall().getModel());

@@ -162,7 +162,7 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
 	if(z>0){
 		double currentDistance = getCurrentDistanceToOriginal();
 		if(currentDistance>=startDistance/2){
-			heigthAngle--;
+			heigthAngle=-1;
 		}
 	}
 
@@ -200,7 +200,7 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
     }*/
     //std::cout<<"Xvel: "<<std::to_string(velX)<<" Yvel: "<<std::to_string(velY)<<" Zvel: "<<std::to_string(velZ)<<std::endl;
 	setState();
-	//std::cout<<"Ball VelX: "<<getVelX()<<" Ball VelY: "<<getVelY()<<std::endl;
+	std::cout<<"Z: "<<z<<std::endl;
 }
 
 int BallModel::getAngle() {
@@ -252,6 +252,10 @@ double BallModel::getCurrentDistanceToOriginal() {
 void BallModel::setVelZ(double i) {
     velZ=i;
 
+}
+
+double BallModel::getZ() {
+    return z;
 }
 
 

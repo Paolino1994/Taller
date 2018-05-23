@@ -58,6 +58,9 @@ public:
     static const int HIGH=2;
 
     static const int LOW=1;
+
+	double getZ();
+
 private:
     double angle=0;
 
