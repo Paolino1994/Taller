@@ -1,4 +1,5 @@
 #pragma once
+#include <math.h>
 
 // Abstract class
 // Object with a real world x and y position
@@ -17,8 +18,8 @@ public:
     // update position
     // void update(double dt);
     
-    int getX() {return (int)x;}; //redondear?
-    int getY() {return (int)y;}; //redondear?
+    int getX() {return (int)floor(x);}; //redondear?
+    int getY() {return (int)floor(y);}; //redondear?
 
 	int getCenterX() { return getX() + (getWidth() / 2); };
 	int getCenterY() { return getY() + (getHeight() / 2); };

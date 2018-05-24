@@ -26,6 +26,11 @@ PlayerView * PlayerController::getView()
 	return this->playerView;
 }
 
+void PlayerController::update(double dt, int x_limit, int y_limit, int ball_x, int ball_y) {
+	this->update(dt, x_limit, y_limit);
+}
+
+
 void PlayerController::update(double dt, int x_limit, int y_limit)
 {
 	this->playerModel->update(dt, x_limit, y_limit);

@@ -67,7 +67,6 @@ public:
     int getKickOff_x();
     int getKickOff_y();
 
-
 	const int initial_x;
 	const int initial_y;
 
@@ -94,6 +93,9 @@ public:
     void longPass(PlayerModel *pModel, BallModel &model);
 
 	void kick(BallModel &model);
+
+    int getDistance_x();
+    int getDistance_y();
 
 private:
 	Team team;
@@ -123,11 +125,15 @@ private:
 
 	bool hasControlOfTheBall=false;
 
+    int distance_x = 100;
+	int distance_y = 100;
+
     Log* log;
 
 	static Player_ID nextPlayerId[static_cast<std::underlying_type<Team>::type>(Team::__LENGTH__)];
 
 	static Player_ID getNextPlayerId(Team team);
+
 
 
 

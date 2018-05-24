@@ -29,6 +29,8 @@ public:
 
 	virtual void update(double dt, int x_limit, int y_limit);
 
+	virtual void update(double dt, int x_limit, int y_limit, int ball_x, int ball_y);
+
 	virtual void swap(PlayerController* other);
 
 	virtual bool isControllable() = 0; //isSwappable()

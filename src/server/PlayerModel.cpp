@@ -202,6 +202,14 @@ bool PlayerModel::getIsControlledByHuman() {
     return isControlledByHuman;
 }
 
+int PlayerModel::getDistance_x() {
+    return 100;
+}
+
+int PlayerModel::getDistance_y() {
+    return 100;
+}
+
 void PlayerModel::setIsControlledByHuman(bool controlled) {
     isControlledByHuman = controlled;
     //Esto es re villero, pero cuando tengamos los 2 equipos recien se va a modificar

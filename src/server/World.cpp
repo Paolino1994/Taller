@@ -264,7 +264,7 @@ void World::update(double dt)
 {
 	for (auto controllers: playerControllers) {
 		for (auto player: controllers) {
-			player->update(dt, this->getWidth(), this->getHeight());
+			player->update(dt, this->getWidth(), this->getHeight(), ball.getModel().getX(),ball.getModel().getY());
 			if (player->getModel()->getIsControlledByHuman()) {
 				std::stringstream msg;
 				msg << "Jugador Controlado: esta en " << player->getModel()->getX() << ", " << player->getModel()->getY();
