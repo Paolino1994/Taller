@@ -21,7 +21,7 @@ class PlayerModel: public Entity {
 
 public:
 
-    PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOffX, int kickOffY);
+    PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOffX, int kickOffY, int distance_x, int distance_y);
     PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y);
 
 
@@ -98,6 +98,8 @@ public:
     int getDistance_y();
 
 private:
+    int distance_x = 100;
+	int distance_y = 100;
 	Team team;
 	Player_ID playerId;
 	const std::vector<int> widths;
@@ -124,9 +126,6 @@ private:
     bool isControlledByHuman = false;
 
 	bool hasControlOfTheBall=false;
-
-    int distance_x = 100;
-	int distance_y = 100;
 
     Log* log;
 

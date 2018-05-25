@@ -18,12 +18,14 @@ Player_ID PlayerModel::getNextPlayerId(Team team) {
 	return pID;
 }
 
-PlayerModel::PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y) :
+PlayerModel::PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y, int distance_x, int distance_y) :
 	Entity(kickOff_x, kickOff_y),
 	initial_x(initial_x),
 	initial_y(initial_y),
 	kickOff_x(kickOff_x),
 	kickOff_y(kickOff_y),
+	distance_x(distance_x),
+	distance_y(distance_y),
 	team(team),
 	playerId(PlayerModel::getNextPlayerId(team)),
 	widths(player_data.widths, std::end(player_data.widths)),
@@ -54,6 +56,8 @@ PlayerModel::PlayerModel(Team team, const player_data_t player_data, double init
 	initial_y(initial_y),
 	kickOff_x(initial_x),
 	kickOff_y(initial_y),
+	distance_x(100),
+	distance_y(100),
 	team(team),
 	playerId(PlayerModel::getNextPlayerId(team)),
 	widths(player_data.widths, std::end(player_data.widths)),
@@ -203,11 +207,11 @@ bool PlayerModel::getIsControlledByHuman() {
 }
 
 int PlayerModel::getDistance_x() {
-    return 100;
+    return distance_x;
 }
 
 int PlayerModel::getDistance_y() {
-    return 100;
+    return distance_y;
 }
 
 void PlayerModel::setIsControlledByHuman(bool controlled) {
