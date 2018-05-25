@@ -323,7 +323,7 @@ int main( int argc, char* args[] )
 
             Texture miniMapIndicatorBall(gRenderer, "res/Ball/mini_map_indicator.png");
 
-
+            Texture miniMapIndicatorCamera(gRenderer, "res/camera_rect.png");
 
 			/*
 			** FIN CREACION TEXTURAS Y ANIMACIONES
@@ -337,7 +337,7 @@ int main( int argc, char* args[] )
 
             
 			log->info("Agrego la camara");
-            Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
+            Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET, &miniMapIndicatorCamera);
             camera.follow(world.getBall());
 
             log->info("Renderizo");

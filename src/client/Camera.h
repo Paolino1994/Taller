@@ -3,6 +3,7 @@
 #include "Entity.h"
 //#include "Player.h"
 #include "World.h"
+#include "Texture.h"
 
 class Camera
 {
@@ -16,9 +17,10 @@ class Camera
     int x_update_offset; // el offset con respecto al estado anterior
     int y_update_offset; // idem
     Entity& followed; //std::vector<GameObject*> o Entities
+    Texture *miniMapRect;
     
 public:
-    Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset);
+    Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniMapRect);
     ~Camera();
     
     void follow(Entity& gameObj); //Entity

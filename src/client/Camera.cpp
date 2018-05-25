@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-Camera::Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset):
+Camera::Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniMap):
 	world(world),
     width(width),
     height(height),
@@ -13,8 +13,10 @@ Camera::Camera(World& world, int width, int height, int widthScrollOffset, int h
     y(0),
     x_update_offset(0),
     y_update_offset(0),
-    followed(world.getBall())
-{}
+    followed(world.getBall()),
+	miniMapRect(miniMap)
+{
+}
 
 Camera::~Camera()
 {}
@@ -82,6 +84,8 @@ void Camera::render(World& world){
 	background->setScaling(this->width, this->height);
 	background->setSrcRect(this->x, this->y, this->width, this->height);
 	background->render(0, 0);
+
+	miniMapRect->render(this->x / 10, this->y / 10);
 
 
 	for (std::pair<const Player_ID, Player>& pair : players)
