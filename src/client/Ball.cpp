@@ -16,7 +16,7 @@ void Ball::render(int screen_x, int screen_y) {
 }
 
 void Ball::renderMiniMap(int screen_x, int screen_y) {
-	miniMapIndicator->render(screen_x + 10 + this->x / 10, screen_y + 10 + this->y /10);
+	miniMapIndicator->render(screen_x + 10 + this->x / 10, screen_y + 15 + this->y /11);
 }
 
 void Ball::update(const ball_view_data_t & ball_view_data)

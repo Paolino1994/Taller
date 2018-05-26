@@ -35,7 +35,7 @@ void Player::render(int screen_x, int screen_y)
 
 void Player::renderMiniMap(int screen_x, int screen_y)
 {
-	miniMapIndicator->render(screen_x + 10 + this->x / 10,screen_y + 10  + this->y / 10);
+	miniMapIndicator->render(screen_x + this->x / 11,screen_y + this->y / 11);
 	// aca se renderiza el minimapa, todavia no pongo bien los calculos para que quede donde tiene que quedar porque todavia no se donde va a quedar
 	// y no quiero hacer cuentas de pixels al pedo, cuando este definido el tamanio del minimapa y la posicion lo acomodo
 }

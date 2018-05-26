@@ -86,9 +86,9 @@ void Camera::render(World& world){
 	background->setSrcRect(this->x, this->y, this->width, this->height);
 	background->render(0, 0);
 
-	miniFieldRect->render(this->x / 10, this->y / 10);
+	miniFieldRect->render(300, 0 );
 
-	miniMapRect->render(miniFieldRect->getPosX() -10 + followed.getX() / 10, miniFieldRect->getPosY() -10 + followed.getY() / 10);
+	miniMapRect->render(miniFieldRect->getPosX() -15 + followed.getX() / 10, miniFieldRect->getPosY() -15 + followed.getY() / 10);
 
 
 	for (std::pair<const Player_ID, Player>& pair : players)
@@ -102,7 +102,7 @@ void Camera::render(World& world){
 			// playerSelectedTexture->render(screen_x + 5, screen_y -10);
 		}
 		player.render(screen_x, screen_y);
-		player.renderMiniMap(miniFieldRect->getPosX(), miniFieldRect->getPosY());
+		player.renderMiniMap(miniFieldRect->getPosX() +10, miniFieldRect->getPosY() +10);
 	}
 
 	int screen_x = world.getBall().getX() - this->x;

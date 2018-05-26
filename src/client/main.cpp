@@ -324,7 +324,7 @@ int main( int argc, char* args[] )
             Texture miniMapIndicatorBall(gRenderer, "res/Ball/mini_map_indicator.png");
 
             Texture miniMapIndicatorCamera(gRenderer, "res/camera_rect.png");
-            miniMapIndicatorCamera.setScaling(40, 40);
+            miniMapIndicatorCamera.setScaling(58, 58);
             Texture miniMapFieldCamera(gRenderer, "res/soccer_field_1.6.png");
             miniMapFieldCamera.setScaling(200, 120);
 
