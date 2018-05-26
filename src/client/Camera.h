@@ -18,9 +18,10 @@ class Camera
     int y_update_offset; // idem
     Entity& followed; //std::vector<GameObject*> o Entities
     Texture *miniMapRect;
+    Texture *miniFieldRect;
     
 public:
-    Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniMapRect);
+    Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniMapRect, Texture *miniFieldRect);
     ~Camera();
     
     void follow(Entity& gameObj); //Entity

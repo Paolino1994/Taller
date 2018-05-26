@@ -12,6 +12,7 @@ public:
 	Player(std::map<const std::string, Animation> animationMapper, player_data_t player_data, std::vector<Texture*> playerIndicators, Texture *miniMapIndicator);
 
 	void render(int screen_x, int screen_y);
+	void renderMiniMap(int screen_x, int screen_y);
 
 	void update(const player_view_data_t& player_view_data);
 

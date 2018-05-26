@@ -90,3 +90,13 @@ int Texture::getHeight()
 {
     return mHeight;
 }
+
+int Texture::getPosX()
+{
+    return mDstRect.x;
+}
+
+int Texture::getPosY()
+{
+    return mDstRect.y;
+}

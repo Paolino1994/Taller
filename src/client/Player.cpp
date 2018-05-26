@@ -28,7 +28,14 @@ void Player::render(int screen_x, int screen_y)
 		indicators[this->userId]->render(screen_x, screen_y);
 	}
     animations[state].render(screen_x, screen_y, angle);
-	miniMapIndicator->render(this->x / 10,this->y / 10); 
+//	miniMapIndicator->render( this->x / 10,this->y / 10);
+	// aca se renderiza el minimapa, todavia no pongo bien los calculos para que quede donde tiene que quedar porque todavia no se donde va a quedar
+	// y no quiero hacer cuentas de pixels al pedo, cuando este definido el tamanio del minimapa y la posicion lo acomodo
+}
+
+void Player::renderMiniMap(int screen_x, int screen_y)
+{
+	miniMapIndicator->render(screen_x + this->x / 10,screen_y + this->y / 10);
 	// aca se renderiza el minimapa, todavia no pongo bien los calculos para que quede donde tiene que quedar porque todavia no se donde va a quedar
 	// y no quiero hacer cuentas de pixels al pedo, cuando este definido el tamanio del minimapa y la posicion lo acomodo
 }

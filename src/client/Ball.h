@@ -11,6 +11,8 @@ public:
 
 	void render(int screen_x,int screen_y);
 
+	void renderMiniMap(int screen_x,int screen_y);
+
     void update(const ball_view_data_t& ball_view_data);
 
 	virtual int getWidth();

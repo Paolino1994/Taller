@@ -58,5 +58,8 @@ public:
     int getScaledWidth() {return mDstRect.w;};
     int getScaledHeight() {return mDstRect.h;};
 
+    int getPosX();
+    int getPosY();
+
 };
 

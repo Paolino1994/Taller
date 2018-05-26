@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-Camera::Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniMap):
+Camera::Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniMap, Texture *miniField):
 	world(world),
     width(width),
     height(height),
@@ -14,7 +14,8 @@ Camera::Camera(World& world, int width, int height, int widthScrollOffset, int h
     x_update_offset(0),
     y_update_offset(0),
     followed(world.getBall()),
-	miniMapRect(miniMap)
+	miniMapRect(miniMap),
+	miniFieldRect(miniField)
 {
 }
 
@@ -85,7 +86,9 @@ void Camera::render(World& world){
 	background->setSrcRect(this->x, this->y, this->width, this->height);
 	background->render(0, 0);
 
-	miniMapRect->render(this->x / 10, this->y / 10);
+	miniFieldRect->render(this->x / 10, this->y / 10);
+
+	miniMapRect->render(miniFieldRect->getPosX() -10 + followed.getX() / 10, miniFieldRect->getPosY() -10 + followed.getY() / 10);
 
 
 	for (std::pair<const Player_ID, Player>& pair : players)
@@ -99,11 +102,13 @@ void Camera::render(World& world){
 			// playerSelectedTexture->render(screen_x + 5, screen_y -10);
 		}
 		player.render(screen_x, screen_y);
+		player.renderMiniMap(miniMapRect->getPosX(), miniMapRect->getPosY());
 	}
 
 	int screen_x = world.getBall().getX() - this->x;
 	int screen_y = world.getBall().getY() - this->y;
 	Log::get_instance()->info("X: " + std::to_string(screen_x) + " Y: " + std::to_string(screen_y));
 	world.getBall().render(screen_x, screen_y);
+	world.getBall().renderMiniMap(miniFieldRect->getPosX(), miniFieldRect->getPosY());
 }
 
