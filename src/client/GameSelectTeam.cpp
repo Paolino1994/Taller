@@ -71,7 +71,9 @@ int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
             } else if ( ev.type == SDL_QUIT ) {
                 running = false;
                 returnValue = -1;
-            }
+            } else if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_p){
+				SoundManager::get_instance()->musicOn_off();
+			}
         }
 
         SDL_RenderClear( gRenderer );

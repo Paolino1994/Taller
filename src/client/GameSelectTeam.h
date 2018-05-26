@@ -16,6 +16,8 @@
 #include "Surface.h"
 #include "common/Log.h"
 #include "CommandSender.h"
+#include "SoundManager.h"
+
 
 class GameSelectTeam {
 

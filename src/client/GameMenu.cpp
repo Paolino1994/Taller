@@ -264,6 +264,9 @@ bool GameMenu::pausaMenu(SDL_Event ev){
                     confirmaSalir = false;
                     seleccionoLetraValida = true;
                 }
+                if(ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_p){
+				    SoundManager::get_instance()->musicOn_off();
+			    }
             }
         background.render(0, 0);
         quiereSalirTexto.display((SCREEN_WIDTH - w) / 2, (SCREEN_HEIGHT - h) / 2); // muestro la pregunta centrada

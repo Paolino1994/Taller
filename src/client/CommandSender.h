@@ -3,6 +3,7 @@
 #include <string>
 
 #include "SDL.h"
+#include "SoundManager.h"
 #include "common/Protocol.h"
 #include "common/GameConstants.h"
 

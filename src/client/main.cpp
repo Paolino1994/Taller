@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -27,6 +28,8 @@
 #include "GameSelectTeam.h"
 #include "ListenStart.h"
 #include "GameConnectionError.h"
+
+#include "SoundManager.h"
 
 
 //Screen dimension constants
@@ -60,7 +63,7 @@ bool init_SDL()
 	std::stringstream msg;
 
     //Initialize SDL
-    if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
+    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO ) < 0 )
     {
         // printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
 		msg << "SDL could not initialize! SDL Error: " << SDL_GetError();
@@ -124,6 +127,12 @@ bool init_SDL()
 		msg.str(std::string());
         success = false;
     }
+    //Initialize SDL_mixer
+    if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+    {
+        printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+        success = false;
+    }
 
     return success;
 }
@@ -141,6 +150,8 @@ void close()
     IMG_Quit();
     SDL_Quit();
     TTF_Quit();
+    Mix_Quit();
+
 }
 
 typedef std::chrono::steady_clock Clock;
@@ -198,6 +209,8 @@ int main( int argc, char* args[] )
     } else {
 	    std::unique_ptr<CommandSender> commandSenderPtr(nullptr);
 
+        SoundManager::get_instance()->startGameMusic();
+
 		try {
 			commandSenderPtr = std::unique_ptr<CommandSender>(new CommandSender(server_ip, std::stoul(server_port, nullptr, 0)));
 		}
@@ -239,7 +252,6 @@ int main( int argc, char* args[] )
 			/****************************************
 			** INICIO CREACION TEXTURAS Y ANIMACIONES
 			*/
-
             std::map<const std::string, Animation> animMapperHOME;
             std::map<const std::string, Animation> animMapperAWAY;
             std::map<const std::string, Animation> animMapperBall;
@@ -444,6 +456,11 @@ void renderizar(Camera& camera, World& world, CommandSender& commandSender, Game
                 if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
 					log->info("Se selecciono ESC, juego pausado");
                     salirJuego = true;
+					break;
+                }
+
+                if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_p) {
+                    SoundManager::get_instance()->musicOn_off();
 					break;
                 }
 

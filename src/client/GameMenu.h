@@ -6,6 +6,7 @@
 #include <SDL_ttf.h>
 #include <chrono>
 
+#include "SoundManager.h"
 #include "Animation.h"
 #include "Texto.h"
 #include "Texture.h"

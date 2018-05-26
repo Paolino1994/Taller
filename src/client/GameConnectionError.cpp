@@ -44,6 +44,9 @@ void GameConnectionError::connectionErrorScreen(){
 					running = false;
 					break;
 				}
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_p) {
+					SoundManager::get_instance()->musicOn_off();
+				}
 				if (event.type == SDL_QUIT)
 				{
 					running = false;
