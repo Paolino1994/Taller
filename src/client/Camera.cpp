@@ -102,7 +102,7 @@ void Camera::render(World& world){
 			// playerSelectedTexture->render(screen_x + 5, screen_y -10);
 		}
 		player.render(screen_x, screen_y);
-		player.renderMiniMap(miniMapRect->getPosX(), miniMapRect->getPosY());
+		player.renderMiniMap(miniFieldRect->getPosX(), miniFieldRect->getPosY());
 	}
 
 	int screen_x = world.getBall().getX() - this->x;

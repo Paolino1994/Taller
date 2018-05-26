@@ -287,7 +287,7 @@ int main( int argc, char* args[] )
             animMapperHOME.emplace(std::make_pair(PlayerKick.spriteid, Animation(kickT, PlayerKick)));
 
             // Textura de minimapa
-            Texture miniMapIndicatorHome(gRenderer, "res/" + yamlReader.getTeamColor(1) + "/mini_map_indicator.png");
+            Texture miniMapIndicatorHome(gRenderer, "res/" + yamlReader.getTeamColor(1) + "/mini_map_indicatorBlue.png");
 
             TextureSetter textures2(2, gRenderer);
             sprite_info PlayerRun2=textures2.getPlayerRunInfo();
