@@ -11,6 +11,11 @@ SoundManager::SoundManager(){
     {
         Log::get_instance()->error("Failed to load beat music! SDL_mixer Error: " + (std::string)Mix_GetError());
     }
+    loginOk = Mix_LoadWAV( "res/login_ok.wav" );
+    if( loginOk == NULL )
+    {
+        Log::get_instance()->error("Failed to load beat music! SDL_mixer Error: " + (std::string)Mix_GetError());
+    }
 }
 
 SoundManager::~SoundManager() {    
@@ -39,8 +44,7 @@ SoundManager* SoundManager::get_instance() {
 }
 
 void SoundManager::musicOn_off(){
-    bool auxOn = music_on;
-    music_on = !auxOn;
+    music_on = music_on ? false : true;
     if(music_on) {
         this->startGameMusic();
     } else {
@@ -64,8 +68,10 @@ void SoundManager::startGameMusic(){
 }
 
 void SoundManager::pauseGameMusic(){
-   
     Mix_PauseMusic();
-    
+}
+
+void SoundManager::playLoginOk(){
+    Mix_PlayChannel( -1, loginOk, 0 );
 }
 

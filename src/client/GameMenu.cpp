@@ -185,6 +185,7 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
 				short login_status = commandSender.login(userText + USERNAME_DELIMETER + passText);
 				if (login_status == LOGIN_SUCCESS) {
 	                log->info("Login aceptado por server");
+                    SoundManager::get_instance()->playLoginOk();
 	                running = false;
 				} else if (!(login_status == LOGIN_ERROR)) {
 	                log->info("Login no fue aceptado por server");

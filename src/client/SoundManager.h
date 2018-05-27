@@ -8,6 +8,7 @@ class SoundManager
 {
     private:
         Mix_Music *gMusic;
+        Mix_Chunk *loginOk;
         bool music_on = true;
 	    static SoundManager* instance;
 
@@ -28,5 +29,8 @@ class SoundManager
         void startGameMusic();
 
         void pauseGameMusic();
+
+        void playLoginOk();
+
 };
 
