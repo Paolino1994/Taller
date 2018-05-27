@@ -77,5 +77,11 @@ public:
 	void changeController(int i, std::vector<PlayerController *> &pVector);
 
     PlayerController *getPlayerToPassLong(PlayerController *controllerToSwap);
+
+	bool playerIsOnPassRange(PlayerController *&pController, PlayerController *pPlayerController);
+
+
+
+    double getAngle(PlayerModel *pModel, BallModel &model);
 };
 

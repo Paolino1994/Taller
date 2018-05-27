@@ -3,6 +3,7 @@
 #include "TeamFactory.h"
 #include "PlayerControllerHuman.h"
 #include "PlayerControllerAI.h"
+#include "../common/Log.h"
 #include <algorithm>
 #include <iostream>
 
@@ -98,8 +99,9 @@ PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
     std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
 
 	ptrdiff_t index = std::distance(teamControllers.begin(), std::find(teamControllers.begin(), teamControllers.end(), controllerToSwap));
-
-	if (index >= (long long)teamControllers.size()) {
+    double anguloActual=50000000;
+    int indexAUsar = -1;
+    if (index >= (long long)teamControllers.size()) {
 		Log::get_instance()->info("El controller que se quiso swapear no esta en mi listado de controllers del equipo correspondiente");
 
 	}
@@ -115,8 +117,13 @@ PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
 			index = controllerToSwapIndex;
 			break;
 		}
-		if(teamControllers[index] != controllerToSwap && playerIsOnRange(teamControllers[index],controllerToSwap) /*&& teamControllers[index]->isControllable()*/){
-			break;
+		if(playerIsOnPassRange(teamControllers[index],controllerToSwap)&& teamControllers[index] != controllerToSwap && playerIsOnRange(teamControllers[index],controllerToSwap) /*&& teamControllers[index]->isControllable()*/){
+            //std::cout<<"Player "<<index<<" DistActual "<<distanciaActual<<" Distancia "<<getDistance(teamControllers[index]->getModel(),getBall().getModel())<<std::endl;
+            if(abs(getAngle(teamControllers[index]->getModel(),getBall().getModel())-(360-ball.getModel().getAngle()))<anguloActual){
+                indexAUsar=index;
+                anguloActual=getAngle(teamControllers[index]->getModel(),getBall().getModel());
+                std::cout<<"Angulo:"<<anguloActual<<std::endl;
+            }
 		}
 		/*comparacion=!playerIsOnRange(teamControllers[index],controllerToSwap);
 		comparacion=(comparacion==(teamControllers[index] != controllerToSwap));
@@ -125,43 +132,60 @@ PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
 
 	} //while (!playerIsOnRange(teamControllers[index],controllerToSwap) && teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable()); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
 	while(true);
-	return teamControllers[index];
+    if(indexAUsar!=-1){
+        return teamControllers[indexAUsar];
+
+    }else{
+        return teamControllers[controllerToSwapIndex];
+    }
+
 
 }
 
 PlayerController* World::getPlayerToPassLong(PlayerController * controllerToSwap){
-	Team team = controllerToSwap->getModel()->getTeam();
-	std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
+    Team team = controllerToSwap->getModel()->getTeam();
+    std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
 
-	ptrdiff_t index = std::distance(teamControllers.begin(), std::find(teamControllers.begin(), teamControllers.end(), controllerToSwap));
+    ptrdiff_t index = std::distance(teamControllers.begin(), std::find(teamControllers.begin(), teamControllers.end(), controllerToSwap));
+    double anguloActual=50000000;
+    int indexAUsar = -1;
+    if (index >= (long long)teamControllers.size()) {
+        Log::get_instance()->info("El controller que se quiso swapear no esta en mi listado de controllers del equipo correspondiente");
 
-	if (index >= (long long)teamControllers.size()) {
-		Log::get_instance()->info("El controller que se quiso swapear no esta en mi listado de controllers del equipo correspondiente");
+    }
 
-	}
+    size_t controllerToSwapIndex = index;
+    //bool comparacion;
+    index=-1;
+    do
+    { // en el peor caso volvemos a el que estabamos controlando recien
+        //++index;
+        index++;
+        if (index == (long long)teamControllers.size()) {
+            index = controllerToSwapIndex;
+            break;
+        }
+        if(playerIsOnPassRange(teamControllers[index],controllerToSwap)&& teamControllers[index] != controllerToSwap && !playerIsOnRange(teamControllers[index],controllerToSwap) /*&& teamControllers[index]->isControllable()*/){
+            //std::cout<<"Player "<<index<<" DistActual "<<distanciaActual<<" Distancia "<<getDistance(teamControllers[index]->getModel(),getBall().getModel())<<std::endl;
+            if(abs(getAngle(teamControllers[index]->getModel(),getBall().getModel())-(360-ball.getModel().getAngle()))<anguloActual){
+                indexAUsar=index;
+                anguloActual=getAngle(teamControllers[index]->getModel(),getBall().getModel());
+                std::cout<<"Angulo:"<<anguloActual<<std::endl;
+            }
+        }
+        /*comparacion=!playerIsOnRange(teamControllers[index],controllerToSwap);
+        comparacion=(comparacion==(teamControllers[index] != controllerToSwap));
+        comparacion=(comparacion==!teamControllers[index]->isControllable());*/
+        //comparacion=comparacion==false;
 
-	size_t controllerToSwapIndex = index;
-	//bool comparacion;
-	index=-1;
-	do
-	{ // en el peor caso volvemos a el que estabamos controlando recien
-		//++index;
-		index++;
-		if (index == (long long)teamControllers.size()) {
-			index = controllerToSwapIndex;
-			break;
-		}
-		if(teamControllers[index] != controllerToSwap && !playerIsOnRange(teamControllers[index],controllerToSwap) /*&& teamControllers[index]->isControllable()*/){
-			break;
-		}
-		/*comparacion=!playerIsOnRange(teamControllers[index],controllerToSwap);
-		comparacion=(comparacion==(teamControllers[index] != controllerToSwap));
-		comparacion=(comparacion==!teamControllers[index]->isControllable());*/
-		//comparacion=comparacion==false;
-
-	} //while (!playerIsOnRange(teamControllers[index],controllerToSwap) && teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable()); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
-	while(true);
-	return teamControllers[index];
+    } //while (!playerIsOnRange(teamControllers[index],controllerToSwap) && teamControllers[index] != controllerToSwap && !teamControllers[index]->isControllable()); // sin chequeos de camara por ahora -> igual se sacaba para la fase 2
+    while(true);
+    if(indexAUsar!=-1){
+        return teamControllers[indexAUsar];
+        //std::cout<<indexAUsar<<std::endl;
+    }else{
+        return teamControllers[controllerToSwapIndex];
+    }
 
 }
 
@@ -273,6 +297,7 @@ void World::update(double dt)
 		}
 	}
 	ball.update(dt, this->getWidth(), this->getHeight(), this->getPlayerControllers());
+   // std::cout<<"BAllAngle: "<<ball.getModel().getAngle()<<std::endl;
 	//calculateCollision();
 	updateBallController();
 	std::stringstream msg;
@@ -384,5 +409,50 @@ void World::changeController(int newController, std::vector<PlayerController *> 
 		}
 		counter++;
 	}
+
+}
+
+bool World::playerIsOnPassRange(PlayerController *&controller, PlayerController *controllerToSwap) {
+    int x=ball.getModel().getX();
+    int y=ball.getModel().getY();
+    int xCon=controller->getModel()->getCenterX();
+    int yCon=controller->getModel()->getCenterY();
+    double ballAngle=ball.getModel().getAngle();
+    if(ballAngle>0){
+        ballAngle=360-ballAngle;
+    }
+    std::cout<<"Angle: "<<ballAngle<<" X "<<x<<" xCon "<<xCon<<" Y "<<y<<" yCon "<<yCon<<std::endl;
+    if(ballAngle==90 || ballAngle==270){
+        if(abs(x-xCon)<200 && abs(yCon-y)>10){
+            return true;
+        }
+    }
+    if(ballAngle==0 || ballAngle==180){
+        if(abs(y-yCon)<150 && xCon*cos(ballAngle*3.1415/180)>x*cos(ballAngle*3.1415/180)){
+            return true;
+        }
+    }
+    if(ballAngle==45 || ballAngle==225){
+        if(y-yCon<xCon-x+150 && y-yCon>xCon-x-150){
+            return true;
+        }
+    }
+    if(ballAngle==135 || ballAngle==315){
+        if(y-yCon>x-xCon-150 && y-yCon<x-xCon+150){
+            return true;
+        }
+    }
+
+    return false;
+}
+
+double World::getAngle(PlayerModel *pModel, BallModel &model) {
+    int x1 = model.getX();
+    int x2 = pModel->getCenterX();
+    int y1=model.getY();
+    int y2=pModel->getCenterY();
+    double angulo=atan2(y2-y1,x2-x1);
+    angulo=360-((angulo*180/M_PI) + 90);
+    return angulo;
 
 }
