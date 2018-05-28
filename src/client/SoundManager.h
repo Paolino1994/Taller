@@ -20,6 +20,7 @@ class SoundManager
         Mix_Music *gMusic;
         std::map<SoundEffect, Mix_Chunk*> soundEffects;
         bool music_on = true;
+        bool soundEffects_on = true;
 	    static SoundManager* instance;
 
     static bool initialized;
@@ -35,6 +36,8 @@ class SoundManager
 	    static SoundManager* get_instance();
 
         void musicOn_off();
+
+        void soundEffectsOn_off();
 
         void startGameMusic();
 

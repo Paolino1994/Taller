@@ -80,7 +80,9 @@ int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
                 returnValue = -1;
             } else if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_p){
 				SoundManager::get_instance()->musicOn_off();
-			}
+			} else if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_o) {
+                SoundManager::get_instance()->soundEffectsOn_off();
+            }
         }
 
         SDL_RenderClear( gRenderer );

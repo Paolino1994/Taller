@@ -6,6 +6,7 @@ bool SoundManager::initialized = false;
 
 SoundManager::SoundManager(){
     music_on = true;
+    soundEffects_on = true;
 	gMusic = Mix_LoadMUS( "res/game_music.mp3" );
     if( gMusic == NULL )
     {
@@ -68,6 +69,10 @@ void SoundManager::musicOn_off(){
     }
 }
 
+void SoundManager::soundEffectsOn_off(){
+    soundEffects_on = soundEffects_on ? false : true;
+}
+
 void SoundManager::startGameMusic(){
     if( Mix_PlayingMusic() == 0 )
     {
@@ -84,5 +89,7 @@ void SoundManager::pauseGameMusic(){
 }
 
 void SoundManager::playSound(SoundEffect soundEffect){
-    Mix_PlayChannel( -1, soundEffects.at(soundEffect), 0 );
+    if(soundEffects_on) {
+        Mix_PlayChannel( -1, soundEffects.at(soundEffect), 0 );
+    }
 }

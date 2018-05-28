@@ -270,6 +270,9 @@ bool GameMenu::pausaMenu(SDL_Event ev){
                 if(ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_p){
 				    SoundManager::get_instance()->musicOn_off();
 			    }
+                if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_o) {
+					SoundManager::get_instance()->soundEffectsOn_off();
+				}
             }
         background.render(0, 0);
         quiereSalirTexto.display((SCREEN_WIDTH - w) / 2, (SCREEN_HEIGHT - h) / 2); // muestro la pregunta centrada
@@ -350,7 +353,9 @@ int GameMenu::selectFormationScreen(CommandSender& commandSender) {
                 returnValue = -1;
             } else if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_p){
 				SoundManager::get_instance()->musicOn_off();
-			}
+			} else if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_o) {
+                SoundManager::get_instance()->soundEffectsOn_off();
+            }
         }
 
         SDL_RenderClear( gRenderer );
