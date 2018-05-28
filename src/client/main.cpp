@@ -251,6 +251,9 @@ int main( int argc, char* args[] )
         }
         if (gameState == GameState::ONLINE) {
 
+            CommandSender& commandSender = *commandSenderPtr;
+            gameMenu.selectFormationScreen(commandSender);
+
 			/****************************************
 			** INICIO CREACION TEXTURAS Y ANIMACIONES
 			*/

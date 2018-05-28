@@ -40,13 +40,7 @@ SDL_Texture *Texto::loadFont(const std::string &font_path, int font_size, const 
 	}
 	mFont = font;
 	auto text_surface = TTF_RenderText_Solid(font, mensaje_texto.c_str(), color);
-	if(!text_surface){
-		log->error("No se pudo crear la superficie con el mensaje: " + mensaje_texto);
-	}
 	auto text_texture = SDL_CreateTextureFromSurface(mRenderer, text_surface);
-	if(!text_texture){
-		log->error("No se pudo crear la textura");
-	}
 	SDL_FreeSurface(text_surface);
 	return text_texture;
 }
@@ -78,11 +72,6 @@ bool Texto::updateText( std::string textureText, SDL_Color textColor )
 		//Get rid of old surface
 		SDL_FreeSurface( textSurface );
 	}
-	else
-	{
-		Log::get_instance()->error("Error al crear la superfice para el texto");
-	}
-
 	
 	//Return success
 	return text_texture	 != NULL;

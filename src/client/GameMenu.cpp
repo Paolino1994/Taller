@@ -283,3 +283,132 @@ int GameMenu::verificarCredenciales (std::string usuario, std::string pass) {
     int valor = YAMLReader::get_instance().validarUsuario(usuario,pass);
     return valor;
 }
+
+int GameMenu::selectFormationScreen(CommandSender& commandSender) {
+    Log *log = Log::get_instance();
+
+    log->info("Generando pantalla de selección de formacion");
+
+    Texture background(gRenderer, "res/choose_team.jpg");
+    int tituloW, tituloH, fTxtH, fTxtW;
+
+    Texto tituloTxt(gRenderer, "res/Tehkan World Cup.ttf",36, "ELEGIR FORMACION", {255,255,0,0});
+
+    Texto f_321_txt(gRenderer, "res/Tehkan World Cup.ttf",28, "3-2-1", {255,255,0,0});
+    Texto f_312_txt(gRenderer, "res/Tehkan World Cup.ttf",28, "3-1-2", {255,255,0,0});
+    Texto f_330_txt(gRenderer, "res/Tehkan World Cup.ttf",28, "3-3-0", {255,255,0,0});
+
+    Texture f_321_img(gRenderer, "res/formation_321.png");
+    Texture f_312_img(gRenderer, "res/formation_312.png");
+    Texture f_330_img(gRenderer, "res/formation_330.png");
+
+    Texture selectTeam(gRenderer, "res/select_formation.png");
+
+    Animation selectTeamAnimation(selectTeam, 2, 2);
+
+    tituloTxt.getTextureDimensions(&tituloW,&tituloH);
+    f_321_txt.getTextureDimensions(&fTxtW,&fTxtH); // Todas las formaciones tienen el mismo tamanio
+        
+    log->info("se crea las texturas para la selección de Formacion");
+
+    int returnValue = 0;
+
+    bool running = true;
+    bool done = false;
+
+    Clock::time_point currentTime, newTime;
+    currentTime = Clock::now();
+    std::chrono::milliseconds milli;
+    const double fixed_dt = 0.5; 
+    double accumulator = 0;
+    double frametime;
+
+    int selectFormationPosition_X[3];
+    selectFormationPosition_X[0] = 20;
+    selectFormationPosition_X[1] = (SCREEN_WIDTH / 3) + 20;
+    selectFormationPosition_X[2] = ((SCREEN_WIDTH / 3) * 2)  + 20;
+    int formationPositionIndex = 0;
+
+    while ( running ) {
+        SDL_Event ev;
+        while ( SDL_PollEvent( &ev ) ) {
+            if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_LEFT) {
+                if(formationPositionIndex != 0) {
+                    SoundManager::get_instance()->playSound(SoundEffect::SE_SELECT);
+                    formationPositionIndex--;
+                }
+            } else if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_RIGHT) {
+                if(formationPositionIndex != 2) {
+                    SoundManager::get_instance()->playSound(SoundEffect::SE_SELECT);                
+                    formationPositionIndex++;
+                }
+            } else if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_RETURN) {
+                SoundManager::get_instance()->playSound(SoundEffect::SE_OK);                
+                done = true;
+            } else if ( ev.type == SDL_QUIT ) {
+                running = false;
+                returnValue = -1;
+            } else if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_p){
+				SoundManager::get_instance()->musicOn_off();
+			}
+        }
+
+        SDL_RenderClear( gRenderer );
+        background.render(0, 0);
+
+        newTime = Clock::now();
+        milli = std::chrono::duration_cast<std::chrono::milliseconds>(newTime - currentTime);
+        currentTime = newTime;
+        frametime = milli.count()/1000.0;
+
+        accumulator += frametime;
+
+        if (accumulator >= fixed_dt)
+        {
+            selectTeamAnimation.update(fixed_dt);
+            accumulator = 0;
+        }
+
+       
+        tituloTxt.display((SCREEN_WIDTH - tituloW) / 2, (SCREEN_HEIGHT - tituloH) / 8);
+
+        int margenTextoFormacion = 62; // Ya hice la cuenta de cuento tiene que ser el margen para centrar textos de "3-2-1" de largo
+        f_321_txt.display(margenTextoFormacion, SCREEN_HEIGHT / 4);
+        f_312_txt.display((SCREEN_WIDTH / 3) + margenTextoFormacion, SCREEN_HEIGHT / 4);
+        f_330_txt.display(((SCREEN_WIDTH / 3) * 2) + margenTextoFormacion, SCREEN_HEIGHT / 4);
+
+        int margenImagenFormacion = 33; // Ya hice la cuenta con los pixel con formaciones de tamanio 200 x 320
+        f_321_img.render(margenImagenFormacion, SCREEN_HEIGHT / 3);
+        f_312_img.render((SCREEN_WIDTH / 3) + margenImagenFormacion, SCREEN_HEIGHT / 3);
+        f_330_img.render(((SCREEN_WIDTH / 3) * 2) + margenImagenFormacion, SCREEN_HEIGHT / 3);
+
+        selectTeamAnimation.render(selectFormationPosition_X[formationPositionIndex], (SCREEN_HEIGHT / 4) - 20);
+
+        if(done) {
+            std::string formacionElegida = "";
+            switch (formationPositionIndex){
+                case 0: 
+                    formacionElegida = "3-2-1";
+                    break;
+                case 1:
+                    formacionElegida = "3-1-2";
+                    break;
+                case 2 :
+                    formacionElegida = "3-3-0";
+                break;  
+                default:
+                    log->error("Hubo un error en la eleccion de la formacion, indice selccionado: " + formationPositionIndex);
+                    formacionElegida = "3-2-1";
+                break;
+
+            }
+            log->info("se selecciono la formacion: " + formacionElegida);
+            returnValue = 0;
+            running = false;
+            //commandSender.assignTeam(team); ACA HAY QUE LLAMAR AL SERVIDOR PARA ASIGNAR LA FORMACION
+        }
+        SDL_RenderPresent( gRenderer );
+    }
+
+    return returnValue;
+}
