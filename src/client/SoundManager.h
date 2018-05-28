@@ -5,6 +5,9 @@
 
 #include "common/Log.h"
 
+using namespace std;
+
+
 enum SoundEffect {
     SE_OK = 0,
     SE_ERROR,

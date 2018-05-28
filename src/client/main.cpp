@@ -151,6 +151,8 @@ void close()
     SDL_Quit();
     TTF_Quit();
     Mix_Quit();
+    Mix_CloseAudio();
+
 
 }
 

@@ -32,9 +32,12 @@ SoundManager::SoundManager(){
 }
 
 SoundManager::~SoundManager() {    
-    //Free the music
     Mix_FreeMusic( gMusic );
     gMusic = NULL;
+    
+    for(map<SoundEffect,Mix_Chunk*>::iterator it = soundEffects.begin(); it != soundEffects.end(); ++it) {
+        Mix_FreeChunk( it->second );
+    }
 
 }
 
@@ -66,16 +69,12 @@ void SoundManager::musicOn_off(){
 }
 
 void SoundManager::startGameMusic(){
-    //If there is no music playing
     if( Mix_PlayingMusic() == 0 )
     {
-        //Play the music
         Mix_PlayMusic( gMusic, -1 );
     }
-    //If the music is paused
     if( Mix_PausedMusic() == 1 )
     {
-        //Resume the music
         Mix_ResumeMusic();
     }
 }
