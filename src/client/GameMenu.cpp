@@ -185,10 +185,11 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
 				short login_status = commandSender.login(userText + USERNAME_DELIMETER + passText);
 				if (login_status == LOGIN_SUCCESS) {
 	                log->info("Login aceptado por server");
-                    SoundManager::get_instance()->playLoginOk();
+                    SoundManager::get_instance()->playSound(SoundEffect::SE_OK);
 	                running = false;
 				} else if (!(login_status == LOGIN_ERROR)) {
 	                log->info("Login no fue aceptado por server");
+                    SoundManager::get_instance()->playSound(SoundEffect::SE_ERROR);
 		            usuarioOPass = EscrbiendoState::ERROR;
 		            userText = " ";
 		            passText = " ";
@@ -221,6 +222,7 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
                     log->info("Usuario incorrecto");
                     errorText = "Usuario invalido, presione enter.";
                 }
+                SoundManager::get_instance()->playSound(SoundEffect::SE_ERROR);
                 usuarioOPass = EscrbiendoState::ERROR;
                 userText = " ";
                 passText = " ";

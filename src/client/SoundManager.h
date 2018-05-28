@@ -1,14 +1,21 @@
 #pragma once
 
 #include <SDL_mixer.h>
+#include <map>
 
 #include "common/Log.h"
+
+enum SoundEffect {
+    SE_OK = 0,
+    SE_ERROR,
+    SE_SELECT
+};
 
 class SoundManager
 {
     private:
         Mix_Music *gMusic;
-        Mix_Chunk *loginOk;
+        std::map<SoundEffect, Mix_Chunk*> soundEffects;
         bool music_on = true;
 	    static SoundManager* instance;
 
@@ -30,7 +37,6 @@ class SoundManager
 
         void pauseGameMusic();
 
-        void playLoginOk();
-
+        void playSound(SoundEffect soundEffect);
 };
 

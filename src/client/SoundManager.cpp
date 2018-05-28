@@ -11,11 +11,24 @@ SoundManager::SoundManager(){
     {
         Log::get_instance()->error("Failed to load beat music! SDL_mixer Error: " + (std::string)Mix_GetError());
     }
-    loginOk = Mix_LoadWAV( "res/login_ok.wav" );
-    if( loginOk == NULL )
+    Mix_Chunk* okSound = Mix_LoadWAV( "res/ok_sound.wav" );
+    if( okSound == NULL )
     {
         Log::get_instance()->error("Failed to load beat music! SDL_mixer Error: " + (std::string)Mix_GetError());
     }
+    soundEffects.insert ( std::pair<SoundEffect,Mix_Chunk*>(SoundEffect::SE_OK,okSound) );
+    Mix_Chunk* errorSound = Mix_LoadWAV( "res/error_sound.wav" );
+    if( errorSound == NULL )
+    {
+        Log::get_instance()->error("Failed to load beat music! SDL_mixer Error: " + (std::string)Mix_GetError());
+    }
+    soundEffects.insert ( std::pair<SoundEffect,Mix_Chunk*>(SoundEffect::SE_ERROR,errorSound) );
+    Mix_Chunk* selectSound = Mix_LoadWAV( "res/select_sound.wav" );
+    if( selectSound == NULL )
+    {
+        Log::get_instance()->error("Failed to load beat music! SDL_mixer Error: " + (std::string)Mix_GetError());
+    }
+    soundEffects.insert ( std::pair<SoundEffect,Mix_Chunk*>(SoundEffect::SE_SELECT,selectSound) );
 }
 
 SoundManager::~SoundManager() {    
@@ -71,7 +84,6 @@ void SoundManager::pauseGameMusic(){
     Mix_PauseMusic();
 }
 
-void SoundManager::playLoginOk(){
-    Mix_PlayChannel( -1, loginOk, 0 );
+void SoundManager::playSound(SoundEffect soundEffect){
+    Mix_PlayChannel( -1, soundEffects.at(soundEffect), 0 );
 }
-
