@@ -66,9 +66,14 @@ void Protocol::readText()
 
 void Protocol::write(Request request, const char * data, u_int32_t len)
 {
-	header_t writeHeader{ request, len };
-	skt->send((char*)&writeHeader, sizeof(writeHeader), Socket::DEFAULT_FLAGS | MSG_MORE);
-	skt->send(data, len);
+	if (len == 0) {
+		this->write(request);
+	}
+	else {
+		header_t writeHeader{ request, len };
+		skt->send((char*)&writeHeader, sizeof(writeHeader), Socket::DEFAULT_FLAGS | MSG_MORE);
+		skt->send(data, len);
+	}
 }
 
 void Protocol::write(Request request)
