@@ -44,6 +44,12 @@ void RequestHandler::_run()
 					protocol.write(Request::BALL_VIEW_UPDATE, (const char*)&model_data.ballViewData, sizeof(model_data.ballViewData));
 					break;
 				}
+				case Request::EVENT_UPDATE: {
+					model_data_t model_data = this->game.getModelData();
+					// std::cout << "Hay " << model_data.events.size() << " eventos. Enviamos en bytes: " << sizeof(EventID) * model_data.events.size() << std::endl;
+					protocol.write(Request::EVENT_UPDATE, (const char*)model_data.events.data(), sizeof(EventID) * model_data.events.size());
+					break;
+				}
 				case Request::START: {
 					bool started = false;
 					(UserManager::get_instance()).user_ready(protocol);

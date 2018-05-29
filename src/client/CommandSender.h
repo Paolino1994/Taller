@@ -6,6 +6,7 @@
 #include "SoundManager.h"
 #include "common/Protocol.h"
 #include "common/GameConstants.h"
+#include "common/Event.h"
 
 // Mas que CommandSender, un RequestIssuer o otra zaraza
 class CommandSender
@@ -14,6 +15,7 @@ private:
 	Protocol protocol;
 	std::vector<player_view_data_t> playerViewData;
 	ball_view_data_t ballViewData;
+	std::vector<EventID> events;
 
 	// Quizas proximamente datos "estadisticos" del modelo
 	// int modelUpdateNumber

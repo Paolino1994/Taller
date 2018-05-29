@@ -2,6 +2,7 @@
 // Created by federico on 11/04/18.
 //
 
+#include "common/EventQueue.h"
 #include "PlayerModel.h"
 #include "BallController.h"
 #include "../common/GameConstants.h"
@@ -314,6 +315,7 @@ void PlayerModel::kick(BallModel& ballModel,double distance)
         setHasControlOfTheBall(false);
 		ballModel.setAngle(angle);
 		ballModel.kick(distance,BallModel::LOW);
+		EventQueue::get().push(make_shared<KickEvent>());
 	}
 	log->debug("PlayerModel: pateando");
 }

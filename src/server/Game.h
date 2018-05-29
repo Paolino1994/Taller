@@ -1,13 +1,15 @@
 #pragma once
 #include <thread>
 
+#include "common/EventHandler.h"
 #include "World.h"
 
-class Game
+class Game : public EventHandler
 {
 private:
 	std::vector<player_view_data_t> playerViewData;
 	ball_view_data_t ballViewData;
+	std::vector<EventID> events;
 	model_data_t modelData;
 
 	World world;
@@ -22,11 +24,15 @@ private:
 
 public:
 	Game();
-	~Game();
+	virtual ~Game();
 
 	PlayerController* assignToTeam(Team team, User_ID userId);
 	model_data_t getModelData();
 	// invalida el contoller, le hacemos delete
 	bool withdrawUser(PlayerController* playerController, User_ID userId);
+
+	virtual void handleFallback(Event & e);
+
+	//virtual void handle(KickEvent& e);
 };
 

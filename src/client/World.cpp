@@ -74,6 +74,21 @@ void World::update(CommandSender& commandSender) {
 
 	ball.update(ball_view_data);
 	
+	for (EventID eventId : modelData.events) {
+		// hacer algo con el evento: 
+		// ver si del lado del cliente tambien conviene meter patron tipo Observer para manejar eventos,
+		// pero trataremos de no
+		switch (eventId)
+		{
+		case EventID::KICK: {
+			std::cout << "Server me avisa: Alguien pateo la bocha recien!" << std::endl;
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
 }
 
 int World::getWidth(){

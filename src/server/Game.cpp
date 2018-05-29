@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "common/EventQueue.h"
 #include "common/GameConstants.h"
 #include "common/Log.h"
 #include "common/SpriteInfoSetter.h"
@@ -52,10 +53,9 @@ std::map<const std::string, Animation> getAnimMapperBall() {
 
 void Game::_run()
 {
-	// TODO: como primer paso falta avisarle a los clientes que el juego empezo,
-	// es decir ->> que salgan del "lobby" y empiezen a enviar comandos y recibir el modelo que les enviamos!
-
-	// FIN aviso de comienzo de juego!
+	// TEMPORAL test eventos
+	this->registerTo(EventID::KICK);
+	// TEMPORAL test eventos
 
 	using Clock = std::chrono::steady_clock;
 	//El tema del clock, es para actualizar en intervalos fijos
@@ -87,7 +87,7 @@ void Game::_run()
 
 		//int64_t sleep = (fixed_dt - accumulator) * 1000;
 		//std::cout << "Sleeping for " << sleep << " millis" << std::endl;
-		std::this_thread::sleep_for(std::chrono::milliseconds(10)); // fixed_dt en millisegundos
+		std::this_thread::sleep_for(std::chrono::milliseconds(5)); // fixed_dt en millisegundos
 
 		// Handle events on queue
 		// Por ahora no usamos event queue -> Permitimos que los controllers desde los RequestHandlers le pegen directo al modelo
@@ -99,6 +99,9 @@ void Game::_run()
 			//Calcula movimientos
 			//std::cout << "Model update" << std::endl;
 			world.update(fixed_dt); //Update de todos los players (y otras entidades proximamente?)
+
+			modelData.events.clear();
+			EventQueue::get().handleEvents();
 			accumulator -= fixed_dt;
 			modelData.playerViewData.clear();
 			//std::cout << "Model serialize" << std::endl;
@@ -111,7 +114,8 @@ void Game::_run()
 Game::Game() :
 	playerViewData(std::vector<player_view_data_t>()),
 	ballViewData({ 0,0,0,0,QUIESCENT }),
-	modelData({ playerViewData, ballViewData }),
+	events(std::vector<EventID>()),
+	modelData({ playerViewData, ballViewData, events }),
 	world(World(YAML::WORLD_WIDTH, YAML::WORLD_HEIGHT, getAnimMapperBall())),
 	maxPlayers(YAML::MAX_PLAYERS),
 	playerCount(0),
@@ -235,3 +239,15 @@ bool Game::withdrawUser(PlayerController * playerController, User_ID userId)
 {
 	return this->world.ejectController(playerController, userId);
 }
+
+void Game::handleFallback(Event& e) {
+	std::cout << "Game como EventHandler - estoy handleando un evento cualquiera" << std::endl;
+	this->events.push_back(e.getId());
+}
+
+/*
+void Game::handle(KickEvent & e)
+{
+	std::cout << "Evento: Alguien pateo la bocha" << std::endl;
+	this->events.push_back(e.getId());
+}*/

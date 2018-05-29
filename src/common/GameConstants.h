@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "common/YAMLReader.h"
+#include "Event.h"
 
 using Player_ID = u_int32_t;
 using User_ID = int32_t;
@@ -136,4 +137,5 @@ typedef struct ball_view_data {
 typedef struct model_data {
 	std::vector<player_view_data_t>& playerViewData;
 	ball_view_data_t& ballViewData;
+	std::vector<EventID>& events; // probablemente cambie
 } model_data_t;

@@ -74,12 +74,27 @@ bool CommandSender::updateModel()
 	  }
 	  
 	  */
+	
+	protocol.write(Request::EVENT_UPDATE); // quizas proximamente, le pasamos datos mios de que modelo tengo actualemente u otras yerbas
+	protocol.read();
+
+	request = protocol.request();
+	if (request == Request::EVENT_UPDATE) {
+		const EventID* event_data = reinterpret_cast<const EventID*>(protocol.dataBuffer());
+		size_t event_data_len = protocol.dataLength() / sizeof(EventID);
+		events.clear();
+		events.reserve(event_data_len);
+		for (size_t i = 0; i < event_data_len; ++i) {
+			events.push_back(event_data[i]);
+		}
+	}/*  TODO, no siempre se actualiza*/
+	
 	return true;
 }
 
 model_data_t CommandSender::getModelData()
 {
-	model_data_t model = { playerViewData, ballViewData };
+	model_data_t model = { playerViewData, ballViewData, events};
 	return model;
 }
 

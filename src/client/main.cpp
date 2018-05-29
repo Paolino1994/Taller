@@ -424,7 +424,7 @@ void renderizar(Camera& camera, World& world, CommandSender& commandSender, Game
         Clock::time_point currentTime, newTime;
         currentTime = Clock::now();
         std::chrono::milliseconds milli;
-        const double fixed_dt = 0.01; //10 milliseconds
+        const double fixed_dt = 0.005; //10 milliseconds
         double accumulator = 0;
         double frametime;
         bool salirJuego = false;
