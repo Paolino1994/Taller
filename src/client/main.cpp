@@ -151,6 +151,8 @@ void close()
     SDL_Quit();
     TTF_Quit();
     Mix_Quit();
+    Mix_CloseAudio();
+
 
 }
 
@@ -248,6 +250,9 @@ int main( int argc, char* args[] )
 			}
         }
         if (gameState == GameState::ONLINE) {
+
+            CommandSender& commandSender = *commandSenderPtr;
+            gameMenu.selectFormationScreen(commandSender);
 
 			/****************************************
 			** INICIO CREACION TEXTURAS Y ANIMACIONES
@@ -463,6 +468,11 @@ void renderizar(Camera& camera, World& world, CommandSender& commandSender, Game
                     SoundManager::get_instance()->musicOn_off();
 					break;
                 }
+                
+                if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_o) {
+					SoundManager::get_instance()->soundEffectsOn_off();
+                    break;
+				}
 
                 //controlled->handleEvent(e);
 

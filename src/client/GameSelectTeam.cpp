@@ -63,17 +63,26 @@ int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
         SDL_Event ev;
         while ( SDL_PollEvent( &ev ) ) {
             if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_LEFT) {
-                team = Team::HOME;
+                if(team != Team::HOME) {
+                    SoundManager::get_instance()->playSound(SoundEffect::SE_SELECT);
+                    team = Team::HOME;
+                }
             } else if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_RIGHT) {
-                team = Team::AWAY;
+                if(team != Team::AWAY) {
+                    SoundManager::get_instance()->playSound(SoundEffect::SE_SELECT);                
+                    team = Team::AWAY;
+                }
             } else if ( ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_RETURN) {
+                SoundManager::get_instance()->playSound(SoundEffect::SE_OK);                
                 done = true;
             } else if ( ev.type == SDL_QUIT ) {
                 running = false;
                 returnValue = -1;
             } else if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_p){
 				SoundManager::get_instance()->musicOn_off();
-			}
+			} else if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_o) {
+                SoundManager::get_instance()->soundEffectsOn_off();
+            }
         }
 
         SDL_RenderClear( gRenderer );

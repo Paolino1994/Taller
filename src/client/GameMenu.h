@@ -25,6 +25,8 @@ public:
 
     int logginScreen(CommandSender& commandSender);
 
+    int selectFormationScreen(CommandSender& commandSender);
+
     bool pausaMenu(SDL_Event ev);
 
 };
