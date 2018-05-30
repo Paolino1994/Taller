@@ -6,6 +6,7 @@
 #include "BallController.h"
 #include "common/GameConstants.h"
 #include "PlayerController.h"
+#include "System.h"
 
 
 // Esto ahora va estar un poco mas relacionado con el juego
@@ -15,6 +16,7 @@
 class World
 {
 private:
+	std::vector<std::shared_ptr<System>> systems;
 	// Tenemos una pelota ya desde el principio (controller por ahora que funca como un struct de model + view)
 	BallController ball;
 	// Objetos comunes
@@ -23,6 +25,8 @@ private:
 	std::vector<PlayerController*> playerControllers[static_cast<std::underlying_type<Team>::type>(Team::__LENGTH__)];
 
 	std::vector<PlayerController*> pControllers;
+
+	
 	// Las dimensiones del mapa en screen coordinates
 	// en x: vamos de 0 -> width
 	// en y: vamos de 0 -> height
@@ -65,6 +69,9 @@ public:
     
     int getWidth();
     int getHeight();
+
+	void addSystem(std::shared_ptr<System> system);
+	//bool removeSystem(System* system); TODO: ver si es necesario!, o como mucho un disableSystem
 
 	void swapToBallController(PlayerController *cont);
 

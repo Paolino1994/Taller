@@ -24,7 +24,7 @@ BallView& BallController::getView() {
 
 void BallController::update(double dt, int x_limit, int y_limit, std::vector<PlayerController*>& playerControllers){
     ballModel.update(dt,x_limit,y_limit, playerControllers);
-    calculateCollision(playerControllers);
+    //calculateCollision(playerControllers);
     ballView.update(dt);
 }
 

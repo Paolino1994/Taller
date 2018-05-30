@@ -7,6 +7,8 @@
 #include "common/Log.h"
 #include "common/SpriteInfoSetter.h"
 
+#include "BallPlayerCollisionSystem.h"
+
 player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick) {
 	player_data_t defaultPlayer = { {
 			[PlayerState::STILL] = PlayerStill.spriteid,
@@ -199,6 +201,8 @@ Game::Game() :
 	delanteros = YAMLReader::get_instance().getDelanteros(2);
 
 	world.createTeam(Team::AWAY, defensores, mediocampistas, delanteros, defaultPlayer2, animMapper2);
+
+	world.addSystem(std::make_shared<BallPlayerCollisionSystem>(world));
 
 	world.serialize(this->modelData);
 }

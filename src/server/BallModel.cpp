@@ -117,7 +117,7 @@ void BallModel::setVelY(double vel) {
 // TODO: pasar PlayerModels en vez de PlayerControllers
 void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerController*>& playerControllers) {
 
-	for (PlayerController* controller : playerControllers) {
+	/*for (PlayerController* controller : playerControllers) {
 		if (controller->getModel()->getHasControlOfTheBall()) {
 			auto player = controller->getModel();
 			this->setX(player->getX());
@@ -125,7 +125,7 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
 			this->setAngle(player->getAngle());
 			return;
 		}
-	}
+	}*/
 
 	/*
 	* ACA SE PODRIA HACE UN CHEQEUO DE CERCANIA CON RESPECTO A MODELS DE LOS JUGADORES

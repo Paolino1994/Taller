@@ -8,6 +8,7 @@
 #include <iostream>
 
 World::World(int width, int height, std::map<const std::string, Animation> ballAnimMapper):
+	systems(std::vector<std::shared_ptr<System>>()),
 	ball(BallController(width/2, height/2, ballAnimMapper)),
     entities(std::vector<Entity*>()),
 	pControllers(std::vector<PlayerController*>()),
@@ -286,23 +287,21 @@ std::vector<PlayerController*>& World::getPlayerControllers() {
 
 void World::update(double dt)
 {
-	for (auto controllers: playerControllers) {
+	// Player update
+	for (std::vector<PlayerController*>& controllers: playerControllers) {
 		for (auto player: controllers) {
 			player->update(dt, this->getWidth(), this->getHeight(), ball.getModel().getX(),ball.getModel().getY());
-			if (player->getModel()->getIsControlledByHuman()) {
-				std::stringstream msg;
-				msg << "Jugador Controlado: esta en " << player->getModel()->getX() << ", " << player->getModel()->getY();
-				//std::cout << msg.str() << std::endl;
-			}
 		}
 	}
+
+	// Ball update
 	ball.update(dt, this->getWidth(), this->getHeight(), this->getPlayerControllers());
-   // std::cout<<"BAllAngle: "<<ball.getModel().getAngle()<<std::endl;
-	//calculateCollision();
-	updateBallController();
-	std::stringstream msg;
-	msg << "Pelota esta en " << ball.getModel().getX() << ", " << ball.getModel().getY();
-	//std::cout << msg.str() << std::endl;
+	//updateBallController();
+	
+	// Systems update
+	for (auto system : systems) {
+		system->process(dt);
+	}
 }
 
 void World::serialize(model_data_t & modelData)
@@ -324,6 +323,11 @@ int World::getWidth(){
 
 int World::getHeight(){
     return height;
+}
+
+void World::addSystem(std::shared_ptr<System> system)
+{
+	this->systems.push_back(system);
 }
 
 void World::swapToBallController(PlayerController *cont) {
