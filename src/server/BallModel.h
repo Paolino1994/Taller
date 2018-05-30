@@ -5,7 +5,6 @@
 
 #include "Entity.h"
 #include "common/GameConstants.h"
-#include "PlayerController.h"
 
 class BallModel: public Entity {
 
@@ -40,8 +39,7 @@ public:
 
     void kick();
 
-	// TODO: pasar PlayerModels en vez de PlayerControllers
-    void update(double dt, int x_limit, int y_limit, std::vector<PlayerController*>& playerControllers);
+    void update(double dt, int x_limit, int y_limit);
 
     int getAngle();
 

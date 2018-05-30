@@ -1,21 +1,11 @@
-//
-// Created by federico on 11/04/18.
-//
-
-#ifndef UNTITLED1_PLAYERMODEL_H
-#define UNTITLED1_PLAYERMODEL_H
+#pragma once
 
 #include <vector>
 
 #include "common/GameConstants.h"
-#include "Entity.h"
 #include "common/Log.h"
-#include "sstream"
-
-// Tenemos un temita de dependencia circular, 
-// --> TODO: pensar mejor asociacion pelota <-> jugador
-//#include "BallModel.h"
-class BallModel;
+#include "Entity.h"
+#include "BallModel.h"
 
 class PlayerModel: public Entity {
 
@@ -144,7 +134,3 @@ private:
 
 	double getDistanceToGoal();
 };
-
-
-
-#endif //UNTITLED1_PLAYERMODEL_H

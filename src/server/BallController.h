@@ -6,7 +6,6 @@
 #include "Entity.h"
 #include "BallModel.h"
 #include "BallView.h"
-#include "PlayerController.h"
 
 class BallController {
 
@@ -23,13 +22,7 @@ public:
 
     void kick();
 
-    void update(double dt, int x_limit, int y_limit, std::vector<PlayerController*>& playerControllers);
-
-	void calculateCollision(std::vector<PlayerController *> &vector);
-
-	void changeController(int newController, std::vector<PlayerController *> &playerControllers);
-
-	PlayerController * findActualController(std::vector<PlayerController *> &vector);
+    void update(double dt, int x_limit, int y_limit);
 
 	void serialize(ball_view_data_t& ball_view_data);
 };

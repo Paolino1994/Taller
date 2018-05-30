@@ -295,7 +295,7 @@ void World::update(double dt)
 	}
 
 	// Ball update
-	ball.update(dt, this->getWidth(), this->getHeight(), this->getPlayerControllers());
+	ball.update(dt, this->getWidth(), this->getHeight());
 	//updateBallController();
 	
 	// Systems update
@@ -328,92 +328,6 @@ int World::getHeight(){
 void World::addSystem(std::shared_ptr<System> system)
 {
 	this->systems.push_back(system);
-}
-
-void World::swapToBallController(PlayerController *cont) {
-    Team team = cont->getModel()->getTeam();
-    std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
-    for(PlayerController* controller : teamControllers){
-        if(controller->getModel()->getHasControlOfTheBall()){
-            cont->swap(controller);
-        }
-    }
-
-
-}
-
-void World::updateBallController() {
-	PlayerController* priorController = NULL;
-	PlayerController* currentController = NULL;
-    int i=0;
-	for (auto controllers : playerControllers) {
-		for (auto player : controllers) {
-			if (!player->isControllable()) {
-				priorController = player;
-				//std::cout<<"PLAYER"<<std::to_string(i)<<std::endl;
-			}
-			else {
-				if (player->hasControlOfTheBall()) {
-					currentController = player;
-					//std::cout<<"New Controller"<<std::to_string(i)<<std::endl;
-				}
-			}
-            if (priorController != NULL && currentController != NULL && priorController->getModel()->getTeam() == currentController->getModel()->getTeam()) {
-                //std::cout<<"ENTRE"<<priorController->getModel()->getTeam()<<currentController->getModel()->getTeam()<<std::endl;
-                priorController->swap(currentController);
-                priorController = NULL;
-                currentController = NULL;
-                controlCounter=0;
-            }
-            i++;
-		}
-
-	}
-	//std::cout<<"ENTRE"<<priorController->getModel()->getTeam()<<currentController->getModel()->getTeam()<<std::endl;
-
-	if (priorController != NULL && currentController != NULL && priorController->getModel()->getTeam() == currentController->getModel()->getTeam()) {
-		//std::cout<<"ENTRE"<<priorController->getModel()->getTeam()<<currentController->getModel()->getTeam()<<std::endl;
-		priorController->swap(currentController);
-		controlCounter=0;
-	}
-
-
-}
-
-void World::calculateCollision() {
-	int x = ball.getModel().getX();
-	int y = ball.getModel().getX();
-	int i = 0;
-	std::vector<PlayerController *> &playerControllers = this->getPlayerControllers();
-	for (PlayerController* controller : playerControllers) {
-		int xPlayer = controller->getModel()->getCenterX();
-		int yPlayer = controller->getModel()->getCenterY();
-		if (abs(x - xPlayer)<10 && abs(y - yPlayer)<10) {
-			if (!controller->getModel()->getHasControlOfTheBall()) {
-				controller->getModel()->setHasControlOfTheBall(true);
-				//controller->getModel()->setAngle(-90+ballModel.getAngle());
-				changeController(i, playerControllers);
-			}
-		}
-		i++;
-	}
-}
-
-void World::changeController(int newController, std::vector<PlayerController *> &playerControllers) {
-	int counter = 0;
-	for (PlayerController* controller : playerControllers) {
-		if (newController == counter) {
-			controller->getModel()->setHasControlOfTheBall(true);
-			ball.getModel().setVelX(controller->getModel()->getVelX());
-			ball.getModel().setVelY(controller->getModel()->getVelY());
-			//std::cout<<"Agarro la pelota"<< "Ball VelX: "<<ballModel.getVelX()<<" Ball VelY: "<<ballModel.getVelY()<<std::endl;
-		}
-		else {
-			controller->getModel()->setHasControlOfTheBall(false);
-		}
-		counter++;
-	}
-
 }
 
 bool World::playerIsOnPassRange(PlayerController *&controller, PlayerController *controllerToSwap) {

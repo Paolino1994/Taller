@@ -11,6 +11,7 @@ BallPlayerCollisionSystem::~BallPlayerCollisionSystem()
 }
 
 void BallPlayerCollisionSystem::process(double dt)
+// TODO: REFACTOR
 {
 	std::vector<PlayerController*>& playerControllers = world.getPlayerControllers();
 	BallModel& ballModel = world.getBall().getModel();

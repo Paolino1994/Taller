@@ -54,8 +54,6 @@ public:
 	// Swap controller
 	void swap(PlayerController* playerController);
 
-	PlayerController* getPlayerToPass(PlayerController * controllerToSwap);
-
 	void addEntity(Entity* entity);
 
 	void addPlayerController(PlayerController* pController);
@@ -73,21 +71,10 @@ public:
 	void addSystem(std::shared_ptr<System> system);
 	//bool removeSystem(System* system); TODO: ver si es necesario!, o como mucho un disableSystem
 
-	void swapToBallController(PlayerController *cont);
-
-
-	void updateBallController();
-
-
-	void calculateCollision();
-
-	void changeController(int i, std::vector<PlayerController *> &pVector);
-
-    PlayerController *getPlayerToPassLong(PlayerController *controllerToSwap);
+    PlayerController* getPlayerToPassLong(PlayerController* controllerToSwap);
+	PlayerController* getPlayerToPass(PlayerController* controllerToSwap);
 
 	bool playerIsOnPassRange(PlayerController *&pController, PlayerController *pPlayerController);
-
-
 
     double getAngle(PlayerModel *pModel, BallModel &model);
 };

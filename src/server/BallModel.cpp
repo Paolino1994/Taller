@@ -5,9 +5,8 @@
 #include <iostream>
 
 #include "BallModel.h"
-#include "BallController.h"
 #include "common/Log.h"
-#include "../common/GameConstants.h"
+#include "common/GameConstants.h"
 
 #define PI 3.14159265
 
@@ -115,24 +114,12 @@ void BallModel::setVelY(double vel) {
 }
 
 // TODO: pasar PlayerModels en vez de PlayerControllers
-void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerController*>& playerControllers) {
+void BallModel::update(double dt, int x_limit, int y_limit) {
+	
+	// Aplicar lógica de movimiento y como mucho choques con fin del mundo
+	// Los otros comportamientos con la pelota los deben hacer los sistemas
 
-	/*for (PlayerController* controller : playerControllers) {
-		if (controller->getModel()->getHasControlOfTheBall()) {
-			auto player = controller->getModel();
-			this->setX(player->getX());
-			this->setY(player->getY());
-			this->setAngle(player->getAngle());
-			return;
-		}
-	}*/
-
-	/*
-	* ACA SE PODRIA HACE UN CHEQEUO DE CERCANIA CON RESPECTO A MODELS DE LOS JUGADORES
-	* --> SI ESTOY A x_diff, y_diff cerca, entonces seteo a ese playerModel.setHasControlOfTheBall(true)
-	* --> ojo! si hay varios cerca!
-	*/
-    velX*=0.995;
+	velX*=0.995;
     velY*=0.995;
 	x += velX * dt;
 	y += velY * dt;
