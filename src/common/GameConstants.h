@@ -2,6 +2,7 @@
 #include <string>
 #include "common/YAMLReader.h"
 #include "Event.h"
+#include "SDL_rect.h"
 
 using Player_ID = u_int32_t;
 using User_ID = int32_t;
@@ -31,6 +32,26 @@ namespace YAML {
 	// Si lo quieren manejar por separado hay que aplicar logica de escalado del mundo logico al background -> no es la idea
 	const int WORLD_WIDTH = 1700;
 	const int WORLD_HEIGHT = 1050;
+
+	// Por ahora lo pensamos como un SDL_Rect //esquina superior izquierda
+	// pero puede cambiar
+	const int FIELD_X = 62; 
+	const int FIELD_Y = 44;
+	const int FIELD_WIDTH = 1574;
+	const int FIELD_HEIGHT = 968;
+
+	enum FIELD_POSITION {
+		LEFT = 0,
+		RIGHT,
+		__LENGTH__
+	};
+
+	// Por ahora lo pensamos como un SDL_Rect //esquina superior izquierda
+	// pero puede cambiar
+	const SDL_Rect GOAL[FIELD_POSITION::__LENGTH__] = {
+		{1637, 432, 63, 198}, // {x,y,w,h}
+		{0, 432, 61, 198 }
+	};
 
 	const size_t MAX_PLAYERS = 1; //TODO: Esto recibirlo desde el YAMLReader
 
