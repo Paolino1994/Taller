@@ -8,6 +8,7 @@
 #include "common/SpriteInfoSetter.h"
 
 #include "BallPlayerCollisionSystem.h"
+#include "BallPassesEndLineSystem.h"
 
 player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick) {
 	player_data_t defaultPlayer = { {
@@ -203,7 +204,8 @@ Game::Game() :
 	world.createTeam(Team::AWAY, defensores, mediocampistas, delanteros, defaultPlayer2, animMapper2);
 
 	world.addSystem(std::make_shared<BallPlayerCollisionSystem>(world));
-
+	world.addSystem(std::make_shared<BallPassesEndLineSystem>(world));
+	
 	world.serialize(this->modelData);
 }
 
