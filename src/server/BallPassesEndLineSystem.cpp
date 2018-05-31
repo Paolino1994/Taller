@@ -15,8 +15,8 @@ void BallPassesEndLineSystem::process(double dt)
 	BallModel& ballModel = world.getBall().getModel();
 
     int leftEndLineX = 60;
-	int goalBottomPost = 400;
-	int goalTopPost = 630;
+	int goalBottomPost = 420;
+	int goalTopPost = 620;
 	int postWidth = 30;
     //int rigthEndLineX = 30;
 
@@ -33,6 +33,7 @@ void BallPassesEndLineSystem::process(double dt)
 				std::cout << "GOOOL" << std::endl;
 			} else {
 				std::cout << "PALO" << std::endl;
+				ballModel.setVelX( -ballModel.getVelX() ); // Hago rebotar la pelota en el palo, le cambio el angulo en x
 			}
 		} else {
         	std::cout << "Salio por el costado izquierdo" << std::endl;

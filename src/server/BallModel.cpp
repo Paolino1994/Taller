@@ -116,7 +116,7 @@ void BallModel::setVelY(double vel) {
 // TODO: pasar PlayerModels en vez de PlayerControllers
 void BallModel::update(double dt, int x_limit, int y_limit) {
 	
-	// Aplicar lógica de movimiento y como mucho choques con fin del mundo
+	// Aplicar lï¿½gica de movimiento y como mucho choques con fin del mundo
 	// Los otros comportamientos con la pelota los deben hacer los sistemas
 
 	velX*=0.995;
@@ -261,6 +261,4 @@ double BallModel::getSpeed(double distance) {
     }
     return distance*2;
 }
-
-
 
