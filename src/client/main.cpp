@@ -81,7 +81,8 @@ bool init_SDL()
         }
 
         //Create window
-        gWindow = SDL_CreateWindow( "TEHKAN FIUBA CUP", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+        gWindow = SDL_CreateWindow( "TEHKAN FIUBA CUP", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        							SCREEN_WIDTH, SCREEN_HEIGHT + YAML::MINIMAP_HEIGHT, SDL_WINDOW_SHOWN );
         if( gWindow == NULL )
         {
             // printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
@@ -343,7 +344,7 @@ int main( int argc, char* args[] )
             Texture miniMapIndicatorCamera(gRenderer, "res/camera_rect.png");
             miniMapIndicatorCamera.setScaling(58, 58);
             Texture miniMapFieldCamera(gRenderer, "res/soccer_field_1.6.png");
-            miniMapFieldCamera.setScaling(200, 120);
+            miniMapFieldCamera.setScaling(YAML::MINIMAP_WIDTH, YAML::MINIMAP_HEIGHT - 50);
 
 			/*
 			** FIN CREACION TEXTURAS Y ANIMACIONES
