@@ -82,13 +82,20 @@ void Camera::render(World& world){
 	// auto playerSelectedTexture = world.getPlayerSelectedTexture();
 
 	// renderizamos el background (la cancha)
-	background->setScaling(this->width, this->height);
+	//	background->setScaling(this->width, this->height);
+	background->setScaling(this->width, this->height - 50);
+
 	background->setSrcRect(this->x, this->y, this->width, this->height);
-	background->render(0, 0);
+
+	background->render(0, YAML::MINIMAP_HEIGHT - 50);
 
 	miniFieldRect->render(300, 0 );
 
-	miniMapRect->render(miniFieldRect->getPosX() -15 + followed.getX() / 10, miniFieldRect->getPosY() -15 + followed.getY() / 10);
+//	miniMapRect->render(miniFieldRect->getPosX() -15 + followed.getX() / 10, miniFieldRect->getPosY() -15 + followed.getY() / 10);
+	// 250 / WORLD_WIDTH  = 0.147059
+	// 150 / WORLD_HEIGHT = 0.142857
+	miniMapRect->render(miniFieldRect->getPosX() -25 + followed.getX() * (0.147059),
+						miniFieldRect->getPosY() -20 + followed.getY() * (0.142857) );
 
 
 	for (std::pair<const Player_ID, Player>& pair : players)
@@ -101,14 +108,14 @@ void Camera::render(World& world){
 		if(player.isControlledByMe()){
 			// playerSelectedTexture->render(screen_x + 5, screen_y -10);
 		}
-		player.render(screen_x, screen_y);
-		player.renderMiniMap(miniFieldRect->getPosX() +10, miniFieldRect->getPosY() +10);
+		player.render(screen_x, screen_y - 15);
+		player.renderMiniMap(miniFieldRect->getPosX() + 5, miniFieldRect->getPosY() +5);
 	}
 
 	int screen_x = world.getBall().getX() - this->x;
 	int screen_y = world.getBall().getY() - this->y;
 	Log::get_instance()->info("X: " + std::to_string(screen_x) + " Y: " + std::to_string(screen_y));
-	world.getBall().render(screen_x, screen_y);
-	world.getBall().renderMiniMap(miniFieldRect->getPosX(), miniFieldRect->getPosY());
+	world.getBall().render(screen_x, screen_y + YAML::MINIMAP_HEIGHT - 15);
+	world.getBall().renderMiniMap(miniFieldRect->getPosX(), miniFieldRect->getPosY() + 5);
 }
 
