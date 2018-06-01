@@ -12,8 +12,8 @@
 class PlayerController {
 
 protected:
-	PlayerModel * playerModel;
-	PlayerView *playerView;
+	PlayerModel* playerModel;
+	PlayerView* playerView;
 
 public:
 	PlayerController(PlayerModel* model, PlayerView* view);

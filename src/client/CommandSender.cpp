@@ -3,12 +3,14 @@
 #include "common/Log.h"
 #include "common/Request.h"
 #include "common/SocketException.h"
+#include "GameManager.h"
 
 
 CommandSender::CommandSender(std::string ip, unsigned short port):
 	protocol(Protocol(ip, port)),
 	playerViewData(std::vector<player_view_data_t>()),
-	ballViewData({0,0,0,QUIESCENT})
+	ballViewData({0,0,0,QUIESCENT}),
+	gameManagerData({0,0})
 {
 }
 
@@ -74,6 +76,22 @@ bool CommandSender::updateModel()
 	  }
 	  
 	  */
+
+	protocol.write(Request::GAME_MANAGER_UPDATE); // quizas proximamente, le pasamos datos mios de que modelo tengo actualemente u otras yerbas
+	protocol.read();
+
+	request = protocol.request();
+	if (request == Request::GAME_MANAGER_UPDATE) {
+		const game_manager_data_t game_manager_data = *reinterpret_cast<const game_manager_data_t*>(protocol.dataBuffer());
+		gameManagerData = game_manager_data;
+	}/*  TODO, no siempre se actualiza
+	  else if (request == Request::WAIT){
+		this->modelUpdated = false;
+		etc....
+		return false;
+	  }
+	  
+	  */
 	
 	protocol.write(Request::EVENT_UPDATE); // quizas proximamente, le pasamos datos mios de que modelo tengo actualemente u otras yerbas
 	protocol.read();
@@ -94,7 +112,7 @@ bool CommandSender::updateModel()
 
 model_data_t CommandSender::getModelData()
 {
-	model_data_t model = { playerViewData, ballViewData, events};
+	model_data_t model = { playerViewData, ballViewData, gameManagerData, events};
 	return model;
 }
 

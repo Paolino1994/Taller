@@ -33,7 +33,15 @@ void PlayerControllerAI::update(double dt, int x_limit, int y_limit, int ball_x,
 			return;
 		}
 
-		int max_distance_x = this->playerModel->getDistance_x();
+		if (this->playerModel->getTeam() == GameManager::get_instance()->getTeamBallControl()) {
+			this->playerModel->setVelX(0);
+			this->playerModel->setVelY(0);
+
+			PlayerController::update(dt, x_limit, y_limit);
+			return;
+		}
+
+		int max_distance_x = this->playerModel->getDistance_x(); 
 		int max_distance_y = this->playerModel->getDistance_y();
 
 		int direction_x_initial = this->playerModel->initial_x - this->playerModel->getX();

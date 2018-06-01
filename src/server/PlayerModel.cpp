@@ -5,6 +5,7 @@
 #include "common/EventQueue.h"
 #include "PlayerModel.h"
 #include "BallController.h"
+#include "GameManager.h"
 #include "../common/GameConstants.h"
 #include <cmath>
 #include <iostream>
@@ -343,6 +344,10 @@ void PlayerModel::setHasControlOfTheBall(bool control) {
 }
 
 bool PlayerModel::getHasControlOfTheBall() {
+	// Forma extremadamente cabeza de ver que equipo tiene la pelota.
+	if (hasControlOfTheBall) { 
+		GameManager::get_instance()->setTeamBallControl(team);
+	}
     return hasControlOfTheBall;
 }
 

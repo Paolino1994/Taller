@@ -2,6 +2,7 @@
 
 #include "PlayerController.h"
 #include "UserManager.h"
+#include "GameManager.h"
 #include "common/Log.h"
 
 class PlayerControllerAI : public PlayerController {

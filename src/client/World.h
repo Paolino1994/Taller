@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "Ball.h"
 #include "Player.h"
+#include "GameManager.h"
 
 // Esto ahora va estar un poco mas relacionado con el juego
 // Game / World

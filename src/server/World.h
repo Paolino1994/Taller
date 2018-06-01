@@ -7,6 +7,7 @@
 #include "common/GameConstants.h"
 #include "PlayerController.h"
 #include "System.h"
+#include "GameManager.h"
 
 
 // Esto ahora va estar un poco mas relacionado con el juego

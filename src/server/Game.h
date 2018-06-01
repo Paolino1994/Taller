@@ -9,6 +9,7 @@ class Game : public EventHandler
 private:
 	std::vector<player_view_data_t> playerViewData;
 	ball_view_data_t ballViewData;
+	game_manager_data_t gameManagerData;
 	std::vector<EventID> events;
 	model_data_t modelData;
 

@@ -154,9 +154,14 @@ typedef struct ball_view_data {
 	frame_t presentFrame;
 } ball_view_data_t;
 
+typedef struct game_manager_data {
+	int scoreHome;
+	int scoreAway;
+} game_manager_data_t;
 
 typedef struct model_data {
 	std::vector<player_view_data_t>& playerViewData;
 	ball_view_data_t& ballViewData;
+    game_manager_data_t& gameManagerData;
 	std::vector<EventID>& events; // probablemente cambie
 } model_data_t;

@@ -59,6 +59,7 @@ void World::update(CommandSender& commandSender) {
 
 	std::vector<player_view_data_t>& playerViewData = modelData.playerViewData;
 	ball_view_data_t& ball_view_data = modelData.ballViewData;
+	game_manager_data_t& game_manager_data = modelData.gameManagerData;
 
 	for (player_view_data_t& player_view_data : playerViewData) {
 		auto existing_player = players.find(player_view_data.playerId);
@@ -73,6 +74,9 @@ void World::update(CommandSender& commandSender) {
 	}
 
 	ball.update(ball_view_data);
+
+	GameManager::get_instance()->update(game_manager_data);
+
 	
 	for (EventID eventId : modelData.events) {
 		// hacer algo con el evento: 

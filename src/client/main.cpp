@@ -30,6 +30,7 @@
 #include "GameConnectionError.h"
 
 #include "SoundManager.h"
+#include "GameManager.h"
 
 
 //Screen dimension constants
@@ -201,7 +202,7 @@ int main( int argc, char* args[] )
     }
     
 	Log* log = Log::get_instance();
-
+    
     GameState gameState = GameState::OFFLINE;
 
     //Start up SDL and create window

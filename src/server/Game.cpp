@@ -10,6 +10,8 @@
 #include "BallPlayerCollisionSystem.h"
 #include "BallPassesEndLineSystem.h"
 
+#include "GameManager.h"
+
 player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick) {
 	player_data_t defaultPlayer = { {
 			[PlayerState::STILL] = PlayerStill.spriteid,
@@ -117,8 +119,9 @@ void Game::_run()
 Game::Game() :
 	playerViewData(std::vector<player_view_data_t>()),
 	ballViewData({ 0,0,0,0,QUIESCENT }),
+	gameManagerData({0,0}),
 	events(std::vector<EventID>()),
-	modelData({ playerViewData, ballViewData, events }),
+	modelData({ playerViewData, ballViewData, gameManagerData,events }),
 	world(World(YAML::WORLD_WIDTH, YAML::WORLD_HEIGHT, getAnimMapperBall())),
 	maxPlayers(YAML::MAX_PLAYERS),
 	playerCount(0),

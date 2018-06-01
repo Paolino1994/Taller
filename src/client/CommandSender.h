@@ -15,6 +15,7 @@ private:
 	Protocol protocol;
 	std::vector<player_view_data_t> playerViewData;
 	ball_view_data_t ballViewData;
+	game_manager_data_t gameManagerData;
 	std::vector<EventID> events;
 
 	// Quizas proximamente datos "estadisticos" del modelo

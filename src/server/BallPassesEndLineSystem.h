@@ -1,6 +1,9 @@
 #pragma once
 #include "System.h"
 #include "World.h"
+#include "GameManager.h"
+#include "common/GameConstants.h"
+
 
 class BallPassesEndLineSystem : public System
 {

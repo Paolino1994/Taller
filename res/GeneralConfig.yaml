@@ -6,7 +6,7 @@ EquipoB:
     Nombre: "UTN"
     Color: "Rojo"
     Formacion: "3-2-1"
-LogLevel: "error"
+LogLevel: "info"
 MaxJugadores: "1"
 usuarios:
 -
