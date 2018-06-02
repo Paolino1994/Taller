@@ -81,30 +81,26 @@ void Camera::render(World& world){
 	auto players = world.getPlayers();
 
 	// renderizamos el background (la cancha)
-	//	background->setScaling(this->width, this->height);
 	background->setScaling(this->width, this->height - 50);
-
 	background->setSrcRect(this->x, this->y, this->width, this->height);
-
 	background->render(0, YAML::MINIMAP_HEIGHT - 50);
 
-	miniFieldRect->render(YAML::MINIMAP_INIT_X, 0 );
-
-	renderMiniCamera();
-
+	// posición de los jugadores
 	for (std::pair<const Player_ID, Player>& pair : players)
 	{
 		Player& player = pair.second;
-		int screen_x = player.getX() - this->x;
-		int screen_y = player.getY() - this->y;
-		//TODO: check screen_x/_y esten en mi ancho/alto
-		//no dibujar lo que no veo!
-		if(player.isControlledByMe()){
-			// playerSelectedTexture->render(screen_x + 5, screen_y -10);
-		}
-		player.render(screen_x, screen_y - 15);
-		player.renderMiniMap(miniFieldRect->getPosX() + 5, miniFieldRect->getPosY() + 5);
+		player.render(player.getX() - this->x, player.getY() - this->y - 15);
 	}
+
+	// posición de los jugadores en el miniMap
+	miniFieldRect->render(YAML::MINIMAP_INIT_X, 0 );
+	renderMiniCamera();
+	for (std::pair<const Player_ID, Player>& pair : players)
+		{
+			Player& player = pair.second;
+			player.renderMiniMap(miniFieldRect->getPosX() + 5, miniFieldRect->getPosY() + 5);
+		}
+
 
 	int screen_x = world.getBall().getX() - this->x;
 	int screen_y = world.getBall().getY() - this->y;
