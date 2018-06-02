@@ -59,6 +59,7 @@ namespace YAML {
     const int SCREEN_HEIGHT = 600;
     const int MINIMAP_HEIGHT = 200;
     const int MINIMAP_WIDTH = 250;
+    const int MINIMAP_INIT_X = SCREEN_WIDTH / 2 - MINIMAP_WIDTH / 2;
 	const int SCREEN_WIDTH_SCROLL_OFFSET = SCREEN_WIDTH / 2;
 	const int SCREEN_HEIGHT_SCROLL_OFFSET = SCREEN_HEIGHT / 2;
 

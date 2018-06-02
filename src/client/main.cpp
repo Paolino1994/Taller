@@ -342,10 +342,10 @@ int main( int argc, char* args[] )
 
             Texture miniMapIndicatorBall(gRenderer, "res/Ball/mini_map_indicator.png");
 
-            Texture miniMapIndicatorCamera(gRenderer, "res/camera_rect.png");
-            miniMapIndicatorCamera.setScaling(58, 58);
-            Texture miniMapFieldCamera(gRenderer, "res/soccer_field_1.6.png");
-            miniMapFieldCamera.setScaling(YAML::MINIMAP_WIDTH, YAML::MINIMAP_HEIGHT - 50);
+            Texture miniCamera(gRenderer, "res/camera_rect.png");
+            miniCamera.setScaling(58, 58);
+            Texture miniField(gRenderer, "res/soccer_field_1.6.png");
+            miniField.setScaling(YAML::MINIMAP_WIDTH, YAML::MINIMAP_HEIGHT - 50);
 
 			/*
 			** FIN CREACION TEXTURAS Y ANIMACIONES
@@ -359,7 +359,7 @@ int main( int argc, char* args[] )
 
             
 			log->info("Agrego la camara");
-            Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET, &miniMapIndicatorCamera, &miniMapFieldCamera);
+            Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET, &miniCamera, &miniField);
             camera.follow(world.getBall());
 
             log->info("Renderizo");
