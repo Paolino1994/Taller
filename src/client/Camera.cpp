@@ -89,7 +89,7 @@ void Camera::render(World& world){
 	for (std::pair<const Player_ID, Player>& pair : players)
 	{
 		Player& player = pair.second;
-		player.render(player.getX() - this->x, player.getY() - this->y - 15);
+		player.render(player.getX() - this->x, player.getY() - this->y + YAML::MINIMAP_HEIGHT - 10);
 	}
 
 	// posición de los jugadores en el miniMap
@@ -105,7 +105,7 @@ void Camera::render(World& world){
 	int screen_x = world.getBall().getX() - this->x;
 	int screen_y = world.getBall().getY() - this->y;
 	Log::get_instance()->info("X: " + std::to_string(screen_x) + " Y: " + std::to_string(screen_y));
-	world.getBall().render(screen_x, screen_y + YAML::MINIMAP_HEIGHT - 15);
+	world.getBall().render(screen_x, screen_y + YAML::MINIMAP_HEIGHT + 20);
 	world.getBall().renderMiniMap(miniFieldRect->getPosX(), miniFieldRect->getPosY() + 5);
 }
 

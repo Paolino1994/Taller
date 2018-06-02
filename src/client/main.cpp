@@ -343,7 +343,7 @@ int main( int argc, char* args[] )
             Texture miniMapIndicatorBall(gRenderer, "res/Ball/mini_map_indicator.png");
 
             Texture miniCamera(gRenderer, "res/camera_rect.png");
-            miniCamera.setScaling(58, 58);
+            miniCamera.setScaling(70, 70);
             Texture miniField(gRenderer, "res/soccer_field_1.6.png");
             miniField.setScaling(YAML::MINIMAP_WIDTH, YAML::MINIMAP_HEIGHT - 50);
 

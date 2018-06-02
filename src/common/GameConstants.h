@@ -31,7 +31,7 @@ namespace YAML {
 	// Identicos a nuestra imagen de background en el cliente
 	// Si lo quieren manejar por separado hay que aplicar logica de escalado del mundo logico al background -> no es la idea
 	const int WORLD_WIDTH = 1700;
-	const int WORLD_HEIGHT = 1050;
+	const int WORLD_HEIGHT = 1050 - 100;
 
 	// Por ahora lo pensamos como un SDL_Rect //esquina superior izquierda
 	// pero puede cambiar
