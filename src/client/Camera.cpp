@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-Camera::Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniCamera, Texture *miniField, Texture *backgroundPanel):
+Camera::Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniCamera, Texture *miniField, Texture *backgroundPanel,Score* score):
 	world(world),
     width(width),
     height(height),
@@ -16,7 +16,8 @@ Camera::Camera(World& world, int width, int height, int widthScrollOffset, int h
     followed(world.getBall()),
 	miniCameraRect(miniCamera),
 	miniFieldRect(miniField),
-	backgroundPanelRect(backgroundPanel)
+	backgroundPanelRect(backgroundPanel),
+	score(score)
 {
 }
 
@@ -109,11 +110,11 @@ void Camera::render(World& world){
 	Log::get_instance()->info("X: " + std::to_string(screen_x) + " Y: " + std::to_string(screen_y));
 	world.getBall().render(screen_x, screen_y + YAML::MINIMAP_HEIGHT + 20);
 	world.getBall().renderMiniMap(miniFieldRect->getPosX(), miniFieldRect->getPosY() + 10);
+
+	this->score->displayScore();
 }
 
 void Camera::renderMiniCamera(){
-
-
 	int followed_x = followed.getX();
 	int followed_y = followed.getY();
 	int pos_x, pos_y;

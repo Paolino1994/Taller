@@ -4,6 +4,7 @@
 //#include "Player.h"
 #include "World.h"
 #include "Texture.h"
+#include "Score.h"
 
 class Camera
 {
@@ -20,9 +21,10 @@ class Camera
     Texture *miniCameraRect;
     Texture *miniFieldRect;
     Texture *backgroundPanelRect;
+    Score * score;
     
 public:
-    Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniMapRect, Texture *miniFieldRect, Texture *tableroRect);
+    Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniMapRect, Texture *miniFieldRect, Texture *tableroRect, Score *score);
     ~Camera();
     
     void follow(Entity& gameObj); //Entity

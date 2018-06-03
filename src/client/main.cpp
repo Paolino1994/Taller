@@ -28,6 +28,7 @@
 #include "GameSelectTeam.h"
 #include "ListenStart.h"
 #include "GameConnectionError.h"
+#include "Score.h"
 
 #include "SoundManager.h"
 #include "GameManager.h"
@@ -350,6 +351,15 @@ int main( int argc, char* args[] )
             Texture backgroundPanel(gRenderer, "res/backgroundPanel.jpg");
 			backgroundPanel.setScaling(SCREEN_WIDTH, YAML::MINIMAP_HEIGHT - 50);
 
+            Texto scoreHomeName(gRenderer, "res/Tehkan World Cup.ttf",22, yamlReader.getTeamNombre(1) , {255,255,0,0});
+            Texto scoreAwayName(gRenderer, "res/Tehkan World Cup.ttf",22, yamlReader.getTeamNombre(2) , {255,255,0,0});
+            Texto scoreHome(gRenderer, "res/Tehkan World Cup.ttf",50, "0", {255,255,0,0});
+            Texto scoreAway(gRenderer, "res/Tehkan World Cup.ttf",50, "0", {255,255,0,0});
+
+
+            Score score(gRenderer, &scoreHomeName, &scoreAwayName, &scoreHome, &scoreAway);
+            score.initialize();
+
 			/*
 			** FIN CREACION TEXTURAS Y ANIMACIONES
 			**************************************/
@@ -362,7 +372,7 @@ int main( int argc, char* args[] )
 
             
 			log->info("Agrego la camara");
-            Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET, &miniCamera, &miniField, &backgroundPanel);
+            Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET, &miniCamera, &miniField, &backgroundPanel, &score);
             camera.follow(world.getBall());
 
             log->info("Renderizo");
