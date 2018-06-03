@@ -1,7 +1,7 @@
 #include "GameSelectTeam.h"
 
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
-const int SCREEN_HEIGHT = YAML::SCREEN_HEIGHT;
+const int SCREEN_HEIGHT = YAML::SCREEN_HEIGHT + YAML::MINIMAP_HEIGHT;
 
 typedef std::chrono::steady_clock Clock;
 
@@ -24,7 +24,8 @@ int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
 
     Texture background(gRenderer, "res/choose_team.jpg");
 
-    background.render( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+    background.render(100, 100);
+    background.setScaling(SCREEN_WIDTH, SCREEN_HEIGHT);
     int tituloW, tituloH, localW, awayW, nameH;
 
     Texto tituloTxt(gRenderer, "res/Tehkan World Cup.ttf",36, "SELECCIONAR EQUIPO", {255,255,0,0});
