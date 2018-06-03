@@ -127,10 +127,9 @@ void Camera::renderMiniCamera(){
 				else pos_y = miniFieldRect->getPosY() - 25 + followed_y * (0.142857);
 		}
 
-
 	if (followed_x < 185) pos_x = miniFieldRect->getPosX();
-		else{
-			if(followed_x > 1484) pos_x = miniFieldRect->getPosX() + 190;
+		else {
+			if (followed_x > 1445) pos_x = miniFieldRect->getPosX() + 180;
 				else pos_x = miniFieldRect->getPosX() - 30 + followed_x * (0.147059);
 		}
 
