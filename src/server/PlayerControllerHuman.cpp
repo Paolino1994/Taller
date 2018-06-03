@@ -15,9 +15,28 @@ PlayerControllerHuman::PlayerControllerHuman(PlayerModel * model, PlayerView * v
 	pressingRIGHT(false),
 	log(Log::get_instance())
 {
+	this->getModel()->setIsControlledByHuman(true);
 }
 
-void PlayerControllerHuman::handleEvent( Command& command ){
+PlayerControllerHuman::PlayerControllerHuman(PlayerController * other, World & world, User_ID userId):
+	PlayerController(other),
+	world(world),
+	userId(userId),
+	pressingUP(false),
+	pressingDOWN(false),
+	pressingLEFT(false),
+	pressingRIGHT(false),
+	log(Log::get_instance())
+{
+	this->getModel()->setIsControlledByHuman(true);
+}
+
+void PlayerControllerHuman::_update(double dt, int x_limit, int y_limit, int ball_x, int ball_y)
+{
+	// do nothing
+}
+
+void PlayerControllerHuman::_handleEvent( Command& command ){
 
     const double MAX_VEL_X=playerModel->getMaxVelX();
     const double MAX_VEL_Y=playerModel->getMaxVelY();

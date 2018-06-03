@@ -24,6 +24,11 @@ public:
 	int getCenterX() { return getX() + (getWidth() / 2); };
 	int getCenterY() { return getY() + (getHeight() / 2); };
 
+	bool isNearThisPoint(int x_toBeNear, int y_toBeNear, int delta) {
+		return ((x_toBeNear - delta) <= getCenterX() && getCenterX() <= (x_toBeNear + delta) &&
+				(y_toBeNear - delta) <= getCenterY() && getCenterY() <= (y_toBeNear + delta));
+	}
+
     
     virtual int getWidth() = 0;
     virtual int getHeight() = 0;

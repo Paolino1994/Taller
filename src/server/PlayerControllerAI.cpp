@@ -5,9 +5,17 @@ PlayerControllerAI::PlayerControllerAI(PlayerModel * model, PlayerView * view):
 	PlayerController(model, view)
 {
 	this->log = Log::get_instance();
+	this->getModel()->setIsControlledByHuman(false);
 }
 
-void PlayerControllerAI::handleEvent(Command & e)
+PlayerControllerAI::PlayerControllerAI(PlayerController * other):
+	PlayerController(other)
+{
+	this->log = Log::get_instance();
+	this->getModel()->setIsControlledByHuman(false);
+}
+
+void PlayerControllerAI::_handleEvent(Command & c)
 {
 	//do nothing
 }
@@ -17,7 +25,7 @@ User_ID PlayerControllerAI::getUserId()
 	return AI_USER;
 }
 
-void PlayerControllerAI::update(double dt, int x_limit, int y_limit, int ball_x, int ball_y)
+void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x, int ball_y)
 {
 	if(UserManager::get_instance().game_started()) { // FORMA CABEZA DE EVITAR QUE SE MUEVAN LOS JUGADORES ANTES DE QUE EMPIECE EL PARTIDO
 		// AI para volver a nuestra posicion inicial
@@ -29,7 +37,6 @@ void PlayerControllerAI::update(double dt, int x_limit, int y_limit, int ball_x,
 			this->playerModel->setVelX(0);
 			this->playerModel->setVelY(0);
 
-			PlayerController::update(dt, x_limit, y_limit);
 			return;
 		}
 
@@ -37,7 +44,6 @@ void PlayerControllerAI::update(double dt, int x_limit, int y_limit, int ball_x,
 			this->playerModel->setVelX(0);
 			this->playerModel->setVelY(0);
 
-			PlayerController::update(dt, x_limit, y_limit);
 			return;
 		}
 
@@ -98,8 +104,6 @@ void PlayerControllerAI::update(double dt, int x_limit, int y_limit, int ball_x,
 		if(abs(direction_x_ball) < 5 && abs(direction_y_ball) < 5) {
 			this->playerModel->sweep();
 		}
-
-		PlayerController::update(dt, x_limit, y_limit);
 	}
 }
 

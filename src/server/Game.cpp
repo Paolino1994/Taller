@@ -206,6 +206,8 @@ Game::Game() :
 
 	world.createTeam(Team::AWAY, defensores, mediocampistas, delanteros, defaultPlayer2, animMapper2);
 
+	// El orden de como se agregan ES IMPORTANTE
+	// puede ser necesario correr un sistema antes que otro (por ejemplo colisiones (en general) antes que chequear si hubo gol)
 	world.addSystem(std::make_shared<BallPlayerCollisionSystem>(world));
 	world.addSystem(std::make_shared<BallPassesEndLineSystem>(world));
 	
