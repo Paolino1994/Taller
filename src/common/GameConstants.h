@@ -40,6 +40,9 @@ namespace YAML {
 	const int FIELD_WIDTH = 1574;
 	const int FIELD_HEIGHT = 968;
 
+	const int FIELD_CENTER_X = 850;
+	const int FIELD_CENTER_Y = 530;
+
 	enum FIELD_POSITION {
 		LEFT = 0,
 		RIGHT,
