@@ -31,7 +31,7 @@ namespace YAML {
 	// Identicos a nuestra imagen de background en el cliente
 	// Si lo quieren manejar por separado hay que aplicar logica de escalado del mundo logico al background -> no es la idea
 	const int WORLD_WIDTH = 1700;
-	const int WORLD_HEIGHT = 1050;
+	const int WORLD_HEIGHT = 950;
 
 	// Por ahora lo pensamos como un SDL_Rect //esquina superior izquierda
 	// pero puede cambiar
@@ -62,6 +62,7 @@ namespace YAML {
     const int SCREEN_HEIGHT = 600;
     const int MINIMAP_HEIGHT = 200;
     const int MINIMAP_WIDTH = 250;
+    const int MINIMAP_INIT_X = SCREEN_WIDTH / 2 - MINIMAP_WIDTH / 2;
 	const int SCREEN_WIDTH_SCROLL_OFFSET = SCREEN_WIDTH / 2;
 	const int SCREEN_HEIGHT_SCROLL_OFFSET = SCREEN_HEIGHT / 2;
 

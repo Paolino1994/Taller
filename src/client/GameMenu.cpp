@@ -3,7 +3,7 @@
 #include "common/GameConstants.h"
 
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
-const int SCREEN_HEIGHT = YAML::SCREEN_HEIGHT;
+const int SCREEN_HEIGHT = YAML::SCREEN_HEIGHT + YAML::MINIMAP_HEIGHT;
 
 typedef std::chrono::steady_clock Clock;
 
@@ -28,6 +28,7 @@ int GameMenu::logginScreen(CommandSender& commandSender) {
     Texture background(gRenderer, "res/login_background.jpg");
 
     background.render(0,0);
+    background.setScaling(SCREEN_WIDTH, SCREEN_HEIGHT);
     int tituloW, tituloH, usuarioW, usuarioH, passW, passH, errorH, errorW;
 
     EscrbiendoState usuarioOPass = EscrbiendoState::USUARIO;
@@ -293,6 +294,7 @@ int GameMenu::selectFormationScreen(CommandSender& commandSender) {
     log->info("Generando pantalla de selección de formacion");
 
     Texture background(gRenderer, "res/choose_team.jpg");
+    background.setScaling(SCREEN_WIDTH, SCREEN_HEIGHT);
     int tituloW, tituloH, fTxtH, fTxtW;
 
     Texto tituloTxt(gRenderer, "res/Tehkan World Cup.ttf",36, "ELEGIR FORMACION", {255,255,0,0});

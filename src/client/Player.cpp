@@ -25,20 +25,14 @@ Player::Player(std::map<const std::string, Animation> animationMapper, player_da
 void Player::render(int screen_x, int screen_y)
 {
 	if(this->userId != -1){
-		indicators[this->userId]->render(screen_x, screen_y + YAML::MINIMAP_HEIGHT);
+		indicators[this->userId]->render(screen_x, screen_y - 12);
 	}
-    animations[state].render(screen_x, screen_y + YAML::MINIMAP_HEIGHT, angle);
-//	miniMapIndicator->render( this->x / 10,this->y / 10);
-	// aca se renderiza el minimapa, todavia no pongo bien los calculos para que quede donde tiene que quedar porque todavia no se donde va a quedar
-	// y no quiero hacer cuentas de pixels al pedo, cuando este definido el tamanio del minimapa y la posicion lo acomodo
+    animations[state].render(screen_x, screen_y, angle);
 }
 
 void Player::renderMiniMap(int screen_x, int screen_y)
 {
-//	miniMapIndicator->render(screen_x + this->x / 11,screen_y + this->y / 11);
-	miniMapIndicator->render(screen_x + this->x * (0.14706), screen_y + this->y * (0.14286));
-	// aca se renderiza el minimapa, todavia no pongo bien los calculos para que quede donde tiene que quedar porque todavia no se donde va a quedar
-	// y no quiero hacer cuentas de pixels al pedo, cuando este definido el tamanio del minimapa y la posicion lo acomodo
+	miniMapIndicator->render(screen_x + this->x * 0.14706, screen_y + this->y * 0.14286);
 }
 
 void Player::update(const player_view_data_t & player_view_data)

@@ -17,11 +17,12 @@ class Camera
     int x_update_offset; // el offset con respecto al estado anterior
     int y_update_offset; // idem
     Entity& followed; //std::vector<GameObject*> o Entities
-    Texture *miniMapRect;
+    Texture *miniCameraRect;
     Texture *miniFieldRect;
+    Texture *backgroundPanelRect;
     
 public:
-    Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniMapRect, Texture *miniFieldRect);
+    Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniMapRect, Texture *miniFieldRect, Texture *tableroRect);
     ~Camera();
     
     void follow(Entity& gameObj); //Entity
@@ -31,6 +32,8 @@ public:
     void update(double dt);
     
     void render(World& world);
+
+    void renderMiniCamera();
 
 };
 

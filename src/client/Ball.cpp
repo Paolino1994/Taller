@@ -12,12 +12,11 @@ Ball::Ball(std::map<const std::string, Animation>& animMapperBall, Texture * min
 }
 
 void Ball::render(int screen_x, int screen_y) {
-	animations[state].render(screen_x, screen_y, angle,z);
+	animations[state].render(screen_x, screen_y - 30, angle,z);
 }
 
 void Ball::renderMiniMap(int screen_x, int screen_y) {
-//	miniMapIndicator->render(screen_x + 10 + this->x / 10, screen_y + 15 + this->y /11);
-	miniMapIndicator->render(screen_x + this->x * (0.147059), screen_y + this->y * (0.142857));
+	miniMapIndicator->render(screen_x + this->x * 0.147059, screen_y + this->y * 0.142857);
 }
 
 void Ball::update(const ball_view_data_t & ball_view_data)
