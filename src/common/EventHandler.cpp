@@ -12,7 +12,11 @@ EventHandler::~EventHandler()
 {
 }
 
-void EventHandler::registerTo(EventID eventId)
+bool EventHandler::registerTo(EventID eventId)
 {
-	EventQueue::get().registerTo(eventId, this);
+	return EventQueue::get().registerTo(eventId, this);
+}
+
+bool EventHandler::unregisterFrom(EventID eventId) {
+	return EventQueue::get().unRegisterFrom(eventId, this);
 }
