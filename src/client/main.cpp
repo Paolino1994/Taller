@@ -347,6 +347,9 @@ int main( int argc, char* args[] )
             Texture miniField(gRenderer, "res/soccer_field_1.6.png");
             miniField.setScaling(YAML::MINIMAP_WIDTH, YAML::MINIMAP_HEIGHT - 50);
 
+            Texture backgroundPanel(gRenderer, "res/backgroundPanel.jpg");
+			backgroundPanel.setScaling(SCREEN_WIDTH, YAML::MINIMAP_HEIGHT - 50);
+
 			/*
 			** FIN CREACION TEXTURAS Y ANIMACIONES
 			**************************************/
@@ -359,7 +362,7 @@ int main( int argc, char* args[] )
 
             
 			log->info("Agrego la camara");
-            Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET, &miniCamera, &miniField);
+            Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET, &miniCamera, &miniField, &backgroundPanel);
             camera.follow(world.getBall());
 
             log->info("Renderizo");

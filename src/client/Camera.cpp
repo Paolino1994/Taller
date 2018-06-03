@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-Camera::Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniCamera, Texture *miniField):
+Camera::Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniCamera, Texture *miniField, Texture *backgroundPanel):
 	world(world),
     width(width),
     height(height),
@@ -15,7 +15,8 @@ Camera::Camera(World& world, int width, int height, int widthScrollOffset, int h
     y_update_offset(0),
     followed(world.getBall()),
 	miniCameraRect(miniCamera),
-	miniFieldRect(miniField)
+	miniFieldRect(miniField),
+	backgroundPanelRect(backgroundPanel)
 {
 }
 
@@ -92,6 +93,7 @@ void Camera::render(World& world){
 		player.render(player.getX() - this->x, player.getY() - this->y + YAML::MINIMAP_HEIGHT - 10);
 	}
 
+	backgroundPanelRect->render(0, 0);
 	// posición de los jugadores en el miniMap
 	miniFieldRect->render(YAML::MINIMAP_INIT_X, 0 );
 	renderMiniCamera();
