@@ -21,7 +21,7 @@ Player_ID PlayerModel::getNextPlayerId(Team team) {
 }
 
 PlayerModel::PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y, int distance_x, int distance_y) :
-	Entity(kickOff_x, kickOff_y),
+	Entity(initial_x, initial_y),
 	initial_x(initial_x),
 	initial_y(initial_y),
 	kickOff_x(kickOff_x),
@@ -47,7 +47,8 @@ PlayerModel::PlayerModel(Team team, const player_data_t player_data, double init
 	kickVelX(0.0),
 	kickVelY(0.0),
 	sprintVelocityMultiplier(player_data.SPRINT_VELOCITY_MULTIPLIER),
-	velocityMultiplier(1.0)
+	velocityMultiplier(1.0),
+	inChargeOfKickOff(false)
 {
 	log = Log::get_instance();
 }
@@ -79,7 +80,8 @@ PlayerModel::PlayerModel(Team team, const player_data_t player_data, double init
 	kickVelX(0.0),
 	kickVelY(0.0),
 	sprintVelocityMultiplier(player_data.SPRINT_VELOCITY_MULTIPLIER),
-	velocityMultiplier(1.0)
+	velocityMultiplier(1.0),
+	inChargeOfKickOff(false)
 {
 	log = Log::get_instance();
 }
@@ -214,6 +216,16 @@ int PlayerModel::getDistance_x() {
 
 int PlayerModel::getDistance_y() {
     return distance_y;
+}
+
+bool PlayerModel::isInChargeOfKickOff()
+{
+	return inChargeOfKickOff;
+}
+
+void PlayerModel::setInChargeOfKickOff(bool inCharge)
+{
+	this->inChargeOfKickOff = inCharge;
 }
 
 void PlayerModel::setIsControlledByHuman(bool controlled) {

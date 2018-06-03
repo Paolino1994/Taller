@@ -88,6 +88,10 @@ public:
     int getDistance_x();
     int getDistance_y();
 
+	bool isInChargeOfKickOff();
+
+	void setInChargeOfKickOff(bool inCharge);
+
 private:
     int distance_x = 100;
 	int distance_y = 100;
@@ -134,4 +138,7 @@ private:
 	double getAngleToGoal();
 
 	double getDistanceToGoal();
+
+	// TODO: a mover la decisión a un objeto Team
+	bool inChargeOfKickOff;
 };
