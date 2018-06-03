@@ -27,6 +27,7 @@ User_ID PlayerControllerAI::getUserId()
 
 void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x, int ball_y)
 {
+	bool teamHasBall = this->playerModel->getTeam() == GameManager::get_instance()->getTeamBallControl();
 	if(UserManager::get_instance().game_started()) { // FORMA CABEZA DE EVITAR QUE SE MUEVAN LOS JUGADORES ANTES DE QUE EMPIECE EL PARTIDO
 		// AI para volver a nuestra posicion inicial
 		// Bien simple que vuelva a su posicion
@@ -40,12 +41,12 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 			return;
 		}
 
-		if (this->playerModel->getTeam() == GameManager::get_instance()->getTeamBallControl()) {
-			this->playerModel->setVelX(0);
-			this->playerModel->setVelY(0);
+		// if (this->playerModel->getTeam() == GameManager::get_instance()->getTeamBallControl()) {
+		// 	this->playerModel->setVelX(0);
+		// 	this->playerModel->setVelY(0);
 
-			return;
-		}
+		// 	return;
+		// }
 
 		int max_distance_x = this->playerModel->getDistance_x(); 
 		int max_distance_y = this->playerModel->getDistance_y();
@@ -65,7 +66,7 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 
 		if (abs(ball_in_area_x) < max_distance_x) { // Si la pelota esta en la zona entonces la va a buscar
 			if(abs(direction_x_ball) > 5){ // Si esta muy cerca de x deja de correr porque si no queda girando en el lugar y es feo
-				direction_x_goto = (direction_x_ball >= 0) ? 1 : -1;
+					direction_x_goto = (direction_x_ball >= 0) ? 1 : -1;
 			} else {
 				direction_x_goto = 0;
 			}
@@ -78,11 +79,18 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		else {  // El jugador siempre intenta acercarse a la pelota en todo momento
 			direction_x_goto = (direction_x_ball >= 0) ? 1 : -1;
 		}
+		if (teamHasBall && abs(direction_x_ball) < 100) {// Si se acerca mucho a la pelota y la tiene su equipo entonces se queda quieto
+					direction_x_goto = 0;
+				} 
 
 		// Lo mismo pero en Y
 		if (abs(ball_in_area_y) < max_distance_y) {
 			if(abs(direction_y_ball) > 5){
-				direction_y_goto = (direction_y_ball >= 0) ? 1 : -1;
+					direction_y_goto = (direction_y_ball >= 0) ? 1 : -1;
+				if (teamHasBall) { 
+					direction_y_goto = 0;
+				} else {
+				}
 			} else {
 				direction_y_goto = 0;
 			}
@@ -95,6 +103,9 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		else {
 			direction_y_goto = (direction_y_ball >= 0) ? 1 : -1;
 		}
+		if (teamHasBall && abs(direction_y_ball) < 100) { // Si se acerca mucho a la pelota y la tiene su equipo entonces se queda quieto
+			direction_y_goto = 0;
+		} 
 
 		this->playerModel->setVelX(direction_x_goto * this->playerModel->getMaxVelX());
 		this->returning_x = true;
