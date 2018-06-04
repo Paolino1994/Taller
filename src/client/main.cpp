@@ -347,11 +347,6 @@ int main( int argc, char* args[] )
             Texture miniField(gRenderer, "res/soccer_field_1.6.png");
             miniField.setScaling(YAML::MINIMAP_WIDTH, YAML::MINIMAP_HEIGHT - 50);
 
-            Texto tiempo(gRenderer, "res/Tehkan World Cup.ttf",36, "Tekhan Fiuba Cup", {255,255,0,0});
-            tiempo.display(50,50);
-
-
-
 			/*
 			** FIN CREACION TEXTURAS Y ANIMACIONES
 			**************************************/
@@ -361,9 +356,10 @@ int main( int argc, char* args[] )
 			log->info("Creo el mundo con su pelota");
 			World world(background.getWidth(), background.getHeight(), &background, playerIndicators, animMapperBall, &miniMapIndicatorBall, animMapperHOME, animMapperAWAY, &miniMapIndicatorHome, &miniMapIndicatorAway,
 						crearDefaultPlayer(PlayerStill, PlayerRun, PlayerSweep, PlayerKick));
+
             
 			log->info("Agrego la camara");
-            Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET, &miniCamera, &miniField);
+            Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET, &miniCamera, &miniField, &backgroundPanel, &score);
             camera.follow(world.getBall());
 
             log->info("Renderizo");

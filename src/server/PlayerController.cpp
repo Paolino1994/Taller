@@ -1,14 +1,27 @@
 //
 // Created by federico on 11/04/18.
 //
-
+#include <iostream>
 #include "PlayerController.h"
+
+void PlayerController::checkStateChange()
+{
+	if (this->scriptedState && this->scriptedState->isFinished()) {
+		this->setScriptedState(this->scriptedState->getNextState());
+	}
+}
 
 PlayerController::PlayerController(PlayerModel * model, PlayerView * view):
 	playerModel(model),
-	playerView(view)
+	playerView(view),
+	scriptedState(nullptr)
+{}
+
+PlayerController::PlayerController(PlayerController * other):
+	playerModel(other->getModel()),
+	playerView(other->getView()),
+	scriptedState(other->scriptedState.release())
 {
-	playerModel->setIsControlledByHuman(false);
 }
 
 Entity * PlayerController::getEntity()
@@ -26,13 +39,31 @@ PlayerView * PlayerController::getView()
 	return this->playerView;
 }
 
-void PlayerController::update(double dt, int x_limit, int y_limit, int ball_x, int ball_y) {
-	this->update(dt, x_limit, y_limit);
+void PlayerController::setScriptedState(PlayerControllerScriptedState * newState)
+{
+	this->scriptedState.reset(newState);
 }
 
-
-void PlayerController::update(double dt, int x_limit, int y_limit)
+void PlayerController::handleEvent(Command & command)
 {
+	this->checkStateChange();
+	if (this->scriptedState) {
+		std::cout << "Scripted state handleando un command!" << std::endl;
+		this->scriptedState->handleEvent(command);
+	}
+	else {
+		this->_handleEvent(command);
+	}
+}
+
+void PlayerController::update(double dt, int x_limit, int y_limit, int ball_x, int ball_y) {
+	this->checkStateChange();
+	if (this->scriptedState) {
+		this->scriptedState->update(dt, x_limit, y_limit, ball_x, ball_y);
+	}
+	else {
+		this->_update(dt, x_limit, y_limit, ball_x, ball_y);
+	}
 	this->playerModel->update(dt, x_limit, y_limit);
 	this->playerView->update(dt);
 }
@@ -42,15 +73,19 @@ void PlayerController::swap(PlayerController * otherController)
 	Log* log = Log::get_instance();
 	log->debug("PlayerController: cambiando jugador");
 
-	auto temp = this->playerModel;
-	this->playerModel->setIsControlledByHuman(false);
+	bool isControlledHumanForOther = this->playerModel->getIsControlledByHuman();
+	this->playerModel->setIsControlledByHuman(otherController->playerModel->getIsControlledByHuman());
+	otherController->playerModel->setIsControlledByHuman(isControlledHumanForOther);
+
+	PlayerModel* modelForOther = this->playerModel;
 	this->playerModel = otherController->playerModel;
-	this->playerModel->setIsControlledByHuman(true);
-	otherController->playerModel = temp;
+	otherController->playerModel = modelForOther;
 
 	auto tempView = this->playerView;
 	this->playerView = otherController->playerView;
 	otherController->playerView = tempView;
+
+	this->scriptedState.swap(otherController->scriptedState);
 }
 
 bool PlayerController::hasControlOfTheBall() {

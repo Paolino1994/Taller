@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-Camera::Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniCamera, Texture *miniField):
+Camera::Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniCamera, Texture *miniField, Texture *backgroundPanel,Score* score):
 	world(world),
     width(width),
     height(height),
@@ -15,7 +15,9 @@ Camera::Camera(World& world, int width, int height, int widthScrollOffset, int h
     y_update_offset(0),
     followed(world.getBall()),
 	miniCameraRect(miniCamera),
-	miniFieldRect(miniField)
+	miniFieldRect(miniField),
+	backgroundPanelRect(backgroundPanel),
+	score(score)
 {
 }
 
@@ -92,6 +94,7 @@ void Camera::render(World& world){
 		player.render(player.getX() - this->x, player.getY() - this->y + YAML::MINIMAP_HEIGHT - 10);
 	}
 
+	backgroundPanelRect->render(0, 0);
 	// posición de los jugadores en el miniMap
 	miniFieldRect->render(YAML::MINIMAP_INIT_X, 0 );
 	renderMiniCamera();
@@ -107,11 +110,11 @@ void Camera::render(World& world){
 	Log::get_instance()->info("X: " + std::to_string(screen_x) + " Y: " + std::to_string(screen_y));
 	world.getBall().render(screen_x, screen_y + YAML::MINIMAP_HEIGHT + 20);
 	world.getBall().renderMiniMap(miniFieldRect->getPosX(), miniFieldRect->getPosY() + 10);
+
+	this->score->displayScore();
 }
 
 void Camera::renderMiniCamera(){
-
-
 	int followed_x = followed.getX();
 	int followed_y = followed.getY();
 	int pos_x, pos_y;
@@ -125,10 +128,9 @@ void Camera::renderMiniCamera(){
 				else pos_y = miniFieldRect->getPosY() - 25 + followed_y * (0.142857);
 		}
 
-
 	if (followed_x < 185) pos_x = miniFieldRect->getPosX();
-		else{
-			if(followed_x > 1484) pos_x = miniFieldRect->getPosX() + 190;
+		else {
+			if (followed_x > 1445) pos_x = miniFieldRect->getPosX() + 180;
 				else pos_x = miniFieldRect->getPosX() - 30 + followed_x * (0.147059);
 		}
 

@@ -8,15 +8,18 @@
 #include "PlayerView.h"
 #include "common/Log.h"
 #include "common/Request.h" //pasar a GameConstants.h?
+#include "scripted/PlayerControllerScriptedState.h"
 
 class PlayerController {
-
 protected:
 	PlayerModel* playerModel;
 	PlayerView* playerView;
+	std::unique_ptr<PlayerControllerScriptedState> scriptedState;
 
+	void checkStateChange();
 public:
 	PlayerController(PlayerModel* model, PlayerView* view);
+	PlayerController(PlayerController* other);
 	virtual ~PlayerController() {};
 
 	virtual Entity* getEntity();
@@ -25,11 +28,16 @@ public:
 
 	virtual PlayerView* getView();
 
-	virtual void handleEvent(Command &e) = 0;
+	// llamar usando new zaraza()!;
+	void setScriptedState(PlayerControllerScriptedState* newState);
 
-	virtual void update(double dt, int x_limit, int y_limit);
-
-	virtual void update(double dt, int x_limit, int y_limit, int ball_x, int ball_y);
+	// Delegan si hay a un scriptedState:
+	void handleEvent(Command &e);
+	void update(double dt, int x_limit, int y_limit, int ball_x, int ball_y);
+	
+	// A redefinit para un controller especifico, funciona si no hay nada scripteado funcionando
+	virtual void _handleEvent(Command &e) = 0;
+	virtual void _update(double dt, int x_limit, int y_limit, int ball_x, int ball_y) = 0;
 
 	virtual void swap(PlayerController* other);
 

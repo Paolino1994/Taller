@@ -200,6 +200,10 @@ bool TeamFactory::create(int defenders, int midfielders, int forwards, Team goal
 		!(add_midfielders(midfielders, goal, field_length, field_width)) ||
 		!(add_forwards(forwards, goal, field_length, field_width)))
 		return false;
+
+	// Temp: que el ultimo jugador, casi siempre delantero o mediocampista, sea el que saca del medio
+	team.back().model->setInChargeOfKickOff(true);
+
 	return true;
 }
 

@@ -6,6 +6,7 @@
 #include "../common/Log.h"
 #include <algorithm>
 #include <iostream>
+#include "scripted/PlayerKickOffSetupState.h"
 
 World::World(int width, int height, std::map<const std::string, Animation> ballAnimMapper):
 	systems(std::vector<std::shared_ptr<System>>()),
@@ -39,6 +40,7 @@ void World::createTeam(Team team, int defenders, int midfielders, int forwards, 
 
 		for (auto controller : playerControllers[teamIndex]) {
 			pControllers.push_back(controller);
+			controller->setScriptedState(new PlayerKickOffSetupState(*controller->getModel(), Team::HOME));
 		}
 	}
 	else {
@@ -59,16 +61,12 @@ PlayerController* World::injectHumanController(Team team, User_ID userId)
 {
     std::vector<PlayerController*>& teamControllers = playerControllers[static_cast<std::underlying_type<Team>::type>(team)];
 
-    for (size_t i = teamControllers.size() - 1; i >= 0 ; i--)
+    for (size_t i = teamControllers.size(); i-- > 0 ;)
     {
         if (teamControllers[i]->isControllable()) {
             PlayerController* other = teamControllers[i];
-            PlayerControllerHuman* human = new PlayerControllerHuman(other->getModel(), other->getView(), *this, userId);
+            PlayerControllerHuman* human = new PlayerControllerHuman(other, *this, userId);
             teamControllers[i] = human;
-            human->getModel()->setIsControlledByHuman(true);
-            //if(noOneHasControlOfTheBall(teamControllers)){
-            //    human->getModel()->setHasControlOfTheBall(true);
-            //}
             delete other;
             return human;
         }
@@ -197,9 +195,8 @@ bool World::ejectController(PlayerController * playerController, User_ID userId)
 	for (size_t i = 0; i < teamControllers.size(); i++)
 	{
 		if (teamControllers[i] == playerController) {
-			PlayerControllerAI* aiController = new PlayerControllerAI(playerController->getModel(), playerController->getView());
+			PlayerControllerAI* aiController = new PlayerControllerAI(playerController);
 			teamControllers[i] = aiController;
-			aiController->getModel()->setIsControlledByHuman(false);
 			aiController->getModel()->setHasControlOfTheBall(false);
 			delete playerController;
 			return true;

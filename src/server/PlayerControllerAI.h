@@ -14,10 +14,11 @@ private:
 
 public:
 	PlayerControllerAI(PlayerModel* model, PlayerView* view);
+	PlayerControllerAI(PlayerController* other);
 
-	virtual void handleEvent(Command &e);
+	virtual void _handleEvent(Command &e);
 
-	virtual void update(double dt, int x_limit, int y_limit, int ball_x, int ball_y);
+	virtual void _update(double dt, int x_limit, int y_limit, int ball_x, int ball_y);
 
 	virtual bool isControllable();
 
