@@ -347,9 +347,22 @@ int main( int argc, char* args[] )
             Texture miniField(gRenderer, "res/soccer_field_1.6.png");
             miniField.setScaling(YAML::MINIMAP_WIDTH, YAML::MINIMAP_HEIGHT - 50);
 
-			/*
-			** FIN CREACION TEXTURAS Y ANIMACIONES
-			**************************************/
+            Texture backgroundPanel(gRenderer, "res/backgroundPanel.jpg");
+            backgroundPanel.setScaling(SCREEN_WIDTH, YAML::MINIMAP_HEIGHT - 50);
+
+            Texto scoreHomeName(gRenderer, "res/Tehkan World Cup.ttf",22, yamlReader.getTeamNombre(1) , {255,255,0,0});
+            Texto scoreAwayName(gRenderer, "res/Tehkan World Cup.ttf",22, yamlReader.getTeamNombre(2) , {255,255,0,0});
+            Texto scoreHome(gRenderer, "res/Tehkan World Cup.ttf",50, "0", {255,255,0,0});
+            Texto scoreAway(gRenderer, "res/Tehkan World Cup.ttf",50, "0", {255,255,0,0});
+
+
+            Score score(gRenderer, &scoreHomeName, &scoreAwayName, &scoreHome, &scoreAway);
+            score.initialize();
+
+
+            /*
+            ** FIN CREACION TEXTURAS Y ANIMACIONES
+            **************************************/
 
 
 			// Agrego jugadores al mundo
