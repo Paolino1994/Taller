@@ -123,7 +123,7 @@ PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
             if(abs(getAngle(teamControllers[index]->getModel(),getBall().getModel())-(360-ball.getModel().getAngle()))<anguloActual){
                 indexAUsar=index;
                 anguloActual=getAngle(teamControllers[index]->getModel(),getBall().getModel());
-                std::cout<<"Angulo:"<<anguloActual<<std::endl;
+                //std::cout<<"Angulo:"<<anguloActual<<std::endl;
             }
 		}
 		/*comparacion=!playerIsOnRange(teamControllers[index],controllerToSwap);
@@ -171,7 +171,7 @@ PlayerController* World::getPlayerToPassLong(PlayerController * controllerToSwap
             if(abs(getAngle(teamControllers[index]->getModel(),getBall().getModel())-(360-ball.getModel().getAngle()))<anguloActual){
                 indexAUsar=index;
                 anguloActual=getAngle(teamControllers[index]->getModel(),getBall().getModel());
-                std::cout<<"Angulo:"<<anguloActual<<std::endl;
+                //std::cout<<"Angulo:"<<anguloActual<<std::endl;
             }
         }
         /*comparacion=!playerIsOnRange(teamControllers[index],controllerToSwap);
@@ -341,7 +341,7 @@ bool World::playerIsOnPassRange(PlayerController *&controller, PlayerController 
     if(ballAngle>0){
         ballAngle=360-ballAngle;
     }
-    std::cout<<"Angle: "<<ballAngle<<" X "<<x<<" xCon "<<xCon<<" Y "<<y<<" yCon "<<yCon<<std::endl;
+    //std::cout<<"Angle: "<<ballAngle<<" X "<<x<<" xCon "<<xCon<<" Y "<<y<<" yCon "<<yCon<<std::endl;
     if(ballAngle==90 || ballAngle==270){
         if(abs(x-xCon)<200 && abs(yCon-y)>10){
             return true;

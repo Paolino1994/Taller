@@ -160,6 +160,8 @@ typedef struct ball_view_data {
 typedef struct game_manager_data {
 	int scoreHome;
 	int scoreAway;
+    int timeInSeconds;
+    time_t timeInSecondsStart;
 } game_manager_data_t;
 
 typedef struct model_data {
@@ -167,4 +169,5 @@ typedef struct model_data {
 	ball_view_data_t& ballViewData;
     game_manager_data_t& gameManagerData;
 	std::vector<EventID>& events; // probablemente cambie
+
 } model_data_t;

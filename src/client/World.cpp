@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "World.h"
+#include "../common/GameConstants.h"
 
 World::World(int width, int height, Texture* background, std::vector<Texture*>& _playerIndicators, std::map<const std::string, Animation>& ballAnimMapper, Texture* ballMiniMap,
 	std::map<const std::string, Animation>& teamAnimMapperHOME, std::map<const std::string, Animation>& teamAnimMapperAWAY, Texture* miniMapIndicatorHOME, Texture* miniMapIndicatorAWAY,
@@ -56,6 +57,13 @@ void World::update(CommandSender& commandSender) {
 	}
 
 	model_data_t modelData = commandSender.getModelData();
+    //std::cout<<"Execution Time: "<<modelData.gameManagerData.timeInSeconds<<" Seconds"<<std::endl;
+    if(modelData.gameManagerData.timeInSeconds-lastTime>0){
+        std::cout<<"Execution Time: "<<modelData.gameManagerData.timeInSeconds<<" Seconds"<<std::endl;
+        lastTime=modelData.gameManagerData.timeInSeconds;
+    }
+	//std::cout<<"Execution Time: "<< modelData.timeInSeconds<<" Seconds"<<std::endl;
+
 
 	std::vector<player_view_data_t>& playerViewData = modelData.playerViewData;
 	ball_view_data_t& ball_view_data = modelData.ballViewData;
@@ -94,6 +102,8 @@ void World::update(CommandSender& commandSender) {
 	}
 
 }
+
+
 
 int World::getWidth(){
     return width;

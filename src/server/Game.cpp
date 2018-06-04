@@ -6,6 +6,7 @@
 #include "common/GameConstants.h"
 #include "common/Log.h"
 #include "common/SpriteInfoSetter.h"
+#include "../common/GameConstants.h"
 
 #include "BallPlayerCollisionSystem.h"
 #include "BallPassesEndLineSystem.h"
@@ -71,8 +72,11 @@ void Game::_run()
 	const double fixed_dt = 0.01; //10 milliseconds
 	double accumulator = 0; // en segundos!
 	double frametime;
+    time_t start = time(NULL);
+    time_t lastime = time(NULL);
+    time_t end = time(NULL);
 
-	//Log* log = Log::get_instance();
+    //Log* log = Log::get_instance();
 
 	//While application is running
 	while (!server_exit_requested)
@@ -81,8 +85,12 @@ void Game::_run()
 		milli = std::chrono::duration_cast<std::chrono::milliseconds>(newTime - currentTime);
 		currentTime = newTime;
 		frametime = milli.count() / 1000.0;
-
-		accumulator += frametime;
+        accumulator += frametime;
+        //time_t end = time(NULL);
+        /*if((double)(end-lastime)>0){
+            std::cout<<"Execution Time: "<< (double)(end-start)<<" Seconds"<<std::endl;
+            lastime=end;
+        }*/
 
 		// Render current frame
 		// TODO: Aca enviar el modelo a nuestos clientes
@@ -99,8 +107,11 @@ void Game::_run()
 		// TODO falta mutexear modelo para que en update no se puedan llamar metodos a los models
 
 		//Cuando el tiempo pasado es mayor a nuestro tiempo de actualizacion
+
 		while (accumulator >= fixed_dt)
 		{
+			end = time(NULL);
+
 			//Calcula movimientos
 			//std::cout << "Model update" << std::endl;
 			world.update(fixed_dt); //Update de todos los players (y otras entidades proximamente?)
@@ -109,7 +120,14 @@ void Game::_run()
 			EventQueue::get().handleEvents();
 			accumulator -= fixed_dt;
 			modelData.playerViewData.clear();
+            //modelData.timeInSeconds=end-start;
 			//std::cout << "Model serialize" << std::endl;
+            modelData.gameManagerData.timeInSeconds=end-start;
+            modelData.gameManagerData.timeInSecondsStart=start;
+            if((double)(end-lastime)>0){
+                std::cout<<"Execution Time: "<< (double)(end-start)<<" Seconds"<<std::endl;
+                lastime=end;
+            }
 			world.serialize(modelData);
 		}
 	}
@@ -117,100 +135,101 @@ void Game::_run()
 }
 
 Game::Game() :
-	playerViewData(std::vector<player_view_data_t>()),
-	ballViewData({ 0,0,0,0,QUIESCENT }),
-	gameManagerData({0,0}),
-	events(std::vector<EventID>()),
-	modelData({ playerViewData, ballViewData, gameManagerData,events }),
-	world(World(YAML::WORLD_WIDTH, YAML::WORLD_HEIGHT, getAnimMapperBall())),
-	maxPlayers(YAML::MAX_PLAYERS),
-	playerCount(0),
-	running(false),
-	server_exit_requested(false)
+        playerViewData(std::vector<player_view_data_t>()),
+        ballViewData({ 0,0,0,0,QUIESCENT }),
+        gameManagerData({0,0,0,time(NULL)}),
+        events(std::vector<EventID>()),
+        modelData({ playerViewData, ballViewData, gameManagerData,events }),
+        world(World(YAML::WORLD_WIDTH, YAML::WORLD_HEIGHT, getAnimMapperBall())),
+        maxPlayers(YAML::MAX_PLAYERS),
+        playerCount(0),
+        running(false),
+        server_exit_requested(false)
 {
-	/****************************************
-	** INICIO CREACION TEXTURAS Y ANIMACIONES
-	*/
+    /****************************************
+    ** INICIO CREACION TEXTURAS Y ANIMACIONES
+    */
 
-	std::map<const std::string, Animation> animMapper;
-	std::map<const std::string, Animation> animMapper2;
-	
-	// CARGAR La configuracion del YAML y de constantes nuestras:
-	// TODO
+    std::map<const std::string, Animation> animMapper;
+    std::map<const std::string, Animation> animMapper2;
 
-	Log* log = Log::get_instance();
+    // CARGAR La configuracion del YAML y de constantes nuestras:
+    // TODO
 
-	//Las texturas:
-	log->info("Cargando Texturas");
+    Log* log = Log::get_instance();
 
-	// EQUIPO 1 HAY QUE MODULARIZAR ESTO 
-	int equipo = 1;
-	log->info("Crear Texturas");
-	SpriteInfoSetter textures(equipo); // No me gusta esto del lado del servidor
-	sprite_info PlayerRun = textures.getPlayerRunInfo();
-	sprite_info PlayerStill = textures.getPlayerStillInfo();
-	sprite_info PlayerSweep = textures.getPlayerSweepInfo();
-	sprite_info PlayerKick = textures.getPlayerKickInfo();
+    //Las texturas:
+    log->info("Cargando Texturas");
 
-	// Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
-	log->info("Crear Animaciones");
-	log->debug("Crear Animacion Run");
-	animMapper.emplace(std::make_pair(PlayerRun.spriteid, Animation(PlayerRun)));
-	log->debug("Crear Animacion Still");
-	animMapper.emplace(std::make_pair(PlayerStill.spriteid, Animation(PlayerStill)));
-	log->debug("Crear Animacion Sweep");
-	animMapper.emplace(std::make_pair(PlayerSweep.spriteid, Animation(PlayerSweep)));
-	log->debug("Crear Animacion Kick");
-	animMapper.emplace(std::make_pair(PlayerKick.spriteid, Animation(PlayerKick)));
+    // EQUIPO 1 HAY QUE MODULARIZAR ESTO
+    int equipo = 1;
+    log->info("Crear Texturas");
+    SpriteInfoSetter textures(equipo); // No me gusta esto del lado del servidor
+    sprite_info PlayerRun = textures.getPlayerRunInfo();
+    sprite_info PlayerStill = textures.getPlayerStillInfo();
+    sprite_info PlayerSweep = textures.getPlayerSweepInfo();
+    sprite_info PlayerKick = textures.getPlayerKickInfo();
 
-	SpriteInfoSetter textures2(2);
-	sprite_info PlayerRun2 = textures2.getPlayerRunInfo();
-	sprite_info PlayerStill2 = textures2.getPlayerStillInfo();
-	sprite_info PlayerSweep2 = textures2.getPlayerSweepInfo();
-	sprite_info PlayerKick2 = textures2.getPlayerKickInfo();
-	// Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
-	log->info("Crear Animaciones del equipo 2");
-	log->debug("Crear Animacion Run");
-	animMapper2.emplace(std::make_pair(PlayerRun2.spriteid, Animation(PlayerRun2)));
-	log->debug("Crear Animacion Still");
-	animMapper2.emplace(std::make_pair(PlayerStill2.spriteid, Animation(PlayerStill2)));
-	log->debug("Crear Animacion Sweep");
-	animMapper2.emplace(std::make_pair(PlayerSweep2.spriteid, Animation(PlayerSweep2)));
-	log->debug("Crear Animacion Kick");
-	animMapper2.emplace(std::make_pair(PlayerKick2.spriteid, Animation(PlayerKick2)));
+    // Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
+    log->info("Crear Animaciones");
+    log->debug("Crear Animacion Run");
+    animMapper.emplace(std::make_pair(PlayerRun.spriteid, Animation(PlayerRun)));
+    log->debug("Crear Animacion Still");
+    animMapper.emplace(std::make_pair(PlayerStill.spriteid, Animation(PlayerStill)));
+    log->debug("Crear Animacion Sweep");
+    animMapper.emplace(std::make_pair(PlayerSweep.spriteid, Animation(PlayerSweep)));
+    log->debug("Crear Animacion Kick");
+    animMapper.emplace(std::make_pair(PlayerKick.spriteid, Animation(PlayerKick)));
 
-	
-
-	/*
-	** FIN CREACION TEXTURAS Y ANIMACIONES
-	**************************************/
-
-	// Creo jugadores:
-	player_data_t defaultPlayer = crearDefaultPlayer(PlayerStill, PlayerRun, PlayerSweep, PlayerKick);
-	log->info("Crear Jugadores");
-	//TeamFactory* tfactory = new TeamFactory(defaultPlayer);
-	int defensores = YAMLReader::get_instance().getDefensores(equipo);
-	int mediocampistas = YAMLReader::get_instance().getMediocampistas(equipo);
-	int delanteros = YAMLReader::get_instance().getDelanteros(equipo);
-
-	world.createTeam(Team::HOME, defensores, mediocampistas, delanteros, defaultPlayer, animMapper);
+    SpriteInfoSetter textures2(2);
+    sprite_info PlayerRun2 = textures2.getPlayerRunInfo();
+    sprite_info PlayerStill2 = textures2.getPlayerStillInfo();
+    sprite_info PlayerSweep2 = textures2.getPlayerSweepInfo();
+    sprite_info PlayerKick2 = textures2.getPlayerKickInfo();
+    // Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
+    log->info("Crear Animaciones del equipo 2");
+    log->debug("Crear Animacion Run");
+    animMapper2.emplace(std::make_pair(PlayerRun2.spriteid, Animation(PlayerRun2)));
+    log->debug("Crear Animacion Still");
+    animMapper2.emplace(std::make_pair(PlayerStill2.spriteid, Animation(PlayerStill2)));
+    log->debug("Crear Animacion Sweep");
+    animMapper2.emplace(std::make_pair(PlayerSweep2.spriteid, Animation(PlayerSweep2)));
+    log->debug("Crear Animacion Kick");
+    animMapper2.emplace(std::make_pair(PlayerKick2.spriteid, Animation(PlayerKick2)));
 
 
-	//agrego equipo 2
-	player_data_t defaultPlayer2 = crearDefaultPlayer(PlayerStill2, PlayerRun2, PlayerSweep2, PlayerKick2);
-	//TeamFactory* tfactory2 = new TeamFactory(defaultPlayer2);
-	log->info("Crear Jugadores del team 2");
-	defensores = YAMLReader::get_instance().getDefensores(2);
-	mediocampistas = YAMLReader::get_instance().getMediocampistas(2);
-	delanteros = YAMLReader::get_instance().getDelanteros(2);
 
-	world.createTeam(Team::AWAY, defensores, mediocampistas, delanteros, defaultPlayer2, animMapper2);
+    /*
+    ** FIN CREACION TEXTURAS Y ANIMACIONES
+    **************************************/
 
-	world.addSystem(std::make_shared<BallPlayerCollisionSystem>(world));
-	world.addSystem(std::make_shared<BallPassesEndLineSystem>(world));
-	
-	world.serialize(this->modelData);
+    // Creo jugadores:
+    player_data_t defaultPlayer = crearDefaultPlayer(PlayerStill, PlayerRun, PlayerSweep, PlayerKick);
+    log->info("Crear Jugadores");
+    //TeamFactory* tfactory = new TeamFactory(defaultPlayer);
+    int defensores = YAMLReader::get_instance().getDefensores(equipo);
+    int mediocampistas = YAMLReader::get_instance().getMediocampistas(equipo);
+    int delanteros = YAMLReader::get_instance().getDelanteros(equipo);
+
+    world.createTeam(Team::HOME, defensores, mediocampistas, delanteros, defaultPlayer, animMapper);
+
+
+    //agrego equipo 2
+    player_data_t defaultPlayer2 = crearDefaultPlayer(PlayerStill2, PlayerRun2, PlayerSweep2, PlayerKick2);
+    //TeamFactory* tfactory2 = new TeamFactory(defaultPlayer2);
+    log->info("Crear Jugadores del team 2");
+    defensores = YAMLReader::get_instance().getDefensores(2);
+    mediocampistas = YAMLReader::get_instance().getMediocampistas(2);
+    delanteros = YAMLReader::get_instance().getDelanteros(2);
+
+    world.createTeam(Team::AWAY, defensores, mediocampistas, delanteros, defaultPlayer2, animMapper2);
+
+    world.addSystem(std::make_shared<BallPlayerCollisionSystem>(world));
+    world.addSystem(std::make_shared<BallPassesEndLineSystem>(world));
+
+    world.serialize(this->modelData);
 }
+
 
 
 Game::~Game()

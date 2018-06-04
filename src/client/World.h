@@ -8,6 +8,7 @@
 #include "Ball.h"
 #include "Player.h"
 #include "GameManager.h"
+#include "Texto.h"
 
 // Esto ahora va estar un poco mas relacionado con el juego
 // Game / World
@@ -58,5 +59,9 @@ public:
     
     int getWidth();
     int getHeight();
+
+    double lastTime=0;
+
+    void addTime(Texto texto);
 };
 
