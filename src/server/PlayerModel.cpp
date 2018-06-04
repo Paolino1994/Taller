@@ -175,7 +175,7 @@ int PlayerModel::getHeight()
 	return this->heights[this->state];
 }
 
-Team PlayerModel::getTeam()
+Team PlayerModel::getTeam() const
 {
 	return this->team;
 }
@@ -328,7 +328,7 @@ void PlayerModel::kick(BallModel& ballModel,double distance)
         setHasControlOfTheBall(false);
 		ballModel.setAngle(angle);
 		ballModel.kick(distance,BallModel::LOW);
-		EventQueue::get().push(make_shared<KickEvent>());
+		EventQueue::get().push(make_shared<KickEvent>(*this));
 	}
 	log->debug("PlayerModel: pateando");
 }
@@ -358,7 +358,7 @@ void PlayerModel::setHasControlOfTheBall(bool control) {
 bool PlayerModel::getHasControlOfTheBall() {
 	// Forma extremadamente cabeza de ver que equipo tiene la pelota.
 	if (hasControlOfTheBall) { 
-		GameManager::get_instance()->setTeamBallControl(team);
+		GameManager::get_instance().setTeamBallControl(team);
 	}
     return hasControlOfTheBall;
 }

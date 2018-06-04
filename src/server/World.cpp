@@ -313,7 +313,7 @@ void World::serialize(model_data_t & modelData)
 
 	ball.serialize(modelData.ballViewData);
 
-    GameManager::get_instance()->serialize(modelData.gameManagerData);
+    GameManager::get_instance().serialize(modelData.gameManagerData);
 }
 
 int World::getWidth(){

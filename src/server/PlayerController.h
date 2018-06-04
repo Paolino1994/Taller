@@ -9,18 +9,21 @@
 #include "common/Log.h"
 #include "common/Request.h" //pasar a GameConstants.h?
 #include "scripted/PlayerControllerScriptedState.h"
+#include "common/EventHandler.h"
 
-class PlayerController {
+class PlayerController: public EventHandler
+{
 protected:
 	PlayerModel* playerModel;
 	PlayerView* playerView;
 	std::unique_ptr<PlayerControllerScriptedState> scriptedState;
 
 	void checkStateChange();
+	PlayerController(PlayerModel* model, PlayerView* view, PlayerControllerScriptedState* scriptedState);
 public:
 	PlayerController(PlayerModel* model, PlayerView* view);
 	PlayerController(PlayerController* other);
-	virtual ~PlayerController() {};
+	virtual ~PlayerController();
 
 	virtual Entity* getEntity();
 
@@ -50,4 +53,7 @@ public:
     bool hasControlOfTheBall();
 
     double getAngle();
+
+	// Events to handle:
+	virtual void handle(PeriodEndEvent& e);
 };

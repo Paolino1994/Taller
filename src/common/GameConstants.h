@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include "common/YAMLReader.h"
-#include "Event.h"
 #include "SDL_rect.h"
 
 using Player_ID = u_int32_t;
@@ -163,9 +162,15 @@ typedef struct ball_view_data {
 typedef struct game_manager_data {
 	int scoreHome;
 	int scoreAway;
-    int timeInSeconds;
-    time_t timeInSecondsStart;
+    uint32_t timeInSeconds;
 } game_manager_data_t;
+
+
+enum class EventID : uint32_t {
+	KICK = 0,
+	PERIOD_END,
+	__LENGTH__
+};
 
 typedef struct model_data {
 	std::vector<player_view_data_t>& playerViewData;

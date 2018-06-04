@@ -10,6 +10,7 @@
 
 #include "BallPlayerCollisionSystem.h"
 #include "BallPassesEndLineSystem.h"
+#include "TimerSystem.h"
 
 #include "GameManager.h"
 
@@ -72,9 +73,6 @@ void Game::_run()
 	const double fixed_dt = 0.01; //10 milliseconds
 	double accumulator = 0; // en segundos!
 	double frametime;
-    time_t start = time(NULL);
-    time_t lastime = time(NULL);
-    time_t end = time(NULL);
 
     //Log* log = Log::get_instance();
 
@@ -110,8 +108,6 @@ void Game::_run()
 
 		while (accumulator >= fixed_dt)
 		{
-			end = time(NULL);
-
 			//Calcula movimientos
 			//std::cout << "Model update" << std::endl;
 			world.update(fixed_dt); //Update de todos los players (y otras entidades proximamente?)
@@ -122,12 +118,6 @@ void Game::_run()
 			modelData.playerViewData.clear();
             //modelData.timeInSeconds=end-start;
 			//std::cout << "Model serialize" << std::endl;
-            modelData.gameManagerData.timeInSeconds=end-start;
-            modelData.gameManagerData.timeInSecondsStart=start;
-            if((double)(end-lastime)>0){
-                //std::cout<<"Execution Time: "<< (double)(end-start)<<" Seconds"<<std::endl;
-                lastime=end;
-            }
 			world.serialize(modelData);
 		}
 	}
@@ -137,7 +127,7 @@ void Game::_run()
 Game::Game() :
         playerViewData(std::vector<player_view_data_t>()),
         ballViewData({ 0,0,0,0,QUIESCENT }),
-        gameManagerData({0,0,0,time(NULL)}),
+        gameManagerData({0,0,0}),
         events(std::vector<EventID>()),
         modelData({ playerViewData, ballViewData, gameManagerData,events }),
         world(World(YAML::WORLD_WIDTH, YAML::WORLD_HEIGHT, getAnimMapperBall())),
@@ -224,6 +214,8 @@ Game::Game() :
 
     world.createTeam(Team::AWAY, defensores, mediocampistas, delanteros, defaultPlayer2, animMapper2);
 
+	// PUEDE SER importante el orden de agregado de sistemas
+	world.addSystem(std::make_shared<TimerSystem>(1 * 10, true)); // tiempos de 1 minuto emulados a 45 min
     world.addSystem(std::make_shared<BallPlayerCollisionSystem>(world));
     world.addSystem(std::make_shared<BallPassesEndLineSystem>(world));
 

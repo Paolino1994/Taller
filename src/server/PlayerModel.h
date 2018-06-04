@@ -20,7 +20,7 @@ public:
 
 	virtual int getHeight();
 
-	Team getTeam();
+	Team getTeam() const;
 
     double getAngle();
 

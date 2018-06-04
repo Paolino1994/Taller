@@ -28,5 +28,6 @@ public:
 	// Los que hereden de EventHandler solo tienen que redefinir los eventos que van a manejar! (sino lanzamos except)
 
 	virtual void handle(KickEvent& e) { this->handleFallback(e); };
+	virtual void handle(PeriodEndEvent& e) { this->handleFallback(e); };
 };
 

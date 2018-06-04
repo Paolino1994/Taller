@@ -4,6 +4,8 @@
 #include <iostream>
 #include "PlayerController.h"
 
+#include "scripted/PlayerKickOffSetupState.h"
+
 void PlayerController::checkStateChange()
 {
 	if (this->scriptedState && this->scriptedState->isFinished()) {
@@ -11,18 +13,26 @@ void PlayerController::checkStateChange()
 	}
 }
 
-PlayerController::PlayerController(PlayerModel * model, PlayerView * view):
+PlayerController::PlayerController(PlayerModel * model, PlayerView * view, PlayerControllerScriptedState * scriptedState):
 	playerModel(model),
 	playerView(view),
-	scriptedState(nullptr)
+	scriptedState(scriptedState)
+{
+	this->registerTo(EventID::PERIOD_END);
+	// IMPORTANTE: desregistrarme en el destructor porque es posible el matado de controllers cuando entran/salen jugadores!
+}
+
+PlayerController::~PlayerController() {
+	this->unregisterFrom(EventID::PERIOD_END);
+}
+
+PlayerController::PlayerController(PlayerModel * model, PlayerView * view):
+	PlayerController(model, view, nullptr)
 {}
 
 PlayerController::PlayerController(PlayerController * other):
-	playerModel(other->getModel()),
-	playerView(other->getView()),
-	scriptedState(other->scriptedState.release())
-{
-}
+	PlayerController(other->getModel(), other->getView(), other->scriptedState.release())
+{}
 
 Entity * PlayerController::getEntity()
 {
@@ -94,6 +104,11 @@ bool PlayerController::hasControlOfTheBall() {
 
 double PlayerController::getAngle() {
     return playerModel->getAngle();
+}
+
+void PlayerController::handle(PeriodEndEvent & e)
+{
+	this->setScriptedState(new PlayerKickOffSetupState(*this->getModel(), e.teamToKickOffNextPeriod));
 }
 
 void PlayerController::serialize(player_view_data_t& player_view_data) {
