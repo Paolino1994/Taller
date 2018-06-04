@@ -169,6 +169,7 @@ typedef struct game_manager_data {
 enum class EventID : uint32_t {
 	KICK = 0,
 	PERIOD_END,
+	GOAL,
 	__LENGTH__
 };
 

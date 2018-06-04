@@ -34,6 +34,10 @@ public:
 
     void serialize(game_manager_data_t& game_manager_data);
 
+	static Team getKickOffTeamAfterGoal(GoalEvent& e);
+
 	// Events to handle:
 	virtual void handle(KickEvent& e);
+	virtual void handle(GoalEvent& e);
+	virtual void handle(PeriodEndEvent& e);
 };

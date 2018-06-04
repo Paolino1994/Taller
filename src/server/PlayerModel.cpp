@@ -427,6 +427,7 @@ void PlayerModel::kickHigh(double distance, BallModel &ballModel) {
 		setHasControlOfTheBall(false);
         ballModel.setAngle(angle);
         ballModel.kick(distance,BallModel::HIGH);
+		EventQueue::get().push(make_shared<KickEvent>(*this));
 	}
 	log->debug("PlayerModel: pateando largo");
 
@@ -444,6 +445,7 @@ void PlayerModel::kick(BallModel &model) {
         //double angleToGoal=getAngleToGoal();
         double distanceToGoal=getDistanceToGoal();
         model.kick(distanceToGoal,BallModel::GOAL);
+		EventQueue::get().push(make_shared<KickEvent>(*this));
     }
     log->debug("PlayerModel: pateando");
 
