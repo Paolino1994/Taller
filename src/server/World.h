@@ -78,5 +78,9 @@ public:
 	bool playerIsOnPassRange(PlayerController *&pController, PlayerController *pPlayerController);
 
     double getAngle(PlayerModel *pModel, BallModel &model);
+
+	void changeFormation(Team team, int goalSide, std::string formation);
+
+
 };
 

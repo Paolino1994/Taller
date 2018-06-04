@@ -21,7 +21,7 @@ void RequestHandler::_run()
 					player = game.assignToTeam(team, this->userId);
 					break;
 				}
-				case Request::COMMAND: {
+				case Request::COMMAND: { 
 					Command command = *reinterpret_cast<const Command*>(protocol.dataBuffer());
 					if (command.key == CommandKey::KEY_DOWN) {
 						Log::get_instance()->info("Me llego un comando del tipo KEY_DOWN");

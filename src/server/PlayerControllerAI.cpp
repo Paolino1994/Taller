@@ -51,11 +51,11 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		int max_distance_x = this->playerModel->getDistance_x(); 
 		int max_distance_y = this->playerModel->getDistance_y();
 
-		int direction_x_initial = this->playerModel->initial_x - this->playerModel->getX();
-		int direction_y_initial = this->playerModel->initial_y - this->playerModel->getY();
+		int direction_x_initial = this->playerModel->getInitial_x() - this->playerModel->getX();
+		int direction_y_initial = this->playerModel->getInitial_y() - this->playerModel->getY();
 
-		int ball_in_area_x = ball_x - this->playerModel->initial_x;
-		int ball_in_area_y = ball_y - this->playerModel->initial_y;
+		int ball_in_area_x = ball_x - this->playerModel->getInitial_x();
+		int ball_in_area_y = ball_y - this->playerModel->getInitial_y();
 
 		int direction_x_ball = ball_x - this->playerModel->getX();
 		int direction_y_ball = ball_y - this->playerModel->getY();
@@ -79,9 +79,9 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		else {  // El jugador siempre intenta acercarse a la pelota en todo momento
 			direction_x_goto = (direction_x_ball >= 0) ? 1 : -1;
 		}
-		if (teamHasBall && abs(direction_x_ball) < 100) {// Si se acerca mucho a la pelota y la tiene su equipo entonces se queda quieto
-					direction_x_goto = 0;
-				} 
+		if (teamHasBall && abs(direction_x_ball) < 100 && direction_x_initial < max_distance_x ) {// Si se acerca mucho a la pelota y la tiene su equipo entonces se queda quieto
+			direction_x_goto = 0;
+		} 
 
 		// Lo mismo pero en Y
 		if (abs(ball_in_area_y) < max_distance_y) {
@@ -103,7 +103,7 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		else {
 			direction_y_goto = (direction_y_ball >= 0) ? 1 : -1;
 		}
-		if (teamHasBall && abs(direction_y_ball) < 100) { // Si se acerca mucho a la pelota y la tiene su equipo entonces se queda quieto
+		if (teamHasBall && abs(direction_y_ball) < 100 && direction_y_initial < max_distance_y) { // Si se acerca mucho a la pelota y la tiene su equipo entonces se queda quieto
 			direction_y_goto = 0;
 		} 
 

@@ -86,6 +86,22 @@ PlayerModel::PlayerModel(Team team, const player_data_t player_data, double init
 	log = Log::get_instance();
 }
 
+int PlayerModel::getInitial_x(){
+	return initial_x;
+}
+
+int PlayerModel::getInitial_y() {
+	return initial_y;
+}
+
+void PlayerModel::setInitial_x(int x){
+	initial_x = x;
+}
+
+void PlayerModel::setInitial_y(int y) {
+	initial_y = y;
+}
+
 // IMPORTANYE: Proximamente manejar mejor esto con patron State 
 void PlayerModel::update(double dt, int x_limit, int y_limit){
     colisionableCounter++;

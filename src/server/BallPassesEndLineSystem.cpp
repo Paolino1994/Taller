@@ -30,9 +30,13 @@ void BallPassesEndLineSystem::process(double dt)
 		{
 			if(y > goalBottomPost && y < goalTopPost)
 			{
+
+				if(!gol){
+				gol = true;
 				std::cout << "GOOOL" << std::endl;
 				// Aca estoy probando el GameManager, no es para nada definitivo que sea asi
 				GameManager::get_instance()->addGoal(Team::HOME); // Obvio que no es asi porque falta la logica del cambio de lado
+				world.changeFormation(Team::HOME, 0, "3-3-0");}
 			} else {
 				std::cout << "PALO" << std::endl;
 				ballModel.setVelX( -ballModel.getVelX() ); // Hago rebotar la pelota en el palo, le cambio el angulo en x

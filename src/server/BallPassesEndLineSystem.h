@@ -9,6 +9,7 @@ class BallPassesEndLineSystem : public System
 {
 private:
 	World & world;
+	bool gol = false;
 public:
 	BallPassesEndLineSystem(World& world);
 	virtual ~BallPassesEndLineSystem();

@@ -20,6 +20,14 @@ public:
 
 	virtual int getHeight();
 
+	int getInitial_x();
+
+	int getInitial_y();
+
+    void setInitial_x(int _x);
+
+	void setInitial_y(int _y);
+
 	Team getTeam();
 
     double getAngle();
@@ -58,12 +66,6 @@ public:
     int getKickOff_x();
     int getKickOff_y();
 
-	const int initial_x;
-	const int initial_y;
-
-    const int kickOff_x;
-    const int kickOff_y;
-
 	// TODO: Evaluar si conviene tener una referencia a la pelota cuando el PlayerModel la tiene bajo su control
 	void setHasControlOfTheBall(bool i);
 	// TODO: Evaluar si conviene tener una referencia a la pelota cuando el PlayerModel la tiene bajo su control
@@ -93,6 +95,11 @@ public:
 	void setInChargeOfKickOff(bool inCharge);
 
 private:
+    int initial_x;
+	int initial_y;
+
+    int kickOff_x;
+    int kickOff_y;
     int distance_x = 100;
 	int distance_y = 100;
 	Team team;
@@ -139,6 +146,6 @@ private:
 
 	double getDistanceToGoal();
 
-	// TODO: a mover la decisión a un objeto Team
+	// TODO: a mover la decisiï¿½n a un objeto Team
 	bool inChargeOfKickOff;
 };

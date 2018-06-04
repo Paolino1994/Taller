@@ -8,6 +8,8 @@
 #include <iostream>
 #include "scripted/PlayerKickOffSetupState.h"
 
+std::vector<std::string> separarFormacion(const std::string& str, const char& ch) ;
+
 World::World(int width, int height, std::map<const std::string, Animation> ballAnimMapper):
 	systems(std::vector<std::shared_ptr<System>>()),
 	ball(BallController(width/2, height/2, ballAnimMapper)),
@@ -372,4 +374,86 @@ double World::getAngle(PlayerModel *pModel, BallModel &model) {
     angulo=360-((angulo*180/M_PI) + 90);
     return angulo;
 
+}
+
+void World::changeFormation(Team team, int goalSide, std::string formation){
+
+    std::vector<std::string> separados;
+    separados = separarFormacion(formation, '-');
+    int mitadDeCancha_x = YAML::FIELD_CENTER_X;
+    int longTotalCancha_y = YAML::FIELD_HEIGHT;
+    // int defensores = stoi(separados[0]); Para esta primera version de la reformacion no hace falta porque lo unico que cambia es el mediocampo
+    int mediocampistas = stoi(separados[1]);
+    // int delanteros = stoi(separados[2]);
+
+    int direccion_x = 0;
+
+    // Arquero
+    direccion_x = goalSide == 0 ? -1 : 1; // Aca seteo de que lado de la cancha lo pongo  
+    playerControllers[(int)team][0]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 750));
+    playerControllers[(int)team][0]->getModel()->setInitial_y(longTotalCancha_y / 2);
+
+    // Defensores (siempre deberia ser 3, por ahora)
+    direccion_x = goalSide == 0 ? -1 : 1;  
+    playerControllers[(int)team][1]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 500));
+    playerControllers[(int)team][1]->getModel()->setInitial_y(longTotalCancha_y / 4);
+    playerControllers[(int)team][2]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 500));
+    playerControllers[(int)team][2]->getModel()->setInitial_y(longTotalCancha_y / 2);
+    playerControllers[(int)team][3]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 500));
+    playerControllers[(int)team][3]->getModel()->setInitial_y((longTotalCancha_y / 4) * 3);
+
+
+    // Mediocampistas 
+    direccion_x = goalSide == 0 ? 1 : -1; // cambio la direccion para que esten parados del lado que atacan (ofensivos)
+    if (mediocampistas == 1) { // Si es un mediocampista entonces son 2 delanteros
+        playerControllers[(int)team][4]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 100));
+        playerControllers[(int)team][4]->getModel()->setInitial_y(longTotalCancha_y / 2);
+        
+        //Delanteros
+        playerControllers[(int)team][5]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 400));
+        playerControllers[(int)team][5]->getModel()->setInitial_y(longTotalCancha_y / 3);
+        playerControllers[(int)team][6]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 400));
+        playerControllers[(int)team][6]->getModel()->setInitial_y((longTotalCancha_y / 3) * 2);
+
+    } else if (mediocampistas == 2) { //Dos mediocampistas entonces 1 delantero
+
+        playerControllers[(int)team][4]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 100));
+        playerControllers[(int)team][4]->getModel()->setInitial_y(longTotalCancha_y / 3);
+        playerControllers[(int)team][5]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 100));
+        playerControllers[(int)team][5]->getModel()->setInitial_y((longTotalCancha_y / 3) * 2);
+
+        //Delanteros
+        playerControllers[(int)team][6]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 400));
+        playerControllers[(int)team][6]->getModel()->setInitial_y(longTotalCancha_y / 2);
+
+    } else if (mediocampistas == 3) { // Tres mediocampistas entonces 0 delanteros
+
+        playerControllers[(int)team][4]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 100));
+        playerControllers[(int)team][4]->getModel()->setInitial_y(longTotalCancha_y / 4);
+        playerControllers[(int)team][5]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 100));
+        playerControllers[(int)team][5]->getModel()->setInitial_y(longTotalCancha_y / 2);
+        playerControllers[(int)team][6]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 100));
+        playerControllers[(int)team][6]->getModel()->setInitial_y((longTotalCancha_y / 4) * 3);
+
+    }
+}
+
+
+std::vector<std::string> separarFormacion(const std::string& str, const char& ch) {
+    std::string siguiente;
+    std::vector<std::string> resultado;
+
+    for (std::string::const_iterator it = str.begin(); it != str.end(); it++) {
+        if (*it == ch) {
+            if (!siguiente.empty()) {
+                resultado.push_back(siguiente);
+                siguiente.clear();
+            }
+        } else {
+            siguiente += *it;
+        }
+    }
+    if (!siguiente.empty())
+        resultado.push_back(siguiente);
+    return resultado;
 }
