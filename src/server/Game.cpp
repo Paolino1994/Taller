@@ -125,7 +125,7 @@ void Game::_run()
             modelData.gameManagerData.timeInSeconds=end-start;
             modelData.gameManagerData.timeInSecondsStart=start;
             if((double)(end-lastime)>0){
-                std::cout<<"Execution Time: "<< (double)(end-start)<<" Seconds"<<std::endl;
+                //std::cout<<"Execution Time: "<< (double)(end-start)<<" Seconds"<<std::endl;
                 lastime=end;
             }
 			world.serialize(modelData);

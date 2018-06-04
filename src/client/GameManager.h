@@ -12,6 +12,7 @@ private:
 
     int scoreHome;
     int scoreAway;
+	int time;
 
 	GameManager();
 
@@ -27,4 +28,6 @@ public:
     void update(const game_manager_data_t& game_manager_data);
 
     int getScore(Team team);
+
+	int getTime();
 };

@@ -20,16 +20,19 @@ private:
     Texto *awayName;
     Texto *homeScore;
     Texto *awayScore;
+	Texto *tiempo;
 
     GameManager *gameManager;
 
 public:
-	Score(SDL_Renderer *renderer, Texto *homeName, Texto *awayName, Texto *homeScore, Texto *awayScore);
+	Score(SDL_Renderer *renderer, Texto *homeName, Texto *awayName, Texto *homeScore, Texto *awayScore, Texto *tiempo);
 
     ~Score();
 
 	void initialize();
 
     void displayScore();
+
+    string getStringTiempo(int time);
 };
 

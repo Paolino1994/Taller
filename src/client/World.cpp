@@ -59,7 +59,7 @@ void World::update(CommandSender& commandSender) {
 	model_data_t modelData = commandSender.getModelData();
     //std::cout<<"Execution Time: "<<modelData.gameManagerData.timeInSeconds<<" Seconds"<<std::endl;
     if(modelData.gameManagerData.timeInSeconds-lastTime>0){
-        std::cout<<"Execution Time: "<<modelData.gameManagerData.timeInSeconds<<" Seconds"<<std::endl;
+        //std::cout<<"Execution Time: "<<modelData.gameManagerData.timeInSeconds<<" Seconds"<<std::endl;
         lastTime=modelData.gameManagerData.timeInSeconds;
     }
 	//std::cout<<"Execution Time: "<< modelData.timeInSeconds<<" Seconds"<<std::endl;

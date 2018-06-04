@@ -31,6 +31,7 @@
 
 #include "SoundManager.h"
 #include "GameManager.h"
+#include "../common/GameConstants.h"
 
 
 //Screen dimension constants
@@ -354,9 +355,10 @@ int main( int argc, char* args[] )
             Texto scoreAwayName(gRenderer, "res/Tehkan World Cup.ttf",22, yamlReader.getTeamNombre(2) , {255,255,0,0});
             Texto scoreHome(gRenderer, "res/Tehkan World Cup.ttf",50, "0", {255,255,0,0});
             Texto scoreAway(gRenderer, "res/Tehkan World Cup.ttf",50, "0", {255,255,0,0});
+            Texto tiempo(gRenderer, "res/Tehkan World Cup.ttf",50, "0", {255,255,0,0});
 
 
-            Score score(gRenderer, &scoreHomeName, &scoreAwayName, &scoreHome, &scoreAway);
+            Score score(gRenderer, &scoreHomeName, &scoreAwayName, &scoreHome, &scoreAway,&tiempo);
             score.initialize();
 
 

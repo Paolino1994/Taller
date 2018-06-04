@@ -1,4 +1,5 @@
 #include "GameManager.h"
+#include "../common/GameConstants.h"
 
 GameManager* GameManager::instance = 0;
 bool GameManager::initialized = false;
@@ -30,6 +31,7 @@ void GameManager::update(const game_manager_data_t & game_manager_data)
 {
 	scoreHome = game_manager_data.scoreHome;
 	scoreAway = game_manager_data.scoreAway;
+    time=game_manager_data.timeInSeconds;
 }
 
 int GameManager::getScore(Team team){
@@ -42,6 +44,10 @@ int GameManager::getScore(Team team){
 
 
 GameManager::~GameManager() {
+}
+
+int GameManager::getTime() {
+    return time;
 }
 
 
