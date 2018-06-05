@@ -46,8 +46,8 @@ namespace YAML {
 	const int FIELD_WIDTH = 1574;
 	const int FIELD_HEIGHT = 968;
 
-	const int FIELD_CENTER_X = 850;
-	const int FIELD_CENTER_Y = 530;
+	const int FIELD_CENTER_X = 865;
+	const int FIELD_CENTER_Y = 460;
 
 	// Por ahora lo pensamos como un SDL_Rect //esquina superior izquierda
 	// pero puede cambiar
