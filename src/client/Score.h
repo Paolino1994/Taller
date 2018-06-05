@@ -5,6 +5,7 @@
 #include "Texto.h"
 #include "Texture.h"
 #include "GameManager.h"
+#include "SoundManager.h"
 #include "common/GameConstants.h"
 #include "common/YAMLReader.h"
 

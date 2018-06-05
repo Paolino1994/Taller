@@ -35,10 +35,14 @@ void Score::displayScore(){
 
     if(newScoreHome != home) {
         homeScore->updateText(to_string(newScoreHome), {255,255,0,0});
+        SoundManager::get_instance()->playSound(SoundEffect::SE_GOAL_CROWD);
+        home = newScoreHome;
     }
 
     if(newScoreAway != away) {
         awayScore->updateText(to_string(newScoreAway), {255,255,0,0});
+        SoundManager::get_instance()->playSound(SoundEffect::SE_GOAL_CROWD);
+        away = newScoreAway;
     }
 
     std::string Tiempo=getStringTiempo(newTime);

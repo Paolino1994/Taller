@@ -30,6 +30,12 @@ SoundManager::SoundManager(){
         Log::get_instance()->error("Failed to load beat music! SDL_mixer Error: " + (std::string)Mix_GetError());
     }
     soundEffects.insert ( std::pair<SoundEffect,Mix_Chunk*>(SoundEffect::SE_SELECT,selectSound) );
+    Mix_Chunk* goalSound = Mix_LoadWAV( "res/goal_crowd_sound.wav" );
+    if( selectSound == NULL )
+    {
+        Log::get_instance()->error("Failed to load beat music! SDL_mixer Error: " + (std::string)Mix_GetError());
+    }
+    soundEffects.insert ( std::pair<SoundEffect,Mix_Chunk*>(SoundEffect::SE_GOAL_CROWD,goalSound) );
 }
 
 SoundManager::~SoundManager() {    
