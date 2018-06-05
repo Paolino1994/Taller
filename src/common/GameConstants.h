@@ -49,6 +49,9 @@ namespace YAML {
 	const int FIELD_CENTER_X = 865;
 	const int FIELD_CENTER_Y = 460;
 
+	const int LEFT_GOAL_KICK_POINT_X = 216;
+	const int RIGHT_GOAL_KICK_POINT_X = 1485;
+
 	// Por ahora lo pensamos como un SDL_Rect //esquina superior izquierda
 	// pero puede cambiar
 	const SDL_Rect GOAL[FIELD_POSITION::__LENGTH__] = {
@@ -174,6 +177,7 @@ enum class EventID : uint32_t {
 	KICK = 0,
 	PERIOD_END,
 	GOAL,
+	GOAL_KICK,
 	__LENGTH__
 };
 

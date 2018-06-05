@@ -491,3 +491,7 @@ double PlayerModel::getAngleToGoal() {
 double PlayerModel::getDistanceToGoal() {
     return 500;
 }
+
+bool PlayerModel::isGoalKeeper() {
+	return role == 'G';
+}

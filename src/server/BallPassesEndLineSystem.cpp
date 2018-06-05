@@ -60,6 +60,10 @@ void BallPassesEndLineSystem::process(double dt)
 			}
 			else {
 				std::cout << "Salio por el costado izquierdo" << std::endl;
+				Team goalKickTeam = (GameManager::get_instance().getHomeDefends() == FIELD_POSITION::LEFT) ? Team::HOME : Team::AWAY;
+				world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), 1);
+				world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), 1);
+				EventQueue::get().push(std::make_shared<GoalKickEvent>(goalKickTeam, FIELD_POSITION::LEFT));
 			}
 		}
 
@@ -83,6 +87,10 @@ void BallPassesEndLineSystem::process(double dt)
 				}
 			} else {
 				std::cout << "Salio por el costado derecho" << std::endl;
+				Team goalKickTeam = (GameManager::get_instance().getHomeDefends() == FIELD_POSITION::RIGHT) ? Team::HOME : Team::AWAY;
+				world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), 1);
+				world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), 1);
+				EventQueue::get().push(std::make_shared<GoalKickEvent>(goalKickTeam, FIELD_POSITION::RIGHT));
 			}
 		}
 

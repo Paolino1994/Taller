@@ -62,3 +62,20 @@ public:
 
 	virtual void accept(EventHandler& handler);
 };
+
+class GoalKickEvent : public Event {
+public:
+	const Team team; // que equipo saca
+	const int goal;
+
+	GoalKickEvent(Team team, int goal);
+	virtual ~GoalKickEvent();
+
+	virtual EventID getId() {
+		return EventID::GOAL_KICK;
+	}
+
+	virtual void accept(EventHandler& handler);
+};
+
+

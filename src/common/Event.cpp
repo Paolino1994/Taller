@@ -46,3 +46,17 @@ void GoalEvent::accept(EventHandler & handler)
 {
 	handler.handle(*this);
 }
+
+// GOAL KICK EVENT
+GoalKickEvent::GoalKickEvent(Team team, int goal):
+	team(team),
+	goal(goal)
+{}
+
+GoalKickEvent::~GoalKickEvent()
+{}
+
+void GoalKickEvent::accept(EventHandler & handler)
+{
+	handler.handle(*this);
+}

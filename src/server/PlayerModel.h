@@ -100,6 +100,8 @@ public:
     char getRole();
     void setRole(char role);
 
+	bool isGoalKeeper();
+
 private:
     int initial_x;
 	int initial_y;

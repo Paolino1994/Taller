@@ -13,6 +13,7 @@ GameManager::GameManager():
 	this->registerTo(EventID::KICK);
 	this->registerTo(EventID::GOAL);
 	this->registerTo(EventID::PERIOD_END);
+	this->registerTo(EventID::GOAL_KICK);
 }
 
 GameManager& GameManager::get_instance() {
@@ -76,6 +77,11 @@ void GameManager::handle(GoalEvent & e)
 }
 
 void GameManager::handle(PeriodEndEvent & e)
+{
+	this->ballInPlay = false; // esperamos el kickOff
+}
+
+void GameManager::handle(GoalKickEvent & e)
 {
 	this->ballInPlay = false; // esperamos el kickOff
 }
