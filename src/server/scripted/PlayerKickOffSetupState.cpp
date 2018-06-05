@@ -44,6 +44,8 @@ PlayerKickOffSetupState::PlayerKickOffSetupState(PlayerModel& player, Team kickO
 
 PlayerKickOffSetupState::~PlayerKickOffSetupState()
 {
+	// OJO: quizas le cambian el estado al controller mientras trabajo
+	this->unregisterFrom(EventID::KICK);
 }
 
 void PlayerKickOffSetupState::handleEvent(Command & command)

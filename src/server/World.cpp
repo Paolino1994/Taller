@@ -441,13 +441,13 @@ void World::changeFormation(Team team, FIELD_POSITION goalSide, std::string form
 
 // Hay que ver como pasar mejor el tema de que arco defiende cada uno
 // El tema de setpiece lo que deberia ser es que jugada se esta por ejecutar (saque del medio o del fondo)
-void World::setSetPiecePosition(Team team, int goalSide, int setPiece){
+void World::setSetPiecePosition(Team team, FIELD_POSITION goalSide, int setPiece){
 
     int mitadDeCancha_x = YAML::FIELD_CENTER_X;
 
     int direccion_x = 0; 
 
-    direccion_x = goalSide == 0 ? -1 : 1;
+    direccion_x = (goalSide == FIELD_POSITION::LEFT) ? -1 : 1; // Aca seteo de que lado de la cancha lo pongo  
 
     PlayerModel *playerModel = nullptr; 
 

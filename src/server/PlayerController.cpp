@@ -5,6 +5,7 @@
 #include "PlayerController.h"
 
 #include "scripted/PlayerKickOffSetupState.h"
+#include "server/GameManager.h"
 
 void PlayerController::checkStateChange()
 {
@@ -19,11 +20,13 @@ PlayerController::PlayerController(PlayerModel * model, PlayerView * view, Playe
 	scriptedState(scriptedState)
 {
 	this->registerTo(EventID::PERIOD_END);
+	this->registerTo(EventID::GOAL);
 	// IMPORTANTE: desregistrarme en el destructor porque es posible el matado de controllers cuando entran/salen jugadores!
 }
 
 PlayerController::~PlayerController() {
 	this->unregisterFrom(EventID::PERIOD_END);
+	this->unregisterFrom(EventID::GOAL);
 }
 
 PlayerController::PlayerController(PlayerModel * model, PlayerView * view):
@@ -109,6 +112,13 @@ double PlayerController::getAngle() {
 void PlayerController::handle(PeriodEndEvent & e)
 {
 	this->setScriptedState(new PlayerKickOffSetupState(*this->getModel(), e.teamToKickOffNextPeriod));
+}
+
+void PlayerController::handle(GoalEvent & e)
+{
+	// TODO: mandar a un estado de festejo
+	// y, por ejemlo, ese estado aguantarlo un tiempo X y despues setearle este:
+	this->setScriptedState(new PlayerKickOffSetupState(*this->getModel(), GameManager::getKickOffTeamAfterGoal(e)));
 }
 
 void PlayerController::serialize(player_view_data_t& player_view_data) {

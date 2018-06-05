@@ -46,3 +46,19 @@ public:
 
 	virtual void accept(EventHandler& handler);
 };
+
+class GoalEvent : public Event {
+public:
+	const PlayerModel* scorer; // el que metio el gol, 
+	const Team team; // para que equipo cuenta
+	//cosnt Goal goal; // en que arco se metio! // ver
+
+	GoalEvent(const PlayerModel* scorer, Team team);
+	virtual ~GoalEvent();
+
+	virtual EventID getId() {
+		return EventID::GOAL;
+	}
+
+	virtual void accept(EventHandler& handler);
+};

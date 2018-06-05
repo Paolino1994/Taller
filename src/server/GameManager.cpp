@@ -5,15 +5,18 @@ GameManager::GameManager():
 	scoreAway(0),
 	teamBallControl(Team::__LENGTH__),
 	gameTimeInSeconds(0),
-	ballInPlay(false),
 	period(1),
 	homeDefends(FIELD_POSITION::LEFT),
-	awayDefends(FIELD_POSITION::RIGHT)
-{}
+	awayDefends(FIELD_POSITION::RIGHT),
+	ballInPlay(false)
+{
+	this->registerTo(EventID::KICK);
+	this->registerTo(EventID::GOAL);
+	this->registerTo(EventID::PERIOD_END);
+}
 
 GameManager& GameManager::get_instance() {
 	static GameManager instance;
-	instance.registerTo(EventID::KICK);
 	return instance;
 }
 
@@ -47,8 +50,14 @@ void GameManager::serialize(game_manager_data_t& game_manager_data) {
 	game_manager_data.scoreHome = scoreHome;
 	game_manager_data.scoreAway = scoreAway;
 	game_manager_data.timeInSeconds = this->gameTimeInSeconds;
-	game_manager_data.homeDefends = homeDefends;
-	game_manager_data.awayDefends = awayDefends;
+}
+
+Team GameManager::getKickOffTeamAfterGoal(GoalEvent & e)
+{
+	if (e.team == Team::HOME) {
+		return Team::AWAY;
+	}
+	return Team::HOME;
 }
 
 void GameManager::handle(KickEvent & e)
@@ -60,6 +69,24 @@ void GameManager::handle(KickEvent & e)
 	}
 }
 
+void GameManager::handle(GoalEvent & e)
+{
+	this->addGoal(e.team);
+	this->ballInPlay = false; // esperamos el kickOff
+}
+
+void GameManager::handle(PeriodEndEvent & e)
+{
+	this->ballInPlay = false; // esperamos el kickOff
+}
+
+FIELD_POSITION GameManager::getHomeDefends() {
+	return homeDefends;
+}
+
+FIELD_POSITION GameManager::getAwayDefends() {
+	return awayDefends;
+}
 
 GameManager::~GameManager() {
 }

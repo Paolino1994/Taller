@@ -33,3 +33,16 @@ void PeriodEndEvent::accept(EventHandler & handler)
 {
 	handler.handle(*this);
 }
+
+GoalEvent::GoalEvent(const PlayerModel * scorer, Team team):
+	scorer(scorer),
+	team(team)
+{}
+
+GoalEvent::~GoalEvent()
+{}
+
+void GoalEvent::accept(EventHandler & handler)
+{
+	handler.handle(*this);
+}

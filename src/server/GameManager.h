@@ -12,12 +12,10 @@ private:
     int scoreAway;
     Team teamBallControl;
 	double gameTimeInSeconds;
-	bool ballInPlay; // pelota esta en juego o no
-
 	int period;
-
 	FIELD_POSITION homeDefends;
 	FIELD_POSITION awayDefends;
+	bool ballInPlay; // pelota esta en juego o no
 
 	GameManager();
 	~GameManager();
@@ -39,6 +37,16 @@ public:
 
     void serialize(game_manager_data_t& game_manager_data);
 
+	static Team getKickOffTeamAfterGoal(GoalEvent& e);
+
+	FIELD_POSITION getHomeDefends();
+
+	FIELD_POSITION getAwayDefends();
+
 	// Events to handle:
 	virtual void handle(KickEvent& e);
+	virtual void handle(GoalEvent& e);
+	virtual void handle(PeriodEndEvent& e);
+
+
 };

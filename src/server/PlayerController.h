@@ -56,4 +56,5 @@ public:
 
 	// Events to handle:
 	virtual void handle(PeriodEndEvent& e);
+	virtual void handle(GoalEvent& e);
 };
