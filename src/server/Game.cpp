@@ -203,6 +203,8 @@ Game::Game() :
 
     world.createTeam(Team::HOME, defensores, mediocampistas, delanteros, defaultPlayer, animMapper);
 
+	world.setSetPiecePosition(Team::HOME, FIELD_POSITION::LEFT, 1); // ACA estoy emprolijando la formacion para el saque inicial
+
 
     //agrego equipo 2
     player_data_t defaultPlayer2 = crearDefaultPlayer(PlayerStill2, PlayerRun2, PlayerSweep2, PlayerKick2);
@@ -213,6 +215,8 @@ Game::Game() :
     delanteros = YAMLReader::get_instance().getDelanteros(2);
 
     world.createTeam(Team::AWAY, defensores, mediocampistas, delanteros, defaultPlayer2, animMapper2);
+
+	world.setSetPiecePosition(Team::AWAY, FIELD_POSITION::RIGHT, 1); // ACA estoy emprolijando la formacion para el saque inicial
 
 	// PUEDE SER importante el orden de agregado de sistemas
 	world.addSystem(std::make_shared<TimerSystem>(1 * 10, true)); // tiempos de 1 minuto emulados a 45 min
