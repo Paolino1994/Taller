@@ -315,7 +315,7 @@ void World::serialize(model_data_t & modelData)
 
 	ball.serialize(modelData.ballViewData);
 
-    GameManager::get_instance()->serialize(modelData.gameManagerData);
+    GameManager::get_instance().serialize(modelData.gameManagerData);
 }
 
 int World::getWidth(){
@@ -376,7 +376,7 @@ double World::getAngle(PlayerModel *pModel, BallModel &model) {
 
 }
 
-void World::changeFormation(Team team, int goalSide, std::string formation){
+void World::changeFormation(Team team, FIELD_POSITION goalSide, std::string formation){
 
     std::vector<std::string> separados;
     separados = separarFormacion(formation, '-');
@@ -389,7 +389,7 @@ void World::changeFormation(Team team, int goalSide, std::string formation){
     int direccion_x = 0;
 
     // Arquero
-    direccion_x = goalSide == 0 ? -1 : 1; // Aca seteo de que lado de la cancha lo pongo  
+    direccion_x = (goalSide == FIELD_POSITION::LEFT) ? -1 : 1; // Aca seteo de que lado de la cancha lo pongo  
     playerControllers[(int)team][0]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 750));
     playerControllers[(int)team][0]->getModel()->setInitial_y(longTotalCancha_y / 2);
 
@@ -436,6 +436,41 @@ void World::changeFormation(Team team, int goalSide, std::string formation){
         playerControllers[(int)team][6]->getModel()->setInitial_y((longTotalCancha_y / 4) * 3);
 
     }
+}
+
+
+// Hay que ver como pasar mejor el tema de que arco defiende cada uno
+// El tema de setpiece lo que deberia ser es que jugada se esta por ejecutar (saque del medio o del fondo)
+void World::setSetPiecePosition(Team team, int goalSide, int setPiece){
+
+    int mitadDeCancha_x = YAML::FIELD_CENTER_X;
+
+    int direccion_x = 0; 
+
+    direccion_x = goalSide == 0 ? -1 : 1;
+
+    PlayerModel *playerModel = nullptr; 
+
+    for (auto playerController : playerControllers[(int)team]) {
+        playerModel = playerController->getModel();
+        playerModel->setKickOff_y(playerModel->getInitial_y());
+        switch (playerModel->getRole()) {
+            case 'G':
+                playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * 750));
+            break;
+            case 'D':
+                playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * 500));
+            break;
+            case 'M':
+                playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * 300));
+            break;
+            case 'F':
+                playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * 100));
+            break;
+            default:
+            break;
+        }
+	}
 }
 
 

@@ -32,6 +32,7 @@ void GameManager::update(const game_manager_data_t & game_manager_data)
 	scoreHome = game_manager_data.scoreHome;
 	scoreAway = game_manager_data.scoreAway;
     time=game_manager_data.timeInSeconds;
+    period = game_manager_data.period;
 }
 
 int GameManager::getScore(Team team){

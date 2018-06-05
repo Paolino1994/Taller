@@ -56,7 +56,7 @@ void PlayerKickOffSetupState::handleEvent(Command & command)
 		if (command.key == CommandKey::KEY_DOWN && command.type == CommandType::PASS) {
 			// TODO: falta hacer saque real!
 			std::cout << "Sacando la bocha!" << std::endl;
-			EventQueue::get().push(std::make_shared<KickEvent>());
+			EventQueue::get().push(std::make_shared<KickEvent>(this->player));
 		}
 	}
 	// else -> no podes hacer nada!
@@ -80,7 +80,7 @@ void PlayerKickOffSetupState::update(double dt, int x_limit, int y_limit, int ba
 				if (!this->player.getIsControlledByHuman() && this->secondsPassed >= secondsToWaitForAutomaticKickOff) {
 					// TODO: falta hacer saque real!
 					std::cout << "Sacando la bocha de forma automatica!" << std::endl;
-					EventQueue::get().push(std::make_shared<KickEvent>());
+					EventQueue::get().push(std::make_shared<KickEvent>(this->player));
 				}
 			}
 		}

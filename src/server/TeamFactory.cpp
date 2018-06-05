@@ -12,10 +12,10 @@ bool TeamFactory::add_goalkeeper(Team goal, int field_length, int field_width){
 
 	switch (goal) {
 		case LEFT_GOAL:
-			model = new PlayerModel(goal, BasePlayer, field_length * 1.5 / 22, field_width * 21/ 44, field_length * 1.5 / 22, field_width * 21/ 44, 50, 50);
+			model = new PlayerModel(goal, BasePlayer, field_length * 1.5 / 22, field_width * 21/ 44, field_length * 1.5 / 22, field_width * 21/ 44, 50, 50, 'G');
 			break;
 		case RIGHT_GOAL:
-			model = new PlayerModel(goal, BasePlayer, field_length * 20.5 / 22, field_width * 21 / 44, field_length * 20.5 / 22, field_width * 21 / 44, 50, 50);
+			model = new PlayerModel(goal, BasePlayer, field_length * 20.5 / 22, field_width * 21 / 44, field_length * 20.5 / 22, field_width * 21 / 44, 50, 50, 'G');
 			break;
 		default:
 			std::stringstream msg;
@@ -60,7 +60,7 @@ bool TeamFactory::add_defenders(int quantity, Team goal, int field_length, int f
 
 	for (int i = 0; i < quantity; i++){
 		position_y = ((field_width * 5 / 8) * i / 2) + 	field_width / 7;
-		model = new PlayerModel(goal, BasePlayer, position_x, position_y, position_x, position_y, 200, 200);
+		model = new PlayerModel(goal, BasePlayer, position_x, position_y, position_x, position_y, 200, 200, 'D');
 		defender.model = model;
 		team.push_back(defender);
 	}
@@ -110,7 +110,7 @@ bool TeamFactory::add_midfielders(int quantity, Team goal, int field_length, int
 			default:
 				return false;
 		}
-		model = new PlayerModel(goal, BasePlayer, position_x, position_y, kickOff_x, position_y, 100, 100);
+		model = new PlayerModel(goal, BasePlayer, position_x, position_y, kickOff_x, position_y, 100, 100, 'M');
 		midfielder.model = model;
 		team.push_back(midfielder);
 	}
@@ -173,7 +173,7 @@ bool TeamFactory::add_forwards(int quantity, Team goal, int field_length, int fi
 			default:
 				return false;
 		}
-		model = new PlayerModel(goal, BasePlayer, position_x, position_y, kickOff_x, kickOff_y, 50, 50);
+		model = new PlayerModel(goal, BasePlayer, position_x, position_y, kickOff_x, kickOff_y, 50, 50, 'F');
 		if (setBallToPlayer) {
 			model->setHasControlOfTheBall(true);
 		}

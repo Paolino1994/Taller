@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include "common/YAMLReader.h"
-#include "Event.h"
 #include "SDL_rect.h"
 
 using Player_ID = u_int32_t;
@@ -26,6 +25,13 @@ typedef struct sprite_info {
     int frames_per_second; // para Animation
 } sprite_info_t;
 
+enum FIELD_POSITION {
+		LEFT = 0,
+		RIGHT,
+		__LENGTH__
+	};
+
+
 // Datos que pueden venir de la configuracion
 namespace YAML {
 	// Identicos a nuestra imagen de background en el cliente
@@ -42,12 +48,6 @@ namespace YAML {
 
 	const int FIELD_CENTER_X = 850;
 	const int FIELD_CENTER_Y = 530;
-
-	enum FIELD_POSITION {
-		LEFT = 0,
-		RIGHT,
-		__LENGTH__
-	};
 
 	// Por ahora lo pensamos como un SDL_Rect //esquina superior izquierda
 	// pero puede cambiar
@@ -163,9 +163,18 @@ typedef struct ball_view_data {
 typedef struct game_manager_data {
 	int scoreHome;
 	int scoreAway;
-    int timeInSeconds;
-    time_t timeInSecondsStart;
+    uint32_t timeInSeconds;
+    FIELD_POSITION homeDefends;
+    FIELD_POSITION awayDefends;
+    int period;
 } game_manager_data_t;
+
+
+enum class EventID : uint32_t {
+	KICK = 0,
+	PERIOD_END,
+	__LENGTH__
+};
 
 typedef struct model_data {
 	std::vector<player_view_data_t>& playerViewData;

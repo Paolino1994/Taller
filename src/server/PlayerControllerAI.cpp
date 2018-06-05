@@ -27,7 +27,7 @@ User_ID PlayerControllerAI::getUserId()
 
 void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x, int ball_y)
 {
-	bool teamHasBall = this->playerModel->getTeam() == GameManager::get_instance()->getTeamBallControl();
+	bool teamHasBall = this->playerModel->getTeam() == GameManager::get_instance().getTeamBallControl();
 	if(UserManager::get_instance().game_started()) { // FORMA CABEZA DE EVITAR QUE SE MUEVAN LOS JUGADORES ANTES DE QUE EMPIECE EL PARTIDO
 		// AI para volver a nuestra posicion inicial
 		// Bien simple que vuelva a su posicion
@@ -40,13 +40,6 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 
 			return;
 		}
-
-		// if (this->playerModel->getTeam() == GameManager::get_instance()->getTeamBallControl()) {
-		// 	this->playerModel->setVelX(0);
-		// 	this->playerModel->setVelY(0);
-
-		// 	return;
-		// }
 
 		int max_distance_x = this->playerModel->getDistance_x(); 
 		int max_distance_y = this->playerModel->getDistance_y();

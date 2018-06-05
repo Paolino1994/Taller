@@ -14,6 +14,8 @@ private:
     int scoreAway;
 	int time;
 
+    int period;
+
 	GameManager();
 
 public:

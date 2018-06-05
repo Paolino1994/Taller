@@ -12,7 +12,7 @@ class PlayerModel: public Entity {
 
 public:
 
-    PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOffX, int kickOffY, int distance_x, int distance_y);
+    PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOffX, int kickOffY, int distance_x, int distance_y, char role);
     PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y);
 
 
@@ -28,7 +28,7 @@ public:
 
 	void setInitial_y(int _y);
 
-	Team getTeam();
+	Team getTeam() const;
 
     double getAngle();
 
@@ -66,6 +66,9 @@ public:
     int getKickOff_x();
     int getKickOff_y();
 
+    void setKickOff_x(int kickOff_x);
+    void setKickOff_y(int kickOff_y);
+
 	// TODO: Evaluar si conviene tener una referencia a la pelota cuando el PlayerModel la tiene bajo su control
 	void setHasControlOfTheBall(bool i);
 	// TODO: Evaluar si conviene tener una referencia a la pelota cuando el PlayerModel la tiene bajo su control
@@ -93,6 +96,9 @@ public:
 	bool isInChargeOfKickOff();
 
 	void setInChargeOfKickOff(bool inCharge);
+
+    char getRole();
+    void setRole(char role);
 
 private:
     int initial_x;
@@ -148,4 +154,7 @@ private:
 
 	// TODO: a mover la decisi�n a un objeto Team
 	bool inChargeOfKickOff;
+
+    char role;
+
 };

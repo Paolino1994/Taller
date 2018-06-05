@@ -20,7 +20,7 @@ Player_ID PlayerModel::getNextPlayerId(Team team) {
 	return pID;
 }
 
-PlayerModel::PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y, int distance_x, int distance_y) :
+PlayerModel::PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y, int distance_x, int distance_y, char role) :
 	Entity(initial_x, initial_y),
 	initial_x(initial_x),
 	initial_y(initial_y),
@@ -48,7 +48,8 @@ PlayerModel::PlayerModel(Team team, const player_data_t player_data, double init
 	kickVelY(0.0),
 	sprintVelocityMultiplier(player_data.SPRINT_VELOCITY_MULTIPLIER),
 	velocityMultiplier(1.0),
-	inChargeOfKickOff(false)
+	inChargeOfKickOff(false),
+	role(role)
 {
 	log = Log::get_instance();
 }
@@ -100,6 +101,22 @@ void PlayerModel::setInitial_x(int x){
 
 void PlayerModel::setInitial_y(int y) {
 	initial_y = y;
+}
+
+void PlayerModel::setKickOff_x(int x){
+	kickOff_x = x;
+}
+
+void PlayerModel::setKickOff_y(int y) {
+	kickOff_y = y;
+}
+
+char PlayerModel::getRole() {
+	return role;
+}
+
+void PlayerModel::setRole(char _role){
+	role = _role;
 }
 
 // IMPORTANYE: Proximamente manejar mejor esto con patron State 
@@ -191,7 +208,7 @@ int PlayerModel::getHeight()
 	return this->heights[this->state];
 }
 
-Team PlayerModel::getTeam()
+Team PlayerModel::getTeam() const
 {
 	return this->team;
 }
@@ -344,7 +361,7 @@ void PlayerModel::kick(BallModel& ballModel,double distance)
         setHasControlOfTheBall(false);
 		ballModel.setAngle(angle);
 		ballModel.kick(distance,BallModel::LOW);
-		EventQueue::get().push(make_shared<KickEvent>());
+		EventQueue::get().push(make_shared<KickEvent>(*this));
 	}
 	log->debug("PlayerModel: pateando");
 }
@@ -374,7 +391,7 @@ void PlayerModel::setHasControlOfTheBall(bool control) {
 bool PlayerModel::getHasControlOfTheBall() {
 	// Forma extremadamente cabeza de ver que equipo tiene la pelota.
 	if (hasControlOfTheBall) { 
-		GameManager::get_instance()->setTeamBallControl(team);
+		GameManager::get_instance().setTeamBallControl(team);
 	}
     return hasControlOfTheBall;
 }

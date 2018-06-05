@@ -1,12 +1,13 @@
 #pragma once
 #include <cstdint>
 
-class EventHandler;
+#include "GameConstants.h"
 
-enum class EventID : uint32_t {
-	KICK = 0,
-	__LENGTH__
-};
+// no hagan includes aca, solo forward declarations (asi no hay problemas de dependencias circulares)
+class EventHandler;
+class PlayerModel;
+
+// EventID definirlos en GameConstants!
 
 class Event
 {
@@ -20,11 +21,27 @@ public:
 
 class KickEvent : public Event {
 public:
-	KickEvent();
+	const PlayerModel& player; // el que pateo
+
+	KickEvent(PlayerModel& player);
 	virtual ~KickEvent();
 
 	virtual EventID getId() {
 		return EventID::KICK;
+	}
+
+	virtual void accept(EventHandler& handler);
+};
+
+class PeriodEndEvent : public Event {
+public:
+	const Team teamToKickOffNextPeriod;
+
+	PeriodEndEvent(Team teamToKickOffNextPeriod);
+	virtual ~PeriodEndEvent();
+
+	virtual EventID getId() {
+		return EventID::PERIOD_END;
 	}
 
 	virtual void accept(EventHandler& handler);
