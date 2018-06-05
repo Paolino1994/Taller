@@ -81,7 +81,7 @@ public:
 
 	void changeFormation(Team team, FIELD_POSITION goalSide, std::string formation);
 
-	void setSetPiecePosition(Team team, FIELD_POSITION goalSide, int setPiece);
+	void setSetPiecePosition(Team team, FIELD_POSITION goalSide, SET_PIECE setPiece);
 
 
 

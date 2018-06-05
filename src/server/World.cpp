@@ -441,7 +441,7 @@ void World::changeFormation(Team team, FIELD_POSITION goalSide, std::string form
 
 // Hay que ver como pasar mejor el tema de que arco defiende cada uno
 // El tema de setpiece lo que deberia ser es que jugada se esta por ejecutar (saque del medio o del fondo)
-void World::setSetPiecePosition(Team team, FIELD_POSITION goalSide, int setPiece){
+void World::setSetPiecePosition(Team team, FIELD_POSITION goalSide, SET_PIECE setPiece){
 
     int mitadDeCancha_x = YAML::FIELD_CENTER_X;
 
@@ -451,26 +451,50 @@ void World::setSetPiecePosition(Team team, FIELD_POSITION goalSide, int setPiece
 
     PlayerModel *playerModel = nullptr; 
 
-    for (auto playerController : playerControllers[(int)team]) {
-        playerModel = playerController->getModel();
-        playerModel->setKickOff_y(playerModel->getInitial_y());
-        switch (playerModel->getRole()) {
-            case 'G':
-                playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * 750));
-            break;
-            case 'D':
-                playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * 500));
-            break;
-            case 'M':
-                playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * 300));
-            break;
-            case 'F':
-                playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * 100));
-            break;
-            default:
-            break;
+    if(setPiece == SET_PIECE::KICKOFF) {
+        for (auto playerController : playerControllers[(int)team]) {
+            playerModel = playerController->getModel();
+            playerModel->setKickOff_y(playerModel->getInitial_y());
+            switch (playerModel->getRole()) {
+                case 'G':
+                    playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * 750));
+                break;
+                case 'D':
+                    playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * 500));
+                break;
+                case 'M':
+                    playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * 300));
+                break;
+                case 'F':
+                    playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * 100));
+                break;
+                default:
+                break;
+            }
         }
-	}
+    } else if(setPiece == SET_PIECE::GOALKICK) {
+        for (auto playerController : playerControllers[(int)team]) {
+            playerModel = playerController->getModel();
+            playerModel->setKickOff_y(playerModel->getInitial_y());
+            switch (playerModel->getRole()) {
+                case 'G':
+                    playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * 750));
+                break;
+                case 'D':
+                    playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * 500));
+                break;
+                case 'M':
+                    playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * -100));
+                break;
+                case 'F':
+                    playerModel->setKickOff_x(mitadDeCancha_x + (direccion_x * -300));
+                break;
+                default:
+                break;
+            }
+        }
+    }
+
 }
 
 

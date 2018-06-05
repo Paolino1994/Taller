@@ -31,6 +31,12 @@ enum FIELD_POSITION {
 		__LENGTH__
 	};
 
+enum SET_PIECE {
+		KICKOFF = 0,
+		GOALKICK,
+		___LENGTH___
+	};
+
 
 // Datos que pueden venir de la configuracion
 namespace YAML {

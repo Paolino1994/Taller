@@ -47,8 +47,8 @@ void BallPassesEndLineSystem::process(double dt)
 					//TEMP -> TODO: chequear gol en base al arco y posicion del equipo
 
 					Team goalTeam = (GameManager::get_instance().getHomeDefends() == FIELD_POSITION::LEFT) ? Team::AWAY : Team::HOME;
-					world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), 1);
-					world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), 1);
+					world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), SET_PIECE::KICKOFF);
+					world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), SET_PIECE::KICKOFF);
 					// Esto me parece que esta mal, porque puedo hacer goles en contra y me sumo un gol
 					// Team goalTeam = this->lastPlayerThatKickedTheBall != nullptr ? this->lastPlayerThatKickedTheBall->getTeam() : Team::AWAY;
 					EventQueue::get().push(std::make_shared<GoalEvent>(this->lastPlayerThatKickedTheBall, goalTeam));
@@ -61,8 +61,8 @@ void BallPassesEndLineSystem::process(double dt)
 			else {
 				std::cout << "Salio por el costado izquierdo" << std::endl;
 				Team goalKickTeam = (GameManager::get_instance().getHomeDefends() == FIELD_POSITION::LEFT) ? Team::HOME : Team::AWAY;
-				world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), 1);
-				world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), 1);
+				world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), SET_PIECE::GOALKICK);
+				world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), SET_PIECE::GOALKICK);
 				EventQueue::get().push(std::make_shared<GoalKickEvent>(goalKickTeam, FIELD_POSITION::LEFT));
 			}
 		}
@@ -78,8 +78,8 @@ void BallPassesEndLineSystem::process(double dt)
 					// Team goalTeam = this->lastPlayerThatKickedTheBall != nullptr ? this->lastPlayerThatKickedTheBall->getTeam() : Team::HOME;
 
 					Team goalTeam = (GameManager::get_instance().getHomeDefends() == FIELD_POSITION::RIGHT) ? Team::AWAY : Team::HOME;
-					world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), 1);
-					world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), 1);
+					world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), SET_PIECE::KICKOFF);
+					world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), SET_PIECE::KICKOFF);
 					EventQueue::get().push(std::make_shared<GoalEvent>(this->lastPlayerThatKickedTheBall, goalTeam));
 				} else {
 					std::cout << "PALO" << std::endl;
@@ -88,8 +88,8 @@ void BallPassesEndLineSystem::process(double dt)
 			} else {
 				std::cout << "Salio por el costado derecho" << std::endl;
 				Team goalKickTeam = (GameManager::get_instance().getHomeDefends() == FIELD_POSITION::RIGHT) ? Team::HOME : Team::AWAY;
-				world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), 1);
-				world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), 1);
+				world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), SET_PIECE::GOALKICK);
+				world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), SET_PIECE::GOALKICK);
 				EventQueue::get().push(std::make_shared<GoalKickEvent>(goalKickTeam, FIELD_POSITION::RIGHT));
 			}
 		}
