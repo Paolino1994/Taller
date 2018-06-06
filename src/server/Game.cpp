@@ -60,10 +60,6 @@ std::map<const std::string, Animation> getAnimMapperBall() {
 
 void Game::_run()
 {
-	// TEMPORAL test eventos
-	this->registerTo(EventID::KICK);
-	// TEMPORAL test eventos
-
 	using Clock = std::chrono::steady_clock;
 	//El tema del clock, es para actualizar en intervalos fijos
 	//Y renderizar en el resto del tiempo
@@ -112,7 +108,6 @@ void Game::_run()
 			//std::cout << "Model update" << std::endl;
 			world.update(fixed_dt); //Update de todos los players (y otras entidades proximamente?)
 
-			modelData.events.clear();
 			EventQueue::get().handleEvents();
 			accumulator -= fixed_dt;
 			modelData.playerViewData.clear();
@@ -128,8 +123,7 @@ Game::Game() :
         playerViewData(std::vector<player_view_data_t>()),
         ballViewData({ 0,0,0,0,QUIESCENT }),
         gameManagerData({0,0,0}),
-        events(std::vector<EventID>()),
-        modelData({ playerViewData, ballViewData, gameManagerData,events }),
+        modelData({ playerViewData, ballViewData, gameManagerData}),
         world(World(YAML::WORLD_WIDTH, YAML::WORLD_HEIGHT, getAnimMapperBall())),
         maxPlayers(YAML::MAX_PLAYERS),
         playerCount(0),
@@ -263,15 +257,3 @@ bool Game::withdrawUser(PlayerController * playerController, User_ID userId)
 {
 	return this->world.ejectController(playerController, userId);
 }
-
-void Game::handleFallback(Event& e) {
-	std::cout << "Game como EventHandler - estoy handleando un evento cualquiera" << std::endl;
-	this->events.push_back(e.getId());
-}
-
-/*
-void Game::handle(KickEvent & e)
-{
-	std::cout << "Evento: Alguien pateo la bocha" << std::endl;
-	this->events.push_back(e.getId());
-}*/

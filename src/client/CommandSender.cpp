@@ -106,20 +106,19 @@ bool CommandSender::updateModel()
 			events.push_back(event_data[i]);
 		}
 	}/*  TODO, no siempre se actualiza*/
-
-    protocol.write(Request::EVENT_UPDATE); // quizas proximamente, le pasamos datos mios de que modelo tengo actualemente u otras yerbas
-    protocol.read();
-
-
-
 	
 	return true;
 }
 
 model_data_t CommandSender::getModelData()
 {
-	model_data_t model = { playerViewData, ballViewData, gameManagerData, events};
+	model_data_t model = { playerViewData, ballViewData, gameManagerData};
 	return model;
+}
+
+std::vector<EventID>& CommandSender::getEvents()
+{
+	return this->events;
 }
 
 void CommandSender::handleEvent(SDL_Event& e)

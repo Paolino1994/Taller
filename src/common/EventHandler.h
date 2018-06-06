@@ -17,6 +17,8 @@ public:
 
 	bool registerTo(EventID eventId);
 	bool unregisterFrom(EventID eventId);
+	void registerToAllEvents();
+	void unRegisterFromAllEvents();
 
 	// Por si algun Handler prefiere definir un solo metodo para todo los eventos especificos
 	// Esto va a tener sentido para serializar los eventos y mandarlos por red

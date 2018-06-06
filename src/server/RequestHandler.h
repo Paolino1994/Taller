@@ -2,13 +2,15 @@
 
 #include <thread>
 #include <chrono>
+#include <vector>
 
 #include "common/Socket.h"
 #include "common/Protocol.h"
+#include "common/EventHandler.h"
 #include "Game.h"
 #include "UserManager.h"
 
-class RequestHandler
+class RequestHandler: public EventHandler
 {
 private:
 	Protocol protocol;
@@ -17,6 +19,8 @@ private:
 	bool running;
 	bool server_exit_requested;
 	std::thread worker;
+
+	std::vector<EventID> events;
 
 	// De aca para abajo quizas manejar con state en un futuro
 	// Ya que en un principio, va a trabajar sobre el inicio de sesion con el Game
@@ -29,6 +33,9 @@ public:
 	RequestHandler(Socket* socket, Game& game, User_ID userId);
 	~RequestHandler();
 	void run();
+
+	// Events to handle
+	virtual void handleFallback(Event& e);
 };
 
 

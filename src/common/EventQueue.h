@@ -21,7 +21,9 @@ public:
 	void operator=(EventQueue const&) = delete;
 
 	bool registerTo(EventID eventId, EventHandler* handler); //weakPtr ?
+	void registerToAll(EventHandler* handler);
 	bool unRegisterFrom(EventID eventId, EventHandler * handler);
+	void unRegisterFromAll(EventHandler* handler);
 	void push(std::shared_ptr<Event> event);
 	void handleEvents();
 	void getEvents(std::queue<std::shared_ptr<Event>>& queueToFill);

@@ -85,15 +85,27 @@ void World::update(CommandSender& commandSender) {
 
 	GameManager::get_instance()->update(game_manager_data);
 
-	
-	for (EventID eventId : modelData.events) {
-		// hacer algo con el evento: 
+	std::vector<EventID>& events = commandSender.getEvents();
+	for (EventID eventId : events) {
+		// TODO: hacer algo con el evento: en principio para sonidos y alguna visualización extra (tipo texto de Gol)
 		// ver si del lado del cliente tambien conviene meter patron tipo Observer para manejar eventos,
 		// pero trataremos de no
 		switch (eventId)
 		{
 		case EventID::KICK: {
 			std::cout << "Server me avisa: Alguien pateo la bocha recien!" << std::endl;
+			break;
+		}
+		case EventID::GOAL: {
+			std::cout << "Server me avisa: Metieron gol!" << std::endl;
+			break;
+		}
+		case EventID::PERIOD_END: {
+			std::cout << "Server me avisa: Termino un tiempo!" << std::endl;
+			break;
+		}
+		case EventID::GOAL_KICK: {
+			std::cout << "Server me avisa: Salio por el costado, saca el arquero!" << std::endl;
 			break;
 		}
 		default:

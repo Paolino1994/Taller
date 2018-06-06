@@ -29,6 +29,14 @@ bool EventQueue::registerTo(EventID eventId, EventHandler * handler)
 	return false;
 }
 
+void EventQueue::registerToAll(EventHandler * handler)
+{
+	std::underlying_type<EventID>::type length = static_cast<std::underlying_type<EventID>::type>(EventID::__LENGTH__);
+	for (std::underlying_type<EventID>::type i = 0; i < length; i++) {
+		this->registerTo(static_cast<EventID>(i), handler);
+	}
+}
+
 bool EventQueue::unRegisterFrom(EventID eventId, EventHandler * handler)
 {
 	size_t event_id = static_cast<std::underlying_type<EventID>::type>(eventId);
@@ -39,6 +47,14 @@ bool EventQueue::unRegisterFrom(EventID eventId, EventHandler * handler)
 		return false;
 	}
 	return false;
+}
+
+void EventQueue::unRegisterFromAll(EventHandler * handler)
+{
+	std::underlying_type<EventID>::type length = static_cast<std::underlying_type<EventID>::type>(EventID::__LENGTH__);
+	for (std::underlying_type<EventID>::type i = 0; i < length; i++) {
+		this->unRegisterFrom(static_cast<EventID>(i), handler);
+	}
 }
 
 void EventQueue::push(std::shared_ptr<Event> event)

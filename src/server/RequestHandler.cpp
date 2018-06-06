@@ -50,9 +50,9 @@ void RequestHandler::_run()
 					break;
 				}
 				case Request::EVENT_UPDATE: {
-					model_data_t model_data = this->game.getModelData();
-					// std::cout << "Hay " << model_data.events.size() << " eventos. Enviamos en bytes: " << sizeof(EventID) * model_data.events.size() << std::endl;
-					protocol.write(Request::EVENT_UPDATE, (const char*)model_data.events.data(), sizeof(EventID) * model_data.events.size());
+					std::vector<EventID> eventsToSend = std::vector<EventID>();
+					eventsToSend.swap(this->events); // asi this->events queda vacio y mando los que tenia
+					protocol.write(Request::EVENT_UPDATE, (const char*)eventsToSend.data(), sizeof(EventID) * eventsToSend.size());
 					break;
 				}
 				case Request::START: {
@@ -97,7 +97,8 @@ void RequestHandler::_run()
 	else {
 		Log::get_instance()->error("Al desconectar a un cliente, no pudimos expulsar su controlador del juego");
 	}
-	
+	// este objeto queda vivo pero no tiene sentido seguir recibiendo eventos:
+	this->unRegisterFromAllEvents();
 }
 
 RequestHandler::RequestHandler(Socket * socket, Game& game, User_ID userId) :
@@ -106,8 +107,10 @@ RequestHandler::RequestHandler(Socket * socket, Game& game, User_ID userId) :
 	userId(userId),
 	running(false),
 	server_exit_requested(false),
+	events(std::vector<EventID>()),
 	player(nullptr)
 {
+	this->registerToAllEvents();
 }
 
 RequestHandler::~RequestHandler()
@@ -125,4 +128,9 @@ void RequestHandler::run()
 		worker = std::thread(&RequestHandler::_run, this);
 		running = true;
 	}
+}
+
+void RequestHandler::handleFallback(Event & e)
+{
+	this->events.push_back(e.getId());
 }
