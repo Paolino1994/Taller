@@ -34,12 +34,12 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		this->playerModel->stopSprinting(); //por las dudas
 
 		// Si el jugador tiene la pelota entonces no hago nada (por ahora)
-		if(this->playerModel->getHasControlOfTheBall()){
-			this->playerModel->setVelX(0);
-			this->playerModel->setVelY(0);
+		// if(this->playerModel->getHasControlOfTheBall()){
+		// 	this->playerModel->setVelX(0);
+		// 	this->playerModel->setVelY(0);
 
-			return;
-		}
+		// 	return;
+		// }
 
 		int max_distance_x = this->playerModel->getDistance_x(); 
 		int max_distance_y = this->playerModel->getDistance_y();
@@ -80,10 +80,6 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		if (abs(ball_in_area_y) < max_distance_y) {
 			if(abs(direction_y_ball) > 5){
 					direction_y_goto = (direction_y_ball >= 0) ? 1 : -1;
-				if (teamHasBall) { 
-					direction_y_goto = 0;
-				} else {
-				}
 			} else {
 				direction_y_goto = 0;
 			}
