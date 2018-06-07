@@ -18,7 +18,7 @@ public:
 	PlayerKickOffSetupState(PlayerModel& player, Team kickOffTeam);
 	virtual ~PlayerKickOffSetupState();
 
-	virtual void handleEvent(Command &e);
+	virtual bool handleEvent(Command &e);
 
 	//virtual void update(double dt, int x_limit, int y_limit);
 

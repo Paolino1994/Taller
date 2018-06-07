@@ -20,7 +20,7 @@ public:
 	PlayerGoalKickSetupState(PlayerModel& player, Team goalKickTeam, int goal);
 	virtual ~PlayerGoalKickSetupState();
 
-	virtual void handleEvent(Command &e);
+	virtual bool handleEvent(Command &e);
 
 	//virtual void update(double dt, int x_limit, int y_limit);
 

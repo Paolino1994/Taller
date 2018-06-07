@@ -48,7 +48,7 @@ PlayerKickOffSetupState::~PlayerKickOffSetupState()
 	this->unregisterFrom(EventID::KICK);
 }
 
-void PlayerKickOffSetupState::handleEvent(Command & command)
+bool PlayerKickOffSetupState::handleEvent(Command & command)
 {
 	if (this->player.isInChargeOfKickOff() && this->player.getHasControlOfTheBall()
 		&& this->player.isNearThisPoint(YAML::FIELD_CENTER_X, YAML::FIELD_CENTER_Y, kickOff_delta)) {
@@ -59,9 +59,11 @@ void PlayerKickOffSetupState::handleEvent(Command & command)
 			// TODO: falta hacer saque real!
 			std::cout << "Sacando la bocha!" << std::endl;
 			EventQueue::get().push(std::make_shared<KickEvent>(this->player));
+			return true;
 		}
 	}
 	// else -> no podes hacer nada!
+	return false;
 }
 
 void PlayerKickOffSetupState::update(double dt, int x_limit, int y_limit, int ball_x, int ball_y)

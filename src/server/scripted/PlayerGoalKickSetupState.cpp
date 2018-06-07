@@ -48,20 +48,24 @@ PlayerGoalKickSetupState::~PlayerGoalKickSetupState()
 	this->unregisterFrom(EventID::KICK);
 }
 
-void PlayerGoalKickSetupState::handleEvent(Command & command)
+bool PlayerGoalKickSetupState::handleEvent(Command & command)
 {
 	if (this->player.isGoalKeeper() && this->player.getHasControlOfTheBall()
 		&& ((this->goal == FIELD_POSITION::LEFT && this->player.isNearThisPoint(YAML::LEFT_GOAL_KICK_POINT_X, YAML::FIELD_CENTER_Y, goalKick_delta)) || (this->goal == FIELD_POSITION::RIGHT && this->player.isNearThisPoint(YAML::RIGHT_GOAL_KICK_POINT_X, YAML::FIELD_CENTER_Y, goalKick_delta)))) {
 		// TODO: permitir setearle la dirección para sacar del medio
 		// hay que jugar mucho con posicion del jugador relativa a la pelota
 		// por ahora solo dejamos que saque!
-		if (command.key == CommandKey::KEY_DOWN && command.type == CommandType::PASS) {
-			// TODO: falta hacer saque real!
-			std::cout << "Sacando la bocha!" << std::endl;
-			EventQueue::get().push(std::make_shared<KickEvent>(this->player));
+		if (command.key == CommandKey::KEY_DOWN){ 
+			if(command.type == CommandType::PASS || command.type == CommandType::LONG_PASS) {
+				// TODO: falta hacer saque real!
+				std::cout << "Sacando la bocha!" << std::endl;
+				EventQueue::get().push(std::make_shared<KickEvent>(this->player));
+				return true;
+			}
 		}
 	}
 	// else -> no podes hacer nada!
+	return false;
 }
 
 void PlayerGoalKickSetupState::update(double dt, int x_limit, int y_limit, int ball_x, int ball_y)
