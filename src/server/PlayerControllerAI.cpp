@@ -72,7 +72,7 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		else {  // El jugador siempre intenta acercarse a la pelota en todo momento
 			direction_x_goto = (direction_x_ball >= 0) ? 1 : -1;
 		}
-		if (teamHasBall && abs(direction_x_ball) < 100 && direction_x_initial < max_distance_x ) {// Si se acerca mucho a la pelota y la tiene su equipo entonces se queda quieto
+		if (teamHasBall && abs(direction_x_ball) < 100 ) {// Si se acerca mucho a la pelota y la tiene su equipo entonces se queda quieto
 			direction_x_goto = 0;
 		} 
 
@@ -92,7 +92,7 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		else {
 			direction_y_goto = (direction_y_ball >= 0) ? 1 : -1;
 		}
-		if (teamHasBall && abs(direction_y_ball) < 100 && direction_y_initial < max_distance_y) { // Si se acerca mucho a la pelota y la tiene su equipo entonces se queda quieto
+		if (teamHasBall && abs(direction_y_ball) < 100) { // Si se acerca mucho a la pelota y la tiene su equipo entonces se queda quieto
 			direction_y_goto = 0;
 		} 
 
