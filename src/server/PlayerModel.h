@@ -102,6 +102,9 @@ public:
 
 	bool isGoalKeeper();
 
+    int getUserId();
+    void setUserId(int uId);
+
 private:
     int initial_x;
 	int initial_y;
@@ -137,6 +140,7 @@ private:
 
 	bool hasControlOfTheBall=false;
 
+
     Log* log;
 
 	static Player_ID nextPlayerId[static_cast<std::underlying_type<Team>::type>(Team::__LENGTH__)];
@@ -158,5 +162,7 @@ private:
 	bool inChargeOfKickOff;
 
     char role;
+
+    int userId;
 
 };

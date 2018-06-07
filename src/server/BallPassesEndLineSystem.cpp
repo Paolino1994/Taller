@@ -32,7 +32,7 @@ void BallPassesEndLineSystem::process(double dt)
 		int y = ballModel.getY();
 		// double z = ballModel.getZ();
 
-		// condiciones de gol para Team::AWAY
+		// condiciones de gol para FIELD_POSITION::LEFT
 		if (x < leftEndLineX)
 		{
 			if (y > goalBottomPost - postWidth && y < goalTopPost + postWidth)  // Tambien podemos poner la validacion en eje z para el travesanio
@@ -41,16 +41,12 @@ void BallPassesEndLineSystem::process(double dt)
 				{
 					std::cout << "GOOOL" << std::endl;
 
-
-
-					//TEMP -> TODO: ojo que el que metio el gol quizas no la pateo, y entro caminando con la pelota por el arco
-					//TEMP -> TODO: chequear gol en base al arco y posicion del equipo
-
 					Team goalTeam = (GameManager::get_instance().getHomeDefends() == FIELD_POSITION::LEFT) ? Team::AWAY : Team::HOME;
+
 					world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), SET_PIECE::KICKOFF);
 					world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), SET_PIECE::KICKOFF);
-					// Esto me parece que esta mal, porque puedo hacer goles en contra y me sumo un gol
-					// Team goalTeam = this->lastPlayerThatKickedTheBall != nullptr ? this->lastPlayerThatKickedTheBall->getTeam() : Team::AWAY;
+
+					GameManager::get_instance().goalScored(FIELD_POSITION::LEFT);
 					EventQueue::get().push(std::make_shared<GoalEvent>(this->lastPlayerThatKickedTheBall, goalTeam));
 				}
 				else {
@@ -67,7 +63,7 @@ void BallPassesEndLineSystem::process(double dt)
 			}
 		}
 
-		// condiciones de gol para Team::HOME
+		// condiciones de gol para FIELD_POSITION::RIGHT
 		if (x > rigthEndLineX) {
 			if (y > goalBottomPost - postWidth && y < goalTopPost + postWidth) // Tambien podemos poner la validacion en eje z para el travesanio
 					{
@@ -80,6 +76,8 @@ void BallPassesEndLineSystem::process(double dt)
 					Team goalTeam = (GameManager::get_instance().getHomeDefends() == FIELD_POSITION::RIGHT) ? Team::AWAY : Team::HOME;
 					world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), SET_PIECE::KICKOFF);
 					world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), SET_PIECE::KICKOFF);
+
+					GameManager::get_instance().goalScored(FIELD_POSITION::RIGHT);
 					EventQueue::get().push(std::make_shared<GoalEvent>(this->lastPlayerThatKickedTheBall, goalTeam));
 				} else {
 					std::cout << "PALO" << std::endl;

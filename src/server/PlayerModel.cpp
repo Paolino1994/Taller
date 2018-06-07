@@ -49,7 +49,8 @@ PlayerModel::PlayerModel(Team team, const player_data_t player_data, double init
 	sprintVelocityMultiplier(player_data.SPRINT_VELOCITY_MULTIPLIER),
 	velocityMultiplier(1.0),
 	inChargeOfKickOff(false),
-	role(role)
+	role(role),
+	userId(-1)
 {
 	log = Log::get_instance();
 }
@@ -482,6 +483,14 @@ void PlayerModel::kick(BallModel &model) {
     }
     log->debug("PlayerModel: pateando");
 
+}
+
+int PlayerModel::getUserId(){
+	return userId;	
+}
+
+void PlayerModel::setUserId(int uId){
+	userId = uId;
 }
 
 double PlayerModel::getAngleToGoal() {

@@ -8,7 +8,8 @@ GameManager::GameManager():
 	period(1),
 	homeDefends(FIELD_POSITION::LEFT),
 	awayDefends(FIELD_POSITION::RIGHT),
-	ballInPlay(false)
+	ballInPlay(false),
+	lastBallControlUser(-1)
 {
 	this->registerTo(EventID::KICK);
 	this->registerTo(EventID::GOAL);
@@ -93,6 +94,24 @@ FIELD_POSITION GameManager::getHomeDefends() {
 FIELD_POSITION GameManager::getAwayDefends() {
 	return awayDefends;
 }
+
+User_ID GameManager::getLastBallControlUser(){
+	return lastBallControlUser;
+}
+
+void GameManager::setLastBallControlUser(User_ID userId){
+	lastBallControlUser = userId;
+}
+
+void GameManager::goalScored(FIELD_POSITION fieldPostion){
+	goalsByUser[lastBallControlUser - 1] ++;
+
+	for(int i = 0 ; i < 4; i++) {
+		std::cout << "User: " << i + 1 << " Goles: " << goalsByUser[i] << std::endl;
+	}
+
+}
+
 
 GameManager::~GameManager() {
 }

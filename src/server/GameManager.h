@@ -1,5 +1,6 @@
 #pragma once
 #include <thread>
+#include <iostream>
 
 #include "common/EventHandler.h"
 #include "World.h"
@@ -16,6 +17,10 @@ private:
 	FIELD_POSITION homeDefends;
 	FIELD_POSITION awayDefends;
 	bool ballInPlay; // pelota esta en juego o no
+
+	User_ID lastBallControlUser;
+
+	int goalsByUser[4] = {0,0,0,0};
 
 	GameManager();
 	~GameManager();
@@ -42,6 +47,13 @@ public:
 	FIELD_POSITION getHomeDefends();
 
 	FIELD_POSITION getAwayDefends();
+
+	User_ID getLastBallControlUser();
+
+	void setLastBallControlUser(User_ID userId);
+
+	void goalScored(FIELD_POSITION fieldPostion);
+
 
 	// Events to handle:
 	virtual void handle(KickEvent& e);

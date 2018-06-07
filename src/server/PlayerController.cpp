@@ -101,6 +101,10 @@ void PlayerController::swap(PlayerController * otherController)
 	this->playerView = otherController->playerView;
 	otherController->playerView = tempView;
 
+	if(this->hasControlOfTheBall()){
+		GameManager::get_instance().setLastBallControlUser(this->getUserId());
+	}
+
 	this->scriptedState.swap(otherController->scriptedState);
 }
 

@@ -213,7 +213,7 @@ Game::Game() :
 	world.setSetPiecePosition(Team::AWAY, FIELD_POSITION::RIGHT, SET_PIECE::KICKOFF); // ACA estoy emprolijando la formacion para el saque inicial
 
 	// PUEDE SER importante el orden de agregado de sistemas
-	world.addSystem(std::make_shared<TimerSystem>(1 * 10, true)); // tiempos de 1 minuto emulados a 45 min
+	world.addSystem(std::make_shared<TimerSystem>(10 * 10, true)); // tiempos de 1 minuto emulados a 45 min
     world.addSystem(std::make_shared<BallPlayerCollisionSystem>(world));
     world.addSystem(std::make_shared<BallPassesEndLineSystem>(world));
 
@@ -244,6 +244,7 @@ PlayerController * Game::assignToTeam(Team team, User_ID userId)
 	PlayerController* controller= this->world.injectHumanController(team, userId);
 	if(playerCount==1){
 		controller->getModel()->setHasControlOfTheBall(true);
+		GameManager::get_instance().setLastBallControlUser(controller->getUserId());
 	}
 	return controller;
 }

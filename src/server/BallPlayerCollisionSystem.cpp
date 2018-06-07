@@ -41,6 +41,7 @@ void BallPlayerCollisionSystem::process(double dt)
 				if (!controller->getModel()->getHasControlOfTheBall()) {
 					Log::get_instance()->debug("Colision, un nuevo jugador toma la pelota");
 					controller->getModel()->setHasControlOfTheBall(true);
+					GameManager::get_instance().setLastBallControlUser(controller->getUserId());
 					ballModel.setVelX(controller->getModel()->getVelX());
 					ballModel.setVelY(controller->getModel()->getVelY());
 					ballModel.setZ(0);
@@ -52,6 +53,7 @@ void BallPlayerCollisionSystem::process(double dt)
 					for (PlayerController* controller : playerControllers) {
 						if (i == counter) {
 							controller->getModel()->setHasControlOfTheBall(true);
+							GameManager::get_instance().setLastBallControlUser(controller->getUserId());
 							//std::cout<<"Agarro la pelota"<< "Ball VelX: "<<ballModel.getVelX()<<" Ball VelY: "<<ballModel.getVelY()<<std::endl;
 						}
 						else {
