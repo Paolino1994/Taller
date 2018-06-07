@@ -12,7 +12,10 @@ enum SoundEffect {
     SE_OK = 0,
     SE_ERROR,
     SE_SELECT,
-    SE_GOAL_CROWD
+    SE_GOAL_CROWD,
+    SE_WHISTLE,
+    SE_BALL_KICK,
+    SE_POSTHIT
 };
 
 class SoundManager

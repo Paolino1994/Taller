@@ -60,3 +60,14 @@ void GoalKickEvent::accept(EventHandler & handler)
 {
 	handler.handle(*this);
 }
+
+PostHitEvent::PostHitEvent()
+{}
+
+PostHitEvent::~PostHitEvent()
+{}
+
+void PostHitEvent::accept(EventHandler & handler)
+{
+	handler.handle(*this);
+}

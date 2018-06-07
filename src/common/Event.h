@@ -78,4 +78,16 @@ public:
 	virtual void accept(EventHandler& handler);
 };
 
+class PostHitEvent : public Event {
+public:
+	PostHitEvent();
+	virtual ~PostHitEvent();
+
+	virtual EventID getId() {
+		return EventID::POSTHIT;
+	}
+
+	virtual void accept(EventHandler& handler);
+};
+
 

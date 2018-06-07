@@ -50,6 +50,7 @@ void BallPassesEndLineSystem::process(double dt)
 					EventQueue::get().push(std::make_shared<GoalEvent>(this->lastPlayerThatKickedTheBall, goalTeam));
 				}
 				else {
+					EventQueue::get().push(std::make_shared<PostHitEvent>());
 					std::cout << "PALO" << std::endl;
 					ballModel.setVelX(-ballModel.getVelX()); // Hago rebotar la pelota en el palo, le cambio el angulo en x
 				}
@@ -69,10 +70,6 @@ void BallPassesEndLineSystem::process(double dt)
 					{
 				if (y > goalBottomPost && y < goalTopPost) {
 					std::cout << "GOOOL" << std::endl;
-					// Aca estoy probando el GameManager, no es para nada definitivo que sea asi
-//					GameManager::get_instance()->addGoal(Team::HOME); // Obvio que no es asi porque falta la logica del cambio de lado
-					// Team goalTeam = this->lastPlayerThatKickedTheBall != nullptr ? this->lastPlayerThatKickedTheBall->getTeam() : Team::HOME;
-
 					Team goalTeam = (GameManager::get_instance().getHomeDefends() == FIELD_POSITION::RIGHT) ? Team::AWAY : Team::HOME;
 					world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), SET_PIECE::KICKOFF);
 					world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), SET_PIECE::KICKOFF);
@@ -81,6 +78,7 @@ void BallPassesEndLineSystem::process(double dt)
 					EventQueue::get().push(std::make_shared<GoalEvent>(this->lastPlayerThatKickedTheBall, goalTeam));
 				} else {
 					std::cout << "PALO" << std::endl;
+					EventQueue::get().push(std::make_shared<PostHitEvent>());
 					ballModel.setVelX(-ballModel.getVelX()); // Hago rebotar la pelota en el palo, le cambio el angulo en x
 				}
 			} else {

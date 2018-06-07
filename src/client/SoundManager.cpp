@@ -31,11 +31,29 @@ SoundManager::SoundManager(){
     }
     soundEffects.insert ( std::pair<SoundEffect,Mix_Chunk*>(SoundEffect::SE_SELECT,selectSound) );
     Mix_Chunk* goalSound = Mix_LoadWAV( "res/goal_crowd_sound.wav" );
-    if( selectSound == NULL )
+    if( goalSound == NULL )
     {
         Log::get_instance()->error("Failed to load beat music! SDL_mixer Error: " + (std::string)Mix_GetError());
     }
     soundEffects.insert ( std::pair<SoundEffect,Mix_Chunk*>(SoundEffect::SE_GOAL_CROWD,goalSound) );
+    Mix_Chunk* whistleSound = Mix_LoadWAV( "res/whistle_sound.wav" );
+    if( whistleSound == NULL )
+    {
+        Log::get_instance()->error("Failed to load beat music! SDL_mixer Error: " + (std::string)Mix_GetError());
+    }
+    soundEffects.insert ( std::pair<SoundEffect,Mix_Chunk*>(SoundEffect::SE_WHISTLE,whistleSound) );
+    Mix_Chunk* kickSound = Mix_LoadWAV( "res/ball_kick_sound.wav" );
+    if( kickSound == NULL )
+    {
+        Log::get_instance()->error("Failed to load beat music! SDL_mixer Error: " + (std::string)Mix_GetError());
+    }
+    soundEffects.insert ( std::pair<SoundEffect,Mix_Chunk*>(SoundEffect::SE_BALL_KICK,kickSound) );
+    Mix_Chunk* postHitSound = Mix_LoadWAV( "res/post_hit_sound.wav" );
+    if( postHitSound == NULL )
+    {
+        Log::get_instance()->error("Failed to load beat music! SDL_mixer Error: " + (std::string)Mix_GetError());
+    }
+    soundEffects.insert ( std::pair<SoundEffect,Mix_Chunk*>(SoundEffect::SE_POSTHIT,postHitSound) );
 }
 
 SoundManager::~SoundManager() {    

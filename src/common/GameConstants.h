@@ -184,6 +184,7 @@ enum class EventID : uint32_t {
 	PERIOD_END,
 	GOAL,
 	GOAL_KICK,
+	POSTHIT,
 	__LENGTH__
 };
 

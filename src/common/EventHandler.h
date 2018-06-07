@@ -33,5 +33,6 @@ public:
 	virtual void handle(PeriodEndEvent& e) { this->handleFallback(e); };
 	virtual void handle(GoalEvent& e) { this->handleFallback(e); };
 	virtual void handle(GoalKickEvent& e) { this->handleFallback(e); };
+	virtual void handle(PostHitEvent& e) { this->handleFallback(e); };
 };
 
