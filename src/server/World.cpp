@@ -337,30 +337,22 @@ bool World::playerIsOnPassRange(PlayerController *&controller, PlayerController 
     int xCon=controller->getModel()->getCenterX();
     int yCon=controller->getModel()->getCenterY();
     double ballAngle=ball.getModel().getAngle();
-    if(ballAngle>0){
-        ballAngle=360-ballAngle;
+    if(ballAngle<0){
+        ballAngle=360+ballAngle;
     }
+    double angulo=atan2(yCon-y,xCon-x);
+    double angleToPlayer=(angulo*180/M_PI);
+    //double angleToPlayer = getAngle(controller->getModel(), ball.getModel());
+    if(angleToPlayer<0){
+        angleToPlayer=360+angleToPlayer;
+    }
+    //std::cout<<"Angle: "<<ballAngle<<" AngleToPlayer "<<angleToPlayer<<std::endl;
+    if (abs(angleToPlayer-ballAngle)<40){
+        //std::cout<<"Angulo Correcto"<<std::endl;
+        return true;
+    }
+
     //std::cout<<"Angle: "<<ballAngle<<" X "<<x<<" xCon "<<xCon<<" Y "<<y<<" yCon "<<yCon<<std::endl;
-    if(ballAngle==90 || ballAngle==270){
-        if(abs(x-xCon)<200 && abs(yCon-y)>10){
-            return true;
-        }
-    }
-    if(ballAngle==0 || ballAngle==180){
-        if(abs(y-yCon)<150 && xCon*cos(ballAngle*3.1415/180)>x*cos(ballAngle*3.1415/180)){
-            return true;
-        }
-    }
-    if(ballAngle==45 || ballAngle==225){
-        if(y-yCon<xCon-x+150 && y-yCon>xCon-x-150){
-            return true;
-        }
-    }
-    if(ballAngle==135 || ballAngle==315){
-        if(y-yCon>x-xCon-150 && y-yCon<x-xCon+150){
-            return true;
-        }
-    }
 
     return false;
 }
