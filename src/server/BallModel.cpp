@@ -155,7 +155,7 @@ void BallModel::update(double dt, int x_limit, int y_limit) {
 	}
 
 
-	if(heigthAngle>=0){
+	if(heigthAngle>0){
 		z=z+velZ*dt;
 	}else{
 		if(z>0){
@@ -260,5 +260,32 @@ double BallModel::getSpeed(double distance) {
         return 1000;
     }
     return distance*2;
+}
+
+void BallModel::kickWithPower(double power, int type) {
+    double multiplierX=cos(angleToUse*PI/180.0);
+    double multiplierY=sin(angleToUse*PI/180.0);
+    //double speed=getSpeed(distance);
+    double newPower=(power+1)*300;
+    std::cout<<power<<" "<<newPower<<std::endl;
+    if(newPower>5000){
+        newPower=5000;
+        std::cout<<newPower<<std::endl;
+    }
+    double xVel = newPower * multiplierX;
+    double yVel = newPower * multiplierY;
+    //double yVel = 750 * multiplierZ;
+    setVelX(xVel);
+    setVelY(yVel);
+    setVelZ(10);
+    originalX=this->getX();
+    originalY=this->getY();
+    if(type==HIGH){
+        heigthAngle=45;
+    }
+    //startDistance=distance;
+    passType=type;
+
+
 }
 

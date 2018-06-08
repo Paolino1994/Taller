@@ -41,6 +41,7 @@ void PlayerControllerHuman::_handleEvent( Command& command ){
     const double MAX_VEL_X=playerModel->getMaxVelX();
     const double MAX_VEL_Y=playerModel->getMaxVelY();
 
+
     //If a key was pressed
     if (command.key == CommandKey::KEY_DOWN) {
 		
@@ -81,7 +82,9 @@ void PlayerControllerHuman::_handleEvent( Command& command ){
 			}
 			case CommandType::KICK: {
                 if(playerModel->getHasControlOfTheBall()) {
-                    playerModel->kick(world.getBall().getModel());
+                    tiempo[(int)CommandType::KICK]=time(NULL);
+					//std::cout<<time(NULL)<<std::endl;
+                    //playerModel->kick(world.getBall().getModel());
                 }
 
 				log->debug("PlayerControllerHuman: apretando patear");
@@ -149,6 +152,17 @@ void PlayerControllerHuman::_handleEvent( Command& command ){
 			playerModel->stopSprinting();
 			log->debug("PlayerControllerHuman: soltando correr");
 		}
+        else if (command.type == CommandType::KICK) {
+            time_t actualTiempo = time(NULL);
+			//std::cout<<time(NULL)<<std::endl;
+			//std::cout<<tiempo[(int)CommandType::KICK]<<std::endl;
+            if(playerModel->getHasControlOfTheBall()) {
+                double potencia=difftime(actualTiempo,tiempo[(int)CommandType::KICK]);
+                //std::cout<<actualTiempo<<" "<<" "<<tiempo[(int)CommandType::KICK]<<" "<<potencia<<std::endl;
+                playerModel->kick(potencia,world.getBall().getModel());
+            }
+            log->debug("PlayerControllerHuman: soltando patear");
+        }
     }
 
     //Bastabte villero

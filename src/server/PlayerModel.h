@@ -112,6 +112,8 @@ public:
     int getUserId();
     void setUserId(int uId);
 
+	void kick(double potencia, BallModel &ballModel);
+
 private:
     int initial_x;
 	int initial_y;

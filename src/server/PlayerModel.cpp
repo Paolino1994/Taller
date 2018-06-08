@@ -392,6 +392,21 @@ void PlayerModel::kick(BallModel& ballModel,double distance)
 	log->debug("PlayerModel: pateando");
 }
 
+void PlayerModel::kick(double potencia,BallModel& ballModel)
+{
+    if (this->state != KICKING) {
+        this->state = KICKING;
+        this->kickTime = 0.0;
+        this->kickVelX = velX;
+        this->kickVelY = velY;
+        setHasControlOfTheBall(false);
+        ballModel.setAngle(angle);
+        ballModel.kickWithPower(potencia,BallModel::LOW);
+        EventQueue::get().push(make_shared<KickEvent>(*this));
+    }
+    log->debug("PlayerModel: pateando");
+}
+
 void PlayerModel::sprint()
 {
 	this->velocityMultiplier = this->sprintVelocityMultiplier;

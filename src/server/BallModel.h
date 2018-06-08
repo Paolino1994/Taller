@@ -39,6 +39,8 @@ public:
 
     void kick();
 
+	void kickWithPower(double power,int type);
+
     void update(double dt, int x_limit, int y_limit);
 
     int getAngle();

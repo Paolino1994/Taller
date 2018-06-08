@@ -28,4 +28,5 @@ private:
 	bool pressingLEFT;
 	bool pressingRIGHT;
 	Log* log;
+	time_t tiempo[25];
 };
