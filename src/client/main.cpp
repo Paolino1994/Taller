@@ -356,9 +356,11 @@ int main( int argc, char* args[] )
             Texto scoreHome(gRenderer, "res/Tehkan World Cup.ttf",50, "0", {255,255,0,0});
             Texto scoreAway(gRenderer, "res/Tehkan World Cup.ttf",50, "0", {255,255,0,0});
             Texto tiempo(gRenderer, "res/Tehkan World Cup.ttf",50, "0", {255,255,0,0});
+            Texto goalText(gRenderer, "res/Tehkan World Cup.ttf",80, "GOAL!!!", {255,255,0,0});
+            Texto goalKickText(gRenderer, "res/Tehkan World Cup.ttf",50, "GOAL KICK", {255,255,0,0});
 
 
-            Score score(gRenderer, &scoreHomeName, &scoreAwayName, &scoreHome, &scoreAway,&tiempo);
+            Score score(gRenderer, &scoreHomeName, &scoreAwayName, &scoreHome, &scoreAway,&tiempo, &goalText, &goalKickText);
             score.initialize();
 
 

@@ -7,6 +7,8 @@ bool GameManager::initialized = false;
 GameManager::GameManager(){
     scoreHome = 0;
     scoreAway = 0;
+    displayGoalText = 0;
+    displayGoalKickText = 0;
 }
 
 void GameManager::initialize() {
@@ -41,6 +43,22 @@ int GameManager::getScore(Team team){
     } else {
         return scoreAway;
     }
+}
+
+double GameManager::getDisplayGoalText() {
+    return displayGoalText;
+}
+
+void GameManager::setDisplayGoalText(double value) {
+    displayGoalText = value;
+}
+
+double GameManager::getDisplayGoalKickText() {
+    return displayGoalKickText;
+}
+
+void GameManager::setDisplayGoalKickText(double value) {
+    displayGoalKickText = value;
 }
 
 

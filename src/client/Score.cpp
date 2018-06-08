@@ -4,13 +4,15 @@
 const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
 const int SCREEN_HEIGHT = YAML::SCREEN_HEIGHT;
 
-Score::Score(SDL_Renderer *renderer, Texto *homeName, Texto *awayName, Texto *homeScore, Texto *awayScore,Texto *tiempo):
+Score::Score(SDL_Renderer *renderer, Texto *homeName, Texto *awayName, Texto *homeScore, Texto *awayScore,Texto *tiempo, Texto *goalText, Texto *goalKickText):
 gRenderer(renderer),
 homeName(homeName),
 awayName(awayName),
 homeScore(homeScore),
 awayScore(awayScore),
-tiempo(tiempo)
+tiempo(tiempo),
+goalText(goalText),
+goalKickText(goalKickText)
 {
     home = 0;
     away = 0;
@@ -52,6 +54,15 @@ void Score::displayScore(){
     awayScore->display(180, 60);
     tiempo->display(550,60);
 }
+
+void Score::displayGoal(){
+    goalText->display(135,350);
+}
+
+void Score::displayGoalKick(){
+    goalKickText->display(200,400);
+}
+
 
 string Score::getStringTiempo(int time) {
     std::string devolver="";

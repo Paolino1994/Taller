@@ -76,6 +76,16 @@ void Camera::update(double dt){
 		this->y = 0;
 	}
 	this->y_update_offset = this->y - old_y;
+
+	if(GameManager::get_instance()->getDisplayGoalText() > 0) {
+		GameManager::get_instance()->setDisplayGoalText(GameManager::get_instance()->getDisplayGoalText() - dt);
+	}
+
+	if(GameManager::get_instance()->getDisplayGoalKickText() > 0) {
+		GameManager::get_instance()->setDisplayGoalKickText(GameManager::get_instance()->getDisplayGoalKickText() - dt);
+	}
+
+
 }
     
 void Camera::render(World& world){
@@ -112,6 +122,15 @@ void Camera::render(World& world){
 	world.getBall().renderMiniMap(miniFieldRect->getPosX(), miniFieldRect->getPosY() + 10);
 
 	this->score->displayScore();
+
+	if(GameManager::get_instance()->getDisplayGoalText() > 0) {
+		this->score->displayGoal();
+	}
+	
+	if(GameManager::get_instance()->getDisplayGoalKickText() > 0) {
+		this->score->displayGoalKick();
+	}
+
 }
 
 void Camera::renderMiniCamera(){

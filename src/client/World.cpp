@@ -98,6 +98,7 @@ void World::update(CommandSender& commandSender) {
 			break;
 		}
 		case EventID::GOAL: {
+			GameManager::get_instance()->setDisplayGoalText(3);
 			SoundManager::get_instance()->playSound(SoundEffect::SE_GOAL_CROWD);
 			std::cout << "Server me avisa: Metieron gol!" << std::endl;
 			break;
@@ -108,6 +109,7 @@ void World::update(CommandSender& commandSender) {
 			break;
 		}
 		case EventID::GOAL_KICK: {
+			GameManager::get_instance()->setDisplayGoalKickText(2);
 			SoundManager::get_instance()->playSound(SoundEffect::SE_WHISTLE);
 			std::cout << "Server me avisa: Salio por el costado, saca el arquero!" << std::endl;
 			break;

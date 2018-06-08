@@ -22,17 +22,23 @@ private:
     Texto *homeScore;
     Texto *awayScore;
 	Texto *tiempo;
+    Texto *goalText;
+    Texto *goalKickText;
 
     GameManager *gameManager;
 
 public:
-	Score(SDL_Renderer *renderer, Texto *homeName, Texto *awayName, Texto *homeScore, Texto *awayScore, Texto *tiempo);
+	Score(SDL_Renderer *renderer, Texto *homeName, Texto *awayName, Texto *homeScore, Texto *awayScore, Texto *tiempo, Texto *goalText, Texto *goalKickText);
 
     ~Score();
 
 	void initialize();
 
     void displayScore();
+
+    void displayGoal();
+
+    void displayGoalKick();
 
     string getStringTiempo(int time);
 };

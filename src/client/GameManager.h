@@ -16,6 +16,10 @@ private:
 
     int period;
 
+    double displayGoalText;
+
+    double displayGoalKickText;
+
 	GameManager();
 
 public:
@@ -32,4 +36,12 @@ public:
     int getScore(Team team);
 
 	int getTime();
+
+    void setDisplayGoalText(double value);
+
+	double getDisplayGoalText();
+
+    void setDisplayGoalKickText(double value);
+
+	double getDisplayGoalKickText();
 };
