@@ -376,6 +376,7 @@ double World::getAngle(PlayerModel *pModel, BallModel &model) {
 
 }
 
+
 void World::changeFormation(Team team, FIELD_POSITION goalSide, std::string formation){
 
     std::vector<std::string> separados;
@@ -456,8 +457,6 @@ void World::changeFormation(Team team, FIELD_POSITION goalSide, std::string form
 }
 
 
-// Hay que ver como pasar mejor el tema de que arco defiende cada uno
-// El tema de setpiece lo que deberia ser es que jugada se esta por ejecutar (saque del medio o del fondo)
 void World::setSetPiecePosition(Team team, FIELD_POSITION goalSide, SET_PIECE setPiece){
 
     int mitadDeCancha_x = YAML::FIELD_CENTER_X;
@@ -514,6 +513,41 @@ void World::setSetPiecePosition(Team team, FIELD_POSITION goalSide, SET_PIECE se
 
 }
 
+void World::setZonesDistances(Team team){
+    PlayerModel *playerModel = nullptr; 
+    for (auto playerController : playerControllers[(int)team]) {
+            playerModel = playerController->getModel();
+            playerModel->setKickOff_y(playerModel->getInitial_y());
+            switch (playerModel->getRole()) {
+                case 'G':
+                    playerModel->setDefence_distance_x(50);
+                    playerModel->setDefence_distance_y(50);
+                    playerModel->setAtack_distance_x(50);
+                    playerModel->setAtack_distance_y(50);
+                break;
+                case 'D':
+                    playerModel->setDefence_distance_x(200);
+                    playerModel->setDefence_distance_y(200);
+                    playerModel->setAtack_distance_x(300);
+                    playerModel->setAtack_distance_y(50);
+                break;
+                case 'M':
+                    playerModel->setDefence_distance_x(100);
+                    playerModel->setDefence_distance_y(200);
+                    playerModel->setAtack_distance_x(300);
+                    playerModel->setAtack_distance_y(50);
+                break;
+                case 'F':
+                    playerModel->setDefence_distance_x(75);
+                    playerModel->setDefence_distance_y(75);
+                    playerModel->setAtack_distance_x(200);
+                    playerModel->setAtack_distance_y(50);
+                break;
+                default:
+                break;
+            }
+        }
+}
 
 std::vector<std::string> separarFormacion(const std::string& str, const char& ch) {
     std::string siguiente;

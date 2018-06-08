@@ -20,14 +20,14 @@ Player_ID PlayerModel::getNextPlayerId(Team team) {
 	return pID;
 }
 
-PlayerModel::PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y, int distance_x, int distance_y, char role) :
+PlayerModel::PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOff_x, int kickOff_y, int defence_distance_x, int defence_distance_y, char role) :
 	Entity(initial_x, initial_y),
 	initial_x(initial_x),
 	initial_y(initial_y),
 	kickOff_x(kickOff_x),
 	kickOff_y(kickOff_y),
-	distance_x(distance_x),
-	distance_y(distance_y),
+	defence_distance_x(defence_distance_x),
+	defence_distance_y(defence_distance_y),
 	team(team),
 	playerId(PlayerModel::getNextPlayerId(team)),
 	widths(player_data.widths, std::end(player_data.widths)),
@@ -61,8 +61,8 @@ PlayerModel::PlayerModel(Team team, const player_data_t player_data, double init
 	initial_y(initial_y),
 	kickOff_x(initial_x),
 	kickOff_y(initial_y),
-	distance_x(100),
-	distance_y(100),
+	defence_distance_x(100),
+	defence_distance_y(100),
 	team(team),
 	playerId(PlayerModel::getNextPlayerId(team)),
 	widths(player_data.widths, std::end(player_data.widths)),
@@ -244,13 +244,38 @@ bool PlayerModel::getIsControlledByHuman() {
     return isControlledByHuman;
 }
 
-int PlayerModel::getDistance_x() {
-    return distance_x;
+int PlayerModel::getDefence_distance_x() {
+    return defence_distance_x;
 }
 
-int PlayerModel::getDistance_y() {
-    return distance_y;
+int PlayerModel::getDefence_distance_y() {
+    return defence_distance_y;
 }
+
+void PlayerModel::setDefence_distance_x(int defence_x) {
+    defence_distance_x = defence_x;
+}
+
+void PlayerModel::setDefence_distance_y(int defence_y) {
+    defence_distance_y = defence_y;
+}
+
+int PlayerModel::getAtack_distance_x() {
+    return atack_distance_x;
+}
+
+int PlayerModel::getAtack_distance_y() {
+    return atack_distance_y;
+}
+
+void PlayerModel::setAtack_distance_x(int atack_x) {
+    atack_distance_x = atack_x;
+}
+
+void PlayerModel::setAtack_distance_y(int atack_y) {
+    atack_distance_y = atack_y;
+}
+
 
 bool PlayerModel::isInChargeOfKickOff()
 {
