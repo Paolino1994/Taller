@@ -12,7 +12,7 @@ class PlayerModel: public Entity {
 
 public:
 
-    PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOffX, int kickOffY, int distance_x, int distance_y, char role);
+    PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y, int kickOffX, int kickOffY, int defence_distance_x, int distance_y, char role);
     PlayerModel(Team team, const player_data_t player_data, double initial_x, double initial_y);
 
 
@@ -90,8 +90,15 @@ public:
 
 	void kick(BallModel &model);
 
-    int getDistance_x();
-    int getDistance_y();
+    int getDefence_distance_x();
+    int getDefence_distance_y();
+    void setDefence_distance_x(int defence_x);
+    void setDefence_distance_y(int defence_y);
+
+    int getAtack_distance_x();
+    int getAtack_distance_y();
+    void setAtack_distance_x(int atack_x);
+    void setAtack_distance_y(int atack_y);
 
 	bool isInChargeOfKickOff();
 
@@ -111,8 +118,10 @@ private:
 
     int kickOff_x;
     int kickOff_y;
-    int distance_x = 100;
-	int distance_y = 100;
+    int defence_distance_x = 100;
+	int defence_distance_y = 100;
+    int atack_distance_x = 100;
+	int atack_distance_y = 100;
 	Team team;
 	Player_ID playerId;
 	const std::vector<int> widths;

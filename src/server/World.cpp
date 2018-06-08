@@ -368,6 +368,7 @@ double World::getAngle(PlayerModel *pModel, BallModel &model) {
 
 }
 
+
 void World::changeFormation(Team team, FIELD_POSITION goalSide, std::string formation){
 
     std::vector<std::string> separados;
@@ -384,15 +385,20 @@ void World::changeFormation(Team team, FIELD_POSITION goalSide, std::string form
     direccion_x = (goalSide == FIELD_POSITION::LEFT) ? -1 : 1; // Aca seteo de que lado de la cancha lo pongo  
     playerControllers[(int)team][0]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 750));
     playerControllers[(int)team][0]->getModel()->setInitial_y(longTotalCancha_y / 2);
+    playerControllers[(int)team][0]->getModel()->setRole('G');
+
 
     // Defensores (siempre deberia ser 3, por ahora)
     direccion_x = goalSide == 0 ? -1 : 1;  
     playerControllers[(int)team][1]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 500));
     playerControllers[(int)team][1]->getModel()->setInitial_y(longTotalCancha_y / 4);
+    playerControllers[(int)team][1]->getModel()->setRole('D');
     playerControllers[(int)team][2]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 500));
     playerControllers[(int)team][2]->getModel()->setInitial_y(longTotalCancha_y / 2);
+    playerControllers[(int)team][2]->getModel()->setRole('D');
     playerControllers[(int)team][3]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 500));
     playerControllers[(int)team][3]->getModel()->setInitial_y((longTotalCancha_y / 4) * 3);
+    playerControllers[(int)team][3]->getModel()->setRole('D');
 
 
     // Mediocampistas 
@@ -400,39 +406,49 @@ void World::changeFormation(Team team, FIELD_POSITION goalSide, std::string form
     if (mediocampistas == 1) { // Si es un mediocampista entonces son 2 delanteros
         playerControllers[(int)team][4]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 100));
         playerControllers[(int)team][4]->getModel()->setInitial_y(longTotalCancha_y / 2);
+        playerControllers[(int)team][4]->getModel()->setRole('M');
+
         
         //Delanteros
         playerControllers[(int)team][5]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 400));
         playerControllers[(int)team][5]->getModel()->setInitial_y(longTotalCancha_y / 3);
+        playerControllers[(int)team][5]->getModel()->setRole('F');
         playerControllers[(int)team][6]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 400));
         playerControllers[(int)team][6]->getModel()->setInitial_y((longTotalCancha_y / 3) * 2);
+        playerControllers[(int)team][6]->getModel()->setRole('F');
+
 
     } else if (mediocampistas == 2) { //Dos mediocampistas entonces 1 delantero
 
         playerControllers[(int)team][4]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 100));
         playerControllers[(int)team][4]->getModel()->setInitial_y(longTotalCancha_y / 3);
+        playerControllers[(int)team][4]->getModel()->setRole('M');
         playerControllers[(int)team][5]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 100));
         playerControllers[(int)team][5]->getModel()->setInitial_y((longTotalCancha_y / 3) * 2);
+        playerControllers[(int)team][5]->getModel()->setRole('M');
+
 
         //Delanteros
         playerControllers[(int)team][6]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 400));
         playerControllers[(int)team][6]->getModel()->setInitial_y(longTotalCancha_y / 2);
+        playerControllers[(int)team][6]->getModel()->setRole('F');
+
 
     } else if (mediocampistas == 3) { // Tres mediocampistas entonces 0 delanteros
 
         playerControllers[(int)team][4]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 100));
         playerControllers[(int)team][4]->getModel()->setInitial_y(longTotalCancha_y / 4);
+        playerControllers[(int)team][4]->getModel()->setRole('M');
         playerControllers[(int)team][5]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 100));
         playerControllers[(int)team][5]->getModel()->setInitial_y(longTotalCancha_y / 2);
+        playerControllers[(int)team][5]->getModel()->setRole('M');
         playerControllers[(int)team][6]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 100));
         playerControllers[(int)team][6]->getModel()->setInitial_y((longTotalCancha_y / 4) * 3);
-
+        playerControllers[(int)team][6]->getModel()->setRole('M');
     }
 }
 
 
-// Hay que ver como pasar mejor el tema de que arco defiende cada uno
-// El tema de setpiece lo que deberia ser es que jugada se esta por ejecutar (saque del medio o del fondo)
 void World::setSetPiecePosition(Team team, FIELD_POSITION goalSide, SET_PIECE setPiece){
 
     int mitadDeCancha_x = YAML::FIELD_CENTER_X;
@@ -489,6 +505,41 @@ void World::setSetPiecePosition(Team team, FIELD_POSITION goalSide, SET_PIECE se
 
 }
 
+void World::setZonesDistances(Team team){
+    PlayerModel *playerModel = nullptr; 
+    for (auto playerController : playerControllers[(int)team]) {
+            playerModel = playerController->getModel();
+            playerModel->setKickOff_y(playerModel->getInitial_y());
+            switch (playerModel->getRole()) {
+                case 'G':
+                    playerModel->setDefence_distance_x(50);
+                    playerModel->setDefence_distance_y(50);
+                    playerModel->setAtack_distance_x(50);
+                    playerModel->setAtack_distance_y(50);
+                break;
+                case 'D':
+                    playerModel->setDefence_distance_x(200);
+                    playerModel->setDefence_distance_y(200);
+                    playerModel->setAtack_distance_x(300);
+                    playerModel->setAtack_distance_y(50);
+                break;
+                case 'M':
+                    playerModel->setDefence_distance_x(100);
+                    playerModel->setDefence_distance_y(200);
+                    playerModel->setAtack_distance_x(300);
+                    playerModel->setAtack_distance_y(50);
+                break;
+                case 'F':
+                    playerModel->setDefence_distance_x(75);
+                    playerModel->setDefence_distance_y(75);
+                    playerModel->setAtack_distance_x(200);
+                    playerModel->setAtack_distance_y(50);
+                break;
+                default:
+                break;
+            }
+        }
+}
 
 std::vector<std::string> separarFormacion(const std::string& str, const char& ch) {
     std::string siguiente;

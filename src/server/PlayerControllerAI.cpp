@@ -33,16 +33,19 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		// Bien simple que vuelva a su posicion
 		this->playerModel->stopSprinting(); //por las dudas
 
-		// Si el jugador tiene la pelota entonces no hago nada (por ahora)
-		// if(this->playerModel->getHasControlOfTheBall()){
-		// 	this->playerModel->setVelX(0);
-		// 	this->playerModel->setVelY(0);
+		int max_distance_x = 0;
+		int max_distance_y = 0;
 
-		// 	return;
-		// }
+		int margin = 30; // Aca controlamos los que se quedan locos
 
-		int max_distance_x = this->playerModel->getDistance_x(); 
-		int max_distance_y = this->playerModel->getDistance_y();
+		if(teamHasBall) {
+			max_distance_x = this->playerModel->getAtack_distance_x(); 
+			max_distance_y = this->playerModel->getAtack_distance_y();
+		} else {
+			max_distance_x = this->playerModel->getDefence_distance_x(); 
+			max_distance_y = this->playerModel->getDefence_distance_y();
+		}
+
 
 		int direction_x_initial = this->playerModel->getInitial_x() - this->playerModel->getX();
 		int direction_y_initial = this->playerModel->getInitial_y() - this->playerModel->getY();
@@ -63,10 +66,10 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 			} else {
 				direction_x_goto = 0;
 			}
-		} else if (abs(direction_x_initial) > max_distance_x && (abs(direction_x_initial) > max_distance_x + 10)) { // Si el jugador esta afuera de su zona debe volver a la zona
+		} else if (abs(direction_x_initial) > max_distance_x && (abs(direction_x_initial) > max_distance_x + margin)) { // Si el jugador esta afuera de su zona debe volver a la zona
 			direction_x_goto = (direction_x_initial > 0) ? 1 : -1;
 		} 
-		else if(abs(direction_x_initial) >= max_distance_x && abs(direction_x_initial) < max_distance_x + 10){ // Si el jugador esta en limite de su zona entonces me quedo parado
+		else if(abs(direction_x_initial) >= max_distance_x && abs(direction_x_initial) < max_distance_x + margin){ // Si el jugador esta en limite de su zona entonces me quedo parado
 			direction_x_goto = 0;
 		}
 		else {  // El jugador siempre intenta acercarse a la pelota en todo momento
@@ -83,7 +86,7 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 			} else {
 				direction_y_goto = 0;
 			}
-		} else if (abs(direction_y_initial) > max_distance_y && (abs(direction_y_initial) > max_distance_y + 10 )) {
+		} else if (abs(direction_y_initial) > max_distance_y && (abs(direction_y_initial) > max_distance_y + margin )) {
 			direction_y_goto = (direction_y_ball >= 0) ? 1 : -1;
 		} 
 		else if(abs(direction_y_initial) >= max_distance_y && abs(direction_y_initial) < max_distance_y + 10){
