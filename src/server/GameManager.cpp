@@ -95,6 +95,10 @@ FIELD_POSITION GameManager::getAwayDefends() {
 	return awayDefends;
 }
 
+FIELD_POSITION GameManager::getDefendedGoal(Team team) {
+	return team == Team::HOME ? homeDefends : awayDefends;
+}
+
 User_ID GameManager::getLastBallControlUser(){
 	return lastBallControlUser;
 }

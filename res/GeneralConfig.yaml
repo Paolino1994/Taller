@@ -8,6 +8,26 @@ EquipoB:
     Formacion: "3-2-1"
 LogLevel: "info"
 MaxJugadores: "1"
+MovJugAtaqueX:
+    Arquero: "50"
+    Defensores: "300"
+    Mediocampistas: "300"
+    Delanteros: "200"
+MovJugDefensaX:
+    Arquero: "50"
+    Defensores: "200"
+    Mediocampistas: "100"
+    Delanteros: "75"
+MovJugAtaqueY:
+    Arquero: "50"
+    Defensores: "50"
+    Mediocampistas: "50"
+    Delanteros: "50"
+MovJugDefensaY:
+    Arquero: "50"
+    Defensores: "100"
+    Mediocampistas: "200"
+    Delanteros: "75"
 usuarios:
 -
     -messi

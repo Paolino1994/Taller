@@ -506,34 +506,35 @@ void World::setSetPiecePosition(Team team, FIELD_POSITION goalSide, SET_PIECE se
 }
 
 void World::setZonesDistances(Team team){
+    YAMLReader& yamlReader = YAMLReader::get_instance();
     PlayerModel *playerModel = nullptr; 
     for (auto playerController : playerControllers[(int)team]) {
             playerModel = playerController->getModel();
             playerModel->setKickOff_y(playerModel->getInitial_y());
             switch (playerModel->getRole()) {
                 case 'G':
-                    playerModel->setDefence_distance_x(50);
-                    playerModel->setDefence_distance_y(50);
-                    playerModel->setAtack_distance_x(50);
-                    playerModel->setAtack_distance_y(50);
+                    playerModel->setDefence_distance_x(yamlReader.getDefensaArqueroX());
+                    playerModel->setDefence_distance_y(yamlReader.getDefensaArqueroY());
+                    playerModel->setAtack_distance_x(yamlReader.getAtaqueArqueroX());
+                    playerModel->setAtack_distance_y(yamlReader.getAtaqueArqueroY());
                 break;
                 case 'D':
-                    playerModel->setDefence_distance_x(200);
-                    playerModel->setDefence_distance_y(200);
-                    playerModel->setAtack_distance_x(300);
-                    playerModel->setAtack_distance_y(50);
+                    playerModel->setDefence_distance_x(yamlReader.getDefensaDefensorX());
+                    playerModel->setDefence_distance_y(yamlReader.getDefensaDefensorX());
+                    playerModel->setAtack_distance_x(yamlReader.getAtaqueDefensorX());
+                    playerModel->setAtack_distance_y(yamlReader.getAtaqueDefensorY());
                 break;
                 case 'M':
-                    playerModel->setDefence_distance_x(100);
-                    playerModel->setDefence_distance_y(200);
-                    playerModel->setAtack_distance_x(300);
-                    playerModel->setAtack_distance_y(50);
+                    playerModel->setDefence_distance_x(yamlReader.getDefensaMediocampistaX());
+                    playerModel->setDefence_distance_y(yamlReader.getDefensaMediocampistaX());
+                    playerModel->setAtack_distance_x(yamlReader.getAtaqueMediocampistaX());
+                    playerModel->setAtack_distance_y(yamlReader.getAtaqueMediocampistaY());
                 break;
                 case 'F':
-                    playerModel->setDefence_distance_x(75);
-                    playerModel->setDefence_distance_y(75);
-                    playerModel->setAtack_distance_x(200);
-                    playerModel->setAtack_distance_y(50);
+                    playerModel->setDefence_distance_x(yamlReader.getDefensaDelanteroX());
+                    playerModel->setDefence_distance_y(yamlReader.getDefensaDelanteroX());
+                    playerModel->setAtack_distance_x(yamlReader.getAtaqueDelanteroX());
+                    playerModel->setAtack_distance_y(yamlReader.getAtaqueDelanteroY());
                 break;
                 default:
                 break;

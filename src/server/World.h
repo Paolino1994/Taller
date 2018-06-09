@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "BallController.h"
 #include "common/GameConstants.h"
+#include "common/YAMLReader.h"
 #include "PlayerController.h"
 #include "System.h"
 #include "GameManager.h"
