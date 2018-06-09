@@ -51,8 +51,8 @@ namespace YAML {
 	const int FIELD_WIDTH = 1574;
 	const int FIELD_HEIGHT = 968;
 
-	const int FIELD_CENTER_X = 865;
-	const int FIELD_CENTER_Y = 460;
+	const int FIELD_CENTER_X = 850;
+	const int FIELD_CENTER_Y = 530;
 
 	const int LEFT_GOAL_KICK_POINT_X = 216;
 	const int RIGHT_GOAL_KICK_POINT_X = 1485;
