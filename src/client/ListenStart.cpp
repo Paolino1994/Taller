@@ -1,7 +1,7 @@
 #include "ListenStart.h"
 
-const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
-const int SCREEN_HEIGHT = YAML::SCREEN_HEIGHT;
+const int SCREEN_WIDTH = YAML::WINDOW_WIDTH;
+const int SCREEN_HEIGHT = YAML::WINDOW_HEIGHT;
 
 enum WriteState{
     TEAM = 0,

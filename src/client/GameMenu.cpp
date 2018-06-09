@@ -2,8 +2,8 @@
 
 #include "common/GameConstants.h"
 
-const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
-const int SCREEN_HEIGHT = YAML::SCREEN_HEIGHT + YAML::MINIMAP_HEIGHT;
+const int SCREEN_WIDTH = YAML::WINDOW_WIDTH;
+const int SCREEN_HEIGHT = YAML::WINDOW_HEIGHT;
 
 typedef std::chrono::steady_clock Clock;
 
