@@ -1,9 +1,8 @@
 #include "Camera.h"
+
 #include "common/Log.h"
-#include <iostream>
 
-
-Camera::Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset, Texture *miniCamera, Texture *miniField, Texture *backgroundPanel,Score* score):
+Camera::Camera(World& world, int width, int height, int widthScrollOffset, int heightScrollOffset):
 	world(world),
     width(width),
     height(height),
@@ -13,11 +12,7 @@ Camera::Camera(World& world, int width, int height, int widthScrollOffset, int h
     y(0),
     x_update_offset(0),
     y_update_offset(0),
-    followed(world.getBall()),
-	miniCameraRect(miniCamera),
-	miniFieldRect(miniField),
-	backgroundPanelRect(backgroundPanel),
-	score(score)
+    followed(world.getBall())
 {
 }
 
@@ -76,84 +71,44 @@ void Camera::update(double dt){
 		this->y = 0;
 	}
 	this->y_update_offset = this->y - old_y;
-
-	if(GameManager::get_instance()->getDisplayGoalText() > 0) {
-		GameManager::get_instance()->setDisplayGoalText(GameManager::get_instance()->getDisplayGoalText() - dt);
-	}
-
-	if(GameManager::get_instance()->getDisplayGoalKickText() > 0) {
-		GameManager::get_instance()->setDisplayGoalKickText(GameManager::get_instance()->getDisplayGoalKickText() - dt);
-	}
-
-
 }
     
-void Camera::render(World& world){
+void Camera::render(World& world, int screen_x, int screen_y){
 	auto background = world.getBackground();
 	auto players = world.getPlayers();
 
 	// renderizamos el background (la cancha)
-	background->setScaling(this->width, this->height - 50);
+	background->setScaling(this->width, this->height);
 	background->setSrcRect(this->x, this->y, this->width, this->height);
-	background->render(0, YAML::MINIMAP_HEIGHT - 50);
+	background->render(screen_x, screen_y);
 
-	// posición de los jugadores
 	for (std::pair<const Player_ID, Player>& pair : players)
 	{
 		Player& player = pair.second;
-		player.render(player.getX() - this->x, player.getY() - this->y + YAML::MINIMAP_HEIGHT - 10);
+		player.render(screen_x + player.getX() - this->x, screen_y + player.getY() - this->y);
 	}
 
-	backgroundPanelRect->render(0, 0);
-	// posición de los jugadores en el miniMap
-	miniFieldRect->render(YAML::MINIMAP_INIT_X, 0 );
-	renderMiniCamera();
-	for (std::pair<const Player_ID, Player>& pair : players)
-		{
-			Player& player = pair.second;
-			player.renderMiniMap(miniFieldRect->getPosX() + 5, miniFieldRect->getPosY() + 10);
-		}
-
-
-	int screen_x = world.getBall().getX() - this->x;
-	int screen_y = world.getBall().getY() - this->y;
-	Log::get_instance()->info("X: " + std::to_string(screen_x) + " Y: " + std::to_string(screen_y));
-	world.getBall().render(screen_x, screen_y + YAML::MINIMAP_HEIGHT + 20);
-	world.getBall().renderMiniMap(miniFieldRect->getPosX(), miniFieldRect->getPosY() + 10);
-
-	this->score->displayScore();
-
-	if(GameManager::get_instance()->getDisplayGoalText() > 0) {
-		this->score->displayGoal();
-	}
-	
-	if(GameManager::get_instance()->getDisplayGoalKickText() > 0) {
-		this->score->displayGoalKick();
-	}
-
+	Ball& ball = world.getBall();
+	ball.render(screen_x + ball.getX() - this->x, screen_y + ball.getY() - this->y);
 }
 
-void Camera::renderMiniCamera(){
-	int followed_x = followed.getX();
-	int followed_y = followed.getY();
-	int pos_x, pos_y;
+int Camera::getX()
+{
+	return this->x;
+}
 
-	// 250 / WORLD_WIDTH  = 0.147059
-	// 150 / WORLD_HEIGHT = 0.142857
+int Camera::getY()
+{
+	return this->y;
+}
 
-	if (followed_y < YAML::MINIMAP_HEIGHT - 10) pos_y = 0;
-		else {
-			if (followed_y > 750) pos_y = 80;
-				else pos_y = miniFieldRect->getPosY() - 25 + followed_y * (0.142857);
-		}
+int Camera::getWidth()
+{
+	return this->width;
+}
 
-	if (followed_x < 185) pos_x = miniFieldRect->getPosX();
-		else {
-			if (followed_x > 1445) pos_x = miniFieldRect->getPosX() + 180;
-				else pos_x = miniFieldRect->getPosX() - 30 + followed_x * (0.147059);
-		}
-
-	miniCameraRect->render(pos_x, pos_y);
-
+int Camera::getHeight()
+{
+	return this->height;
 }
 

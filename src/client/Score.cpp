@@ -1,8 +1,6 @@
 #include "Score.h"
 #include "../common/GameConstants.h"
 
-const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
-const int SCREEN_HEIGHT = YAML::SCREEN_HEIGHT;
 
 Score::Score(SDL_Renderer *renderer, Texto *homeName, Texto *awayName, Texto *homeScore, Texto *awayScore,Texto *tiempo, Texto *goalText, Texto *goalKickText):
 gRenderer(renderer),
@@ -24,12 +22,7 @@ Score::~Score()
 {
 }
 
-void Score::initialize()
-{
-    
-}
-
-void Score::displayScore(){
+void Score::displayScore(int screen_x, int screen_y){
 
     int newScoreHome = gameManager->getScore(Team::HOME);
     int newScoreAway = gameManager->getScore(Team::AWAY);
@@ -48,11 +41,11 @@ void Score::displayScore(){
     std::string Tiempo=getStringTiempo(newTime);
     tiempo->updateText(Tiempo, {255,255,0,0});
 
-    homeName->display(30,10);
-    awayName->display(180, 10);
-    homeScore->display(30, 60);
-    awayScore->display(180, 60);
-    tiempo->display(550,60);
+    homeName->display(screen_x + 30, screen_y + 10);
+    awayName->display(screen_x + 180, screen_y + 10);
+    homeScore->display(screen_x + 30, screen_y + 60);
+    awayScore->display(screen_x + 180, screen_y + 60);
+    tiempo->display(screen_x + 550, screen_y + 60);
 }
 
 void Score::displayGoal(){

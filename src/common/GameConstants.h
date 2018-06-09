@@ -40,10 +40,9 @@ enum SET_PIECE {
 
 // Datos que pueden venir de la configuracion
 namespace YAML {
-	// Identicos a nuestra imagen de background en el cliente
-	// Si lo quieren manejar por separado hay que aplicar logica de escalado del mundo logico al background -> no es la idea
+	// --->>>>>> !POR FAVOR!: Identicos a nuestra imagen de background en el cliente!!!!!!!!!!!!!!!
 	const int WORLD_WIDTH = 1700;
-	const int WORLD_HEIGHT = 950;
+	const int WORLD_HEIGHT = 1050;
 
 	// Por ahora lo pensamos como un SDL_Rect //esquina superior izquierda
 	// pero puede cambiar
@@ -67,11 +66,19 @@ namespace YAML {
 
 	const size_t MAX_PLAYERS = 1; //TODO: Esto recibirlo desde el YAMLReader
 
-    const int SCREEN_WIDTH = 800;
-    const int SCREEN_HEIGHT = 600;
-    const int MINIMAP_HEIGHT = 200;
-    const int MINIMAP_WIDTH = 250;
-    const int MINIMAP_INIT_X = SCREEN_WIDTH / 2 - MINIMAP_WIDTH / 2;
+    const int SCREEN_WIDTH = 800; // GAME_SCREEN_WIDTH
+    const int SCREEN_HEIGHT = 600; // GAME_SCREEN_HEIGHT
+
+	const double MINIMAP_WORLD_SCALE = 0.15;
+
+    const int MINIMAP_HEIGHT = WORLD_HEIGHT * MINIMAP_WORLD_SCALE;
+    const int MINIMAP_WIDTH = WORLD_WIDTH * MINIMAP_WORLD_SCALE;
+
+	const int INFO_PANEL_HEIGHT = MINIMAP_HEIGHT + 10;
+
+	const int WINDOW_WIDTH = SCREEN_WIDTH;
+	const int WINDOW_HEIGHT = SCREEN_HEIGHT + INFO_PANEL_HEIGHT;
+
 	const int SCREEN_WIDTH_SCROLL_OFFSET = SCREEN_WIDTH / 2;
 	const int SCREEN_HEIGHT_SCROLL_OFFSET = SCREEN_HEIGHT / 2;
 

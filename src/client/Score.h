@@ -32,9 +32,7 @@ public:
 
     ~Score();
 
-	void initialize();
-
-    void displayScore();
+    void displayScore(int screen_x, int screen_y);
 
     void displayGoal();
 

@@ -32,7 +32,7 @@ void Player::render(int screen_x, int screen_y)
 
 void Player::renderMiniMap(int screen_x, int screen_y)
 {
-	miniMapIndicator->render(screen_x + this->x * 0.14706, screen_y + this->y * 0.14286);
+	miniMapIndicator->render(screen_x, screen_y);
 }
 
 void Player::update(const player_view_data_t & player_view_data)

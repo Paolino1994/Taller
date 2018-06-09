@@ -17,6 +17,8 @@
 #include "Surface.h"
 
 #include "Camera.h"
+#include "MiniMap.h"
+#include "InfoPanel.h"
 
 #include "common/SocketException.h"
 #include "common/Log.h"
@@ -34,10 +36,6 @@
 #include "../common/GameConstants.h"
 
 
-//Screen dimension constants
-const int SCREEN_WIDTH = YAML::SCREEN_WIDTH;
-const int SCREEN_HEIGHT = YAML::SCREEN_HEIGHT;
-
 enum GameState {
     OFFLINE = 0,
     ONLINE
@@ -51,7 +49,7 @@ SDL_Renderer* gRenderer = NULL;
 
 std::string getLogType(char *string);
 
-void renderizar(Camera& camera, World& world, CommandSender& commandSender, GameMenu& gameMenu);
+void renderizar(Camera& camera, World& world, CommandSender& commandSender, GameMenu& gameMenu, InfoPanel& infoPanel);
 
 player_data_t
 crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick);
@@ -84,7 +82,7 @@ bool init_SDL()
 
         //Create window
         gWindow = SDL_CreateWindow( "TEHKAN FIUBA CUP", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-        							SCREEN_WIDTH, SCREEN_HEIGHT + YAML::MINIMAP_HEIGHT, SDL_WINDOW_SHOWN );
+        							YAML::WINDOW_WIDTH, YAML::WINDOW_HEIGHT, SDL_WINDOW_SHOWN );
         if( gWindow == NULL )
         {
             // printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
@@ -252,84 +250,84 @@ int main( int argc, char* args[] )
 				return 1;
 			}
         }
-        if (gameState == GameState::ONLINE) {
+		if (gameState == GameState::ONLINE) {
 
-            CommandSender& commandSender = *commandSenderPtr;
-            gameMenu.selectFormationScreen(commandSender);
+			CommandSender& commandSender = *commandSenderPtr;
+			gameMenu.selectFormationScreen(commandSender);
 
 			/****************************************
 			** INICIO CREACION TEXTURAS Y ANIMACIONES
 			*/
-            std::map<const std::string, Animation> animMapperHOME;
-            std::map<const std::string, Animation> animMapperAWAY;
-            std::map<const std::string, Animation> animMapperBall;
-            std::vector<Texture*> playerIndicators;
-            // CARGAR La configuracion del YAML y de constantes nuestras:
-            // TODO
+			std::map<const std::string, Animation> animMapperHOME;
+			std::map<const std::string, Animation> animMapperAWAY;
+			std::map<const std::string, Animation> animMapperBall;
+			std::vector<Texture*> playerIndicators;
+			// CARGAR La configuracion del YAML y de constantes nuestras:
+			// TODO
 
-            //Background:
-            Texture background(gRenderer, YAML::background_path);
-            // Jugador Seleccionado:
-            Texture indicatorRed(gRenderer, YAML::indicators_path + "/red.png");
-            Texture indicatorBlue(gRenderer, YAML::indicators_path + "/blue.png");
-            Texture indicatorYellow(gRenderer, YAML::indicators_path + "/yellow.png");
-            Texture indicatorPink(gRenderer, YAML::indicators_path + "/pink.png");
+			//Background:
+			Texture background(gRenderer, YAML::background_path);
+			// Jugador Seleccionado:
+			Texture indicatorRed(gRenderer, YAML::indicators_path + "/red.png");
+			Texture indicatorBlue(gRenderer, YAML::indicators_path + "/blue.png");
+			Texture indicatorYellow(gRenderer, YAML::indicators_path + "/yellow.png");
+			Texture indicatorPink(gRenderer, YAML::indicators_path + "/pink.png");
 
-            playerIndicators.push_back(&indicatorRed);
-            playerIndicators.push_back(&indicatorBlue);
-            playerIndicators.push_back(&indicatorYellow);
-            playerIndicators.push_back(&indicatorPink);
+			playerIndicators.push_back(&indicatorRed);
+			playerIndicators.push_back(&indicatorBlue);
+			playerIndicators.push_back(&indicatorYellow);
+			playerIndicators.push_back(&indicatorPink);
 
-            //Las texturas:
-            log->info("Cargando Texturas");
-            
-            // EQUIPO 1 HAY QUE MODULARIZAR ESTO 
-            int equipo=1;
-            log->info("Crear Texturas");
-            TextureSetter textures(equipo, gRenderer);
-            sprite_info PlayerRun=textures.getPlayerRunInfo();
-            Texture runT=textures.getPLayerRunTexture();
-            sprite_info PlayerStill=textures.getPlayerStillInfo();
-            Texture stillT=textures.getPLayerStillTexture();
-            sprite_info PlayerSweep=textures.getPlayerSweepInfo();
-            Texture sweepT=textures.getPLayerSweepTexture();
-            sprite_info PlayerKick=textures.getPlayerKickInfo();
-            Texture kickT=textures.getPLayerKickTexture();
-            // Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
-            log->info("Crear Animaciones");
-            log->debug("Crear Animacion Run");
-            animMapperHOME.emplace(std::make_pair(PlayerRun.spriteid, Animation(runT, PlayerRun)));
-            log->debug("Crear Animacion Still");
-            animMapperHOME.emplace(std::make_pair(PlayerStill.spriteid, Animation(stillT, PlayerStill)));
-            log->debug("Crear Animacion Sweep");
-            animMapperHOME.emplace(std::make_pair(PlayerSweep.spriteid, Animation(sweepT, PlayerSweep)));
-            log->debug("Crear Animacion Kick");
-            animMapperHOME.emplace(std::make_pair(PlayerKick.spriteid, Animation(kickT, PlayerKick)));
+			//Las texturas:
+			log->info("Cargando Texturas");
 
-            // Textura de minimapa
-            Texture miniMapIndicatorHome(gRenderer, "res/" + yamlReader.getTeamColor(1) + "/mini_map_indicatorBlue.png");
+			// EQUIPO 1 HAY QUE MODULARIZAR ESTO 
+			int equipo = 1;
+			log->info("Crear Texturas");
+			TextureSetter textures(equipo, gRenderer);
+			sprite_info PlayerRun = textures.getPlayerRunInfo();
+			Texture runT = textures.getPLayerRunTexture();
+			sprite_info PlayerStill = textures.getPlayerStillInfo();
+			Texture stillT = textures.getPLayerStillTexture();
+			sprite_info PlayerSweep = textures.getPlayerSweepInfo();
+			Texture sweepT = textures.getPLayerSweepTexture();
+			sprite_info PlayerKick = textures.getPlayerKickInfo();
+			Texture kickT = textures.getPLayerKickTexture();
+			// Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
+			log->info("Crear Animaciones");
+			log->debug("Crear Animacion Run");
+			animMapperHOME.emplace(std::make_pair(PlayerRun.spriteid, Animation(runT, PlayerRun)));
+			log->debug("Crear Animacion Still");
+			animMapperHOME.emplace(std::make_pair(PlayerStill.spriteid, Animation(stillT, PlayerStill)));
+			log->debug("Crear Animacion Sweep");
+			animMapperHOME.emplace(std::make_pair(PlayerSweep.spriteid, Animation(sweepT, PlayerSweep)));
+			log->debug("Crear Animacion Kick");
+			animMapperHOME.emplace(std::make_pair(PlayerKick.spriteid, Animation(kickT, PlayerKick)));
 
-            TextureSetter textures2(2, gRenderer);
-            sprite_info PlayerRun2=textures2.getPlayerRunInfo();
-            Texture runT2=textures2.getPLayerRunTexture();
-            sprite_info PlayerStill2=textures2.getPlayerStillInfo();
-            Texture stillT2=textures2.getPLayerStillTexture();
-            sprite_info PlayerSweep2=textures2.getPlayerSweepInfo();
-            Texture sweepT2=textures2.getPLayerSweepTexture();
-            sprite_info PlayerKick2=textures2.getPlayerKickInfo();
-            Texture kickT2=textures2.getPLayerKickTexture();
-            // Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
-            log->info("Crear Animaciones del equipo 2");
-            log->debug("Crear Animacion Run");
-            animMapperAWAY.emplace(std::make_pair(PlayerRun2.spriteid, Animation(runT2, PlayerRun2)));
-            log->debug("Crear Animacion Still");
-            animMapperAWAY.emplace(std::make_pair(PlayerStill2.spriteid, Animation(stillT2, PlayerStill2)));
-            log->debug("Crear Animacion Sweep");
-            animMapperAWAY.emplace(std::make_pair(PlayerSweep2.spriteid, Animation(sweepT2, PlayerSweep2)));
-            log->debug("Crear Animacion Kick");
-            animMapperAWAY.emplace(std::make_pair(PlayerKick2.spriteid, Animation(kickT2, PlayerKick2)));
-            // Textura de minimapa
-            Texture miniMapIndicatorAway(gRenderer, "res/" + yamlReader.getTeamColor(2) + "/mini_map_indicator.png");
+			// Textura de minimapa
+			Texture miniMapIndicatorHome(gRenderer, "res/" + yamlReader.getTeamColor(1) + "/mini_map_indicatorBlue.png");
+
+			TextureSetter textures2(2, gRenderer);
+			sprite_info PlayerRun2 = textures2.getPlayerRunInfo();
+			Texture runT2 = textures2.getPLayerRunTexture();
+			sprite_info PlayerStill2 = textures2.getPlayerStillInfo();
+			Texture stillT2 = textures2.getPLayerStillTexture();
+			sprite_info PlayerSweep2 = textures2.getPlayerSweepInfo();
+			Texture sweepT2 = textures2.getPLayerSweepTexture();
+			sprite_info PlayerKick2 = textures2.getPlayerKickInfo();
+			Texture kickT2 = textures2.getPLayerKickTexture();
+			// Crear animaciones en base a datos del sprite y mandarlos a un map para el Player
+			log->info("Crear Animaciones del equipo 2");
+			log->debug("Crear Animacion Run");
+			animMapperAWAY.emplace(std::make_pair(PlayerRun2.spriteid, Animation(runT2, PlayerRun2)));
+			log->debug("Crear Animacion Still");
+			animMapperAWAY.emplace(std::make_pair(PlayerStill2.spriteid, Animation(stillT2, PlayerStill2)));
+			log->debug("Crear Animacion Sweep");
+			animMapperAWAY.emplace(std::make_pair(PlayerSweep2.spriteid, Animation(sweepT2, PlayerSweep2)));
+			log->debug("Crear Animacion Kick");
+			animMapperAWAY.emplace(std::make_pair(PlayerKick2.spriteid, Animation(kickT2, PlayerKick2)));
+			// Textura de minimapa
+			Texture miniMapIndicatorAway(gRenderer, "res/" + yamlReader.getTeamColor(2) + "/mini_map_indicator.png");
 
 			log->info("Crear Animaciones de la pelota");
 			TextureSetter texturesBall(BALL, gRenderer);
@@ -341,32 +339,29 @@ int main( int argc, char* args[] )
 			animMapperBall.emplace(std::make_pair(ballStill.spriteid, Animation(ballStillT, ballStill)));
 			animMapperBall.emplace(std::make_pair(ballMoving.spriteid, Animation(ballMovingT, ballMoving)));
 
-            Texture miniMapIndicatorBall(gRenderer, "res/Ball/mini_map_indicator.png");
+			Texture miniMapIndicatorBall(gRenderer, "res/Ball/mini_map_indicator.png");
 
-            Texture miniCamera(gRenderer, "res/camera_rect.png");
-            miniCamera.setScaling(70, 70);
-            Texture miniField(gRenderer, "res/soccer_field_1.6.png");
-            miniField.setScaling(YAML::MINIMAP_WIDTH, YAML::MINIMAP_HEIGHT - 50);
+			Texture miniCamera(gRenderer, "res/camera_rect.png");
+			Texture miniField(gRenderer, "res/soccer_field_1.6.png");
 
-            Texture backgroundPanel(gRenderer, "res/backgroundPanel.jpg");
-            backgroundPanel.setScaling(SCREEN_WIDTH, YAML::MINIMAP_HEIGHT - 50);
+			Texture backgroundPanel(gRenderer, "res/backgroundPanel.jpg");
+			backgroundPanel.setScaling(YAML::WINDOW_WIDTH, YAML::MINIMAP_HEIGHT);
 
-            Texto scoreHomeName(gRenderer, "res/Tehkan World Cup.ttf",22, yamlReader.getTeamNombre(1) , {255,255,0,0});
-            Texto scoreAwayName(gRenderer, "res/Tehkan World Cup.ttf",22, yamlReader.getTeamNombre(2) , {255,255,0,0});
-            Texto scoreHome(gRenderer, "res/Tehkan World Cup.ttf",50, "0", {255,255,0,0});
-            Texto scoreAway(gRenderer, "res/Tehkan World Cup.ttf",50, "0", {255,255,0,0});
-            Texto tiempo(gRenderer, "res/Tehkan World Cup.ttf",50, "0", {255,255,0,0});
-            Texto goalText(gRenderer, "res/Tehkan World Cup.ttf",80, "GOAL!!!", {255,255,0,0});
-            Texto goalKickText(gRenderer, "res/Tehkan World Cup.ttf",50, "GOAL KICK", {255,255,0,0});
+			Texto scoreHomeName(gRenderer, "res/Tehkan World Cup.ttf", 22, yamlReader.getTeamNombre(1), { 255,255,0,0 });
+			Texto scoreAwayName(gRenderer, "res/Tehkan World Cup.ttf", 22, yamlReader.getTeamNombre(2), { 255,255,0,0 });
+			Texto scoreHome(gRenderer, "res/Tehkan World Cup.ttf", 50, "0", { 255,255,0,0 });
+			Texto scoreAway(gRenderer, "res/Tehkan World Cup.ttf", 50, "0", { 255,255,0,0 });
+			Texto tiempo(gRenderer, "res/Tehkan World Cup.ttf", 50, "0", { 255,255,0,0 });
+			Texto goalText(gRenderer, "res/Tehkan World Cup.ttf", 80, "GOAL!!!", { 255,255,0,0 });
+			Texto goalKickText(gRenderer, "res/Tehkan World Cup.ttf", 50, "GOAL KICK", { 255,255,0,0 });
 
+			/*
+			** FIN CREACION TEXTURAS Y ANIMACIONES
+			**************************************/
 
-            Score score(gRenderer, &scoreHomeName, &scoreAwayName, &scoreHome, &scoreAway,&tiempo, &goalText, &goalKickText);
-            score.initialize();
-
-
-            /*
-            ** FIN CREACION TEXTURAS Y ANIMACIONES
-            **************************************/
+			Score score(gRenderer, &scoreHomeName, &scoreAwayName, &scoreHome, &scoreAway, &tiempo, &goalText, &goalKickText);
+			MiniMap miniMap(YAML::MINIMAP_WIDTH, YAML::MINIMAP_HEIGHT, YAML::MINIMAP_WORLD_SCALE, &miniCamera, &miniField);
+			InfoPanel infoPanel(YAML::WINDOW_WIDTH, YAML::INFO_PANEL_HEIGHT, backgroundPanel, score, miniMap);
 
 
 			// Agrego jugadores al mundo
@@ -376,13 +371,13 @@ int main( int argc, char* args[] )
 
             
 			log->info("Agrego la camara");
-            Camera camera(world, SCREEN_WIDTH, SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET, &miniCamera, &miniField, &backgroundPanel, &score);
+            Camera camera(world, YAML::SCREEN_WIDTH, YAML::SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
             camera.follow(world.getBall());
 
             log->info("Renderizo");
 			try {
 				CommandSender& commandSender = *commandSenderPtr;
-				renderizar(camera, world, commandSender, gameMenu);
+				renderizar(camera, world, commandSender, gameMenu, infoPanel);
 			} catch (SocketException& ex) {
                 // pantalla que muestra la desconexion
 				//std::cout << "Error de conexión con el servidor. Salimos. Ver el log" << std::endl;
@@ -433,7 +428,7 @@ player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun,
     return defaultPlayer;
 }
 
-void renderizar(Camera& camera, World& world, CommandSender& commandSender, GameMenu& gameMenu) {
+void renderizar(Camera& camera, World& world, CommandSender& commandSender, GameMenu& gameMenu, InfoPanel& infoPanel) {
 
     if (true)
     {
@@ -455,7 +450,7 @@ void renderizar(Camera& camera, World& world, CommandSender& commandSender, Game
 
 		Log* log = Log::get_instance();
 	
-	commandSender.set_rcv_timeout(30);
+		commandSender.set_rcv_timeout(30);
 
         //While application is running
         while( !quit )
@@ -493,37 +488,25 @@ void renderizar(Camera& camera, World& world, CommandSender& commandSender, Game
                     break;
 				}
 
-                //controlled->handleEvent(e);
-
-				//std::cout << "Enviando un comando" << std::endl;
 				commandSender.handleEvent(e);
-				/*if (e.type == SDL_KEYDOWN && e.key.repeat == 0 && e.key.keysym.sym == SDLK_q) {
-					camera.follow(controlled->getEntity());
-				}*/
             }
 
             //Cuando el tiempo pasado es mayor a nuestro tiempo de actualizacion
 			if (accumulator >= fixed_dt)
 			{
-				//Calcula movimientos
-				//std::cout << "Vamos a actualizar el modelo con lo que venga" << std::endl;
-				world.update(commandSender); //Update de todos los players (y otras entidades proximamente?)
-				//std::cout << "Terminamos de actualizar el modelo" << std::endl;
+				world.update(commandSender);
 				camera.update(fixed_dt);
+				infoPanel.update(accumulator); // chanchada por lo que hacemos en el contexto
 				accumulator = 0;
-
-
 			}
-				//Renderizamos solo despues de un update
-				//std::cout << "--Renderizando--" << std::endl;
 
-				//Clear screen
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-				SDL_RenderClear(gRenderer);
+			//Clear screen
+			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+			SDL_RenderClear(gRenderer);
 
-				//Render current frame
-				//std::cout << "Renderizamos ahora" << std::endl;
-				camera.render(world);
+			//Render current frame
+			camera.render(world, 0, YAML::INFO_PANEL_HEIGHT);
+			infoPanel.render(world, camera, 0, 0); // posterior al juego porque incluye textos de gol y otros
 
             //quit Si seleciono la tecla escape entonces pregunto si quiere salir
             if(salirJuego){
