@@ -28,6 +28,13 @@ User_ID PlayerControllerAI::getUserId()
 void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x, int ball_y)
 {
 	bool teamHasBall = this->playerModel->getTeam() == GameManager::get_instance().getTeamBallControl();
+	FIELD_POSITION defendedGoal = GameManager::get_instance().getDefendedGoal(this->playerModel->getTeam());
+	int positionModifierX = 0; // Esto es para que sea un poco mas fluido el movimiento y los jugadores no tengan un punto fijo de "centro" de area, si no que se adelantan o se atrasan segun tengan la pelota
+	if (teamHasBall) {
+		positionModifierX = defendedGoal == FIELD_POSITION::LEFT ? 100 : -100; // Si tiene la pelota y defiende en la izquiera entonces le tengo que sumar a la posicion (para que ataque). Si defiende a la derecha le tengo que restar.
+	} else {
+		positionModifierX = defendedGoal == FIELD_POSITION::LEFT ? -100 : 100; // Si NO tiene la pelota y defiende en la izquiera entonces le tengo que restar a la posicion (para que defienda). Si defiende a la derecha le tengo que sumar.
+	}
 	if(UserManager::get_instance().game_started()) { // FORMA CABEZA DE EVITAR QUE SE MUEVAN LOS JUGADORES ANTES DE QUE EMPIECE EL PARTIDO
 		// AI para volver a nuestra posicion inicial
 		// Bien simple que vuelva a su posicion
@@ -47,10 +54,10 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		}
 
 
-		int direction_x_initial = this->playerModel->getInitial_x() - this->playerModel->getX();
+		int direction_x_initial = this->playerModel->getInitial_x() + positionModifierX - this->playerModel->getX();
 		int direction_y_initial = this->playerModel->getInitial_y() - this->playerModel->getY();
 
-		int ball_in_area_x = ball_x - this->playerModel->getInitial_x();
+		int ball_in_area_x = ball_x - this->playerModel->getInitial_x() + positionModifierX;
 		int ball_in_area_y = ball_y - this->playerModel->getInitial_y();
 
 		int direction_x_ball = ball_x - this->playerModel->getX();

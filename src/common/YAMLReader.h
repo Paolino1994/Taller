@@ -55,6 +55,26 @@ public:
     int validarUsuario(std::string user, std::string pass);
 
     int getMaxJugadores();
+    
+    int getAtaqueArqueroX();
+    int getAtaqueDefensorX();
+    int getAtaqueMediocampistaX();
+    int getAtaqueDelanteroX();
+
+    int getDefensaArqueroX();
+    int getDefensaDefensorX();
+    int getDefensaMediocampistaX();
+    int getDefensaDelanteroX();
+    
+    int getAtaqueArqueroY();
+    int getAtaqueDefensorY();
+    int getAtaqueMediocampistaY();
+    int getAtaqueDelanteroY();
+
+    int getDefensaArqueroY();
+    int getDefensaDefensorY();
+    int getDefensaMediocampistaY();
+    int getDefensaDelanteroY();
 
     // C++11 singleton
     static YAMLReader& get_instance();
@@ -89,6 +109,26 @@ private:
     std::string LogLevel="info";
 
     int maxJugadores = 4;
+
+    int ataqueXArquero = 50;
+    int ataqueXDefensor = 50;
+    int ataqueXMediocampista = 50;
+    int ataqueXDelantero = 50;
+
+    int defensaXArquero = 50;
+    int defensaXDefensor = 50;
+    int defensaXMediocampista = 50;
+    int defensaXDelantero = 50;
+
+    int ataqueYArquero = 50;
+    int ataqueYDefensor = 50;
+    int ataqueYMediocampista = 50;
+    int ataqueYDelantero = 50;
+
+    int defensaYArquero = 50;
+    int defensaYDefensor = 50;
+    int defensaYMediocampista = 50;
+    int defensaYDelantero = 50;
 };
 
 

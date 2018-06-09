@@ -73,6 +73,179 @@ void YAMLReader::readYamlGeneral(std::string file){
         }
     }
 
+    if(configNode["MovJugAtaqueX"]){
+        if(configNode["MovJugAtaqueX"]["Arquero"]){
+            int aux = std::stoi(configNode["MovJugAtaqueX"]["Arquero"].as<std::string>());
+            if (aux > 0 ){
+                ataqueXArquero = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: AtaqueArquero " + configNode["MovJugAtaqueX"]["Arquero"].as<std::string>() + " se utilizara el valor 50");
+                ataqueXArquero = 50;
+            }
+        }
+        if(configNode["MovJugAtaqueX"]["Defensores"]){
+            int aux = std::stoi(configNode["MovJugAtaqueX"]["Defensores"].as<std::string>());
+            if (aux > 0 ){
+                ataqueXDefensor = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: Defensores " + configNode["MovJugAtaqueX"]["Defensores"].as<std::string>() + " se utilizara el valor 50");
+                ataqueXDefensor = 50;
+            }
+        }
+        if(configNode["MovJugAtaqueX"]["Mediocampistas"]){
+            int aux = std::stoi(configNode["MovJugAtaqueX"]["Mediocampistas"].as<std::string>());
+            if (aux > 0 ){
+                ataqueXMediocampista = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: Mediocampistas " + configNode["MovJugAtaqueX"]["Mediocampistas"].as<std::string>() + " se utilizara el valor 50");
+                ataqueXDefensor = 50;
+            }
+        }
+        if(configNode["MovJugAtaqueX"]["Delanteros"]){
+            int aux = std::stoi(configNode["MovJugAtaqueX"]["Delanteros"].as<std::string>());
+            if (aux > 0 ){
+                ataqueXDelantero = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: Delantero " + configNode["MovJugAtaqueX"]["Delanteros"].as<std::string>() + " se utilizara el valor 50");
+                ataqueXDefensor = 50;
+            }
+        }
+    }
+
+    if(configNode["MovJugDefensaX"]){
+        if(configNode["MovJugDefensaX"]["Arquero"]){
+            int aux = std::stoi(configNode["MovJugDefensaX"]["Arquero"].as<std::string>());
+            if (aux > 0 ){
+                defensaXArquero = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: DefensaArquero " + configNode["MovJugDefensaX"]["Arquero"].as<std::string>() + " se utilizara el valor 50");
+                defensaXArquero = 50;
+            }
+        }
+        if(configNode["MovJugDefensaX"]["Defensores"]){
+            int aux = std::stoi(configNode["MovJugDefensaX"]["Defensores"].as<std::string>());
+            if (aux > 0 ){
+                defensaXDefensor = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: Defensores " + configNode["MovJugDefensaX"]["Defensores"].as<std::string>() + " se utilizara el valor 50");
+                defensaXDefensor = 50;
+            }
+        }
+        if(configNode["MovJugDefensaX"]["Mediocampistas"]){
+            int aux = std::stoi(configNode["MovJugDefensaX"]["Mediocampistas"].as<std::string>());
+            if (aux > 0 ){
+                defensaXMediocampista = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: Mediocampistas " + configNode["MovJugDefensaX"]["Mediocampistas"].as<std::string>() + " se utilizara el valor 50");
+                defensaXDefensor = 50;
+            }
+        }
+        if(configNode["MovJugDefensaX"]["Delanteros"]){
+            int aux = std::stoi(configNode["MovJugDefensaX"]["Delanteros"].as<std::string>());
+            if (aux > 0 ){
+                defensaXDelantero = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: Delantero " + configNode["MovJugDefensaX"]["Delanteros"].as<std::string>() + " se utilizara el valor 50");
+                defensaXDefensor = 50;
+            }
+        }
+    }
+
+     if(configNode["MovJugAtaqueY"]){
+        if(configNode["MovJugAtaqueY"]["Arquero"]){
+            int aux = std::stoi(configNode["MovJugAtaqueY"]["Arquero"].as<std::string>());
+            if (aux > 0 ){
+                ataqueYArquero = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: AtaqueArquero " + configNode["MovJugAtaqueY"]["Arquero"].as<std::string>() + " se utilizara el valor 50");
+                ataqueYArquero = 50;
+            }
+        }
+        if(configNode["MovJugAtaqueY"]["Defensores"]){
+            int aux = std::stoi(configNode["MovJugAtaqueY"]["Defensores"].as<std::string>());
+            if (aux > 0 ){
+                ataqueYDefensor = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: Defensores " + configNode["MovJugAtaqueY"]["Defensores"].as<std::string>() + " se utilizara el valor 50");
+                ataqueYDefensor = 50;
+            }
+        }
+        if(configNode["MovJugAtaqueY"]["Mediocampistas"]){
+            int aux = std::stoi(configNode["MovJugAtaqueY"]["Mediocampistas"].as<std::string>());
+            if (aux > 0 ){
+                ataqueYMediocampista = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: Mediocampistas " + configNode["MovJugAtaqueY"]["Mediocampistas"].as<std::string>() + " se utilizara el valor 50");
+                ataqueYDefensor = 50;
+            }
+        }
+        if(configNode["MovJugAtaqueY"]["Delanteros"]){
+            int aux = std::stoi(configNode["MovJugAtaqueY"]["Delanteros"].as<std::string>());
+            if (aux > 0 ){
+                ataqueYDelantero = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: Delantero " + configNode["MovJugAtaqueY"]["Delanteros"].as<std::string>() + " se utilizara el valor 50");
+                ataqueYDefensor = 50;
+            }
+        }
+    }
+
+    if(configNode["MovJugDefensaY"]){
+        if(configNode["MovJugDefensaY"]["Arquero"]){
+            int aux = std::stoi(configNode["MovJugDefensaY"]["Arquero"].as<std::string>());
+            if (aux > 0 ){
+                defensaYArquero = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: DefensaArquero " + configNode["MovJugDefensaY"]["Arquero"].as<std::string>() + " se utilizara el valor 50");
+                defensaYArquero = 50;
+            }
+        }
+        if(configNode["MovJugDefensaY"]["Defensores"]){
+            int aux = std::stoi(configNode["MovJugDefensaY"]["Defensores"].as<std::string>());
+            if (aux > 0 ){
+                defensaYDefensor = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: Defensores " + configNode["MovJugDefensaY"]["Defensores"].as<std::string>() + " se utilizara el valor 50");
+                defensaYDefensor = 50;
+            }
+        }
+        if(configNode["MovJugDefensaY"]["Mediocampistas"]){
+            int aux = std::stoi(configNode["MovJugDefensaY"]["Mediocampistas"].as<std::string>());
+            if (aux > 0 ){
+                defensaYMediocampista = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: Mediocampistas " + configNode["MovJugDefensaY"]["Mediocampistas"].as<std::string>() + " se utilizara el valor 50");
+                defensaYDefensor = 50;
+            }
+        }
+        if(configNode["MovJugDefensaY"]["Delanteros"]){
+            int aux = std::stoi(configNode["MovJugDefensaY"]["Delanteros"].as<std::string>());
+            if (aux > 0 ){
+                defensaYDelantero = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: Delantero " + configNode["MovJugDefensaY"]["Delanteros"].as<std::string>() + " se utilizara el valor 50");
+                defensaYDefensor = 50;
+            }
+        }
+    }
+
+
     leerEquipo("EquipoA", 1);
     leerEquipo("EquipoB", 2);
 
@@ -126,6 +299,70 @@ int YAMLReader::getDelanteros(int equipo) {
 
 int YAMLReader::getMaxJugadores() {
     return maxJugadores;
+}
+
+int YAMLReader::getAtaqueArqueroX() {
+    return ataqueXArquero;
+}
+
+int YAMLReader::getAtaqueDefensorX() {
+    return ataqueXDefensor;
+}
+
+int YAMLReader::getAtaqueMediocampistaX() {
+    return ataqueXMediocampista;
+}
+
+int YAMLReader::getAtaqueDelanteroX() {
+    return ataqueXDelantero;
+}
+
+int YAMLReader::getDefensaArqueroX() {
+    return defensaXArquero;
+}
+
+int YAMLReader::getDefensaDefensorX() {
+    return defensaXDefensor;
+}
+
+int YAMLReader::getDefensaMediocampistaX() {
+    return defensaXMediocampista;
+}
+
+int YAMLReader::getDefensaDelanteroX() {
+    return defensaXDelantero;
+}
+
+int YAMLReader::getAtaqueArqueroY() {
+    return ataqueYArquero;
+}
+
+int YAMLReader::getAtaqueDefensorY() {
+    return ataqueYDefensor;
+}
+
+int YAMLReader::getAtaqueMediocampistaY() {
+    return ataqueYMediocampista;
+}
+
+int YAMLReader::getAtaqueDelanteroY() {
+    return ataqueYDelantero;
+}
+
+int YAMLReader::getDefensaArqueroY() {
+    return defensaYArquero;
+}
+
+int YAMLReader::getDefensaDefensorY() {
+    return defensaYDefensor;
+}
+
+int YAMLReader::getDefensaMediocampistaY() {
+    return defensaYMediocampista;
+}
+
+int YAMLReader::getDefensaDelanteroY() {
+    return defensaYDelantero;
 }
 
 // 0 -> Ok, -1 Password incorrecta, -2 usuario no encontrado

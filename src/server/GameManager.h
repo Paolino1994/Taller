@@ -48,6 +48,8 @@ public:
 
 	FIELD_POSITION getAwayDefends();
 
+	FIELD_POSITION getDefendedGoal(Team team);
+
 	User_ID getLastBallControlUser();
 
 	void setLastBallControlUser(User_ID userId);
