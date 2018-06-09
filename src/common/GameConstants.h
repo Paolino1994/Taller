@@ -64,6 +64,8 @@ namespace YAML {
 		{0, 432, 61, 198 }
 	};
 
+	const int POST_WIDTH = 7;
+
 	const size_t MAX_PLAYERS = 1; //TODO: Esto recibirlo desde el YAMLReader
 
     const int SCREEN_WIDTH = 800; // GAME_SCREEN_WIDTH

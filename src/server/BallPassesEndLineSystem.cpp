@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "common/GameConstants.h"
 #include "common/EventQueue.h"
 
 BallPassesEndLineSystem::BallPassesEndLineSystem(World & world):
@@ -21,11 +22,11 @@ void BallPassesEndLineSystem::process(double dt)
 	if (GameManager::get_instance().isBallInPlay()) {
 		BallModel& ballModel = world.getBall().getModel();
 
-		int leftEndLineX = 50;
-		int goalBottomPost = 347;
-		int goalTopPost = 550;
-		int postWidth = 20;
-		int rigthEndLineX = 1628;
+		const int leftEndLineX = YAML::FIELD_X;
+		const int goalBottomPost = YAML::GOAL[FIELD_POSITION::LEFT].y;
+		const int goalTopPost = YAML::GOAL[FIELD_POSITION::LEFT].y + YAML::GOAL[FIELD_POSITION::LEFT].h;
+		const int postWidth = YAML::POST_WIDTH;
+		const int rigthEndLineX = YAML::FIELD_X + YAML::FIELD_WIDTH;
 
 
 		int x = ballModel.getX();
