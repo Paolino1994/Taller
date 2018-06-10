@@ -109,6 +109,7 @@ void GameManager::setLastBallControlUser(User_ID userId){
 
 void GameManager::goalScored(FIELD_POSITION fieldPostion){
 	goalsByUser[lastBallControlUser - 1] ++;
+	UserManager::get_instance().addGoal(lastBallControlUser);
 
 	for(int i = 0 ; i < 4; i++) {
 		std::cout << "User: " << i + 1 << " Goles: " << goalsByUser[i] << std::endl;

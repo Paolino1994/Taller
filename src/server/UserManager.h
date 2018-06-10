@@ -18,6 +18,7 @@ typedef struct {
 	Socket* skt;
 	std::string name;
 	User_ID id;
+	int goals;
 } user;
 
 class UserManager {
@@ -37,7 +38,7 @@ private:
 	static User_ID userIdToAssign;
 	static User_ID getNextUserId();
 
-	// Cabeceadas para solución rapida
+	// Cabeceadas para soluciï¿½n rapida
 	User_ID lastUserId;
 	User_ID reconnectedUserId;
 
@@ -78,6 +79,12 @@ public:
 		CABECEADA para solucion rapida: ESTO FUNCIONA PORQUE ESTO TRABAJA SECUENCIALMENTE (ver main.cpp)
 	*/
 	User_ID getLastUserId();
+
+	std::string getUsernameById(User_ID userId);
+
+	void addGoal(User_ID userId);
+
+	int getGoalsByUserId(User_ID userId);
 };
 
 #endif

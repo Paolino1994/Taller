@@ -88,6 +88,7 @@ short UserManager::_login(Socket* skt){
 	u.skt = skt;
 	u.name = name;
 	u.id = playing? this->reconnectedUserId: UserManager::getNextUserId();
+	u.goals = 0;
 	users.push_back(u);
 
 	this->lastUserId = u.id; // para poder pasarselo al RequestHandler!
@@ -169,4 +170,36 @@ void UserManager::game_finished() {
 User_ID UserManager::getLastUserId()
 {
 	return this->lastUserId;
+}
+
+
+std::string UserManager::getUsernameById(User_ID userId)
+{
+	for (unsigned int i = 0; i < users.size(); i++) {
+		if (users[i].id == userId) {
+			return users[i].name;
+		}
+	}
+	return nullptr;
+}
+
+void UserManager::addGoal(User_ID userId) 
+{
+	for (unsigned int i = 0; i < users.size(); i++) 
+	{
+		if (users[i].id == userId) {
+			users[i].goals++;
+		}
+	}
+}
+
+int UserManager::getGoalsByUserId(User_ID userId) 
+{
+	for (unsigned int i = 0; i < users.size(); i++) 
+	{
+		if (users[i].id == userId) {
+			return users[i].goals;
+		}
+	}
+	return 0;
 }
