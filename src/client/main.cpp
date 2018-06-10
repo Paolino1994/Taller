@@ -254,6 +254,9 @@ int main( int argc, char* args[] )
 
 			CommandSender& commandSender = *commandSenderPtr;
 			gameMenu.selectFormationScreen(commandSender);
+			gameMenu.endGameScreen(commandSender);
+
+
 
 			/****************************************
 			** INICIO CREACION TEXTURAS Y ANIMACIONES

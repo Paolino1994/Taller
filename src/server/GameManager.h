@@ -4,6 +4,7 @@
 
 #include "common/EventHandler.h"
 #include "common/GameConstants.h"
+#include "UserManager.h"
 
 class GameManager: public EventHandler
 {
