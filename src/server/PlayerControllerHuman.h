@@ -28,5 +28,5 @@ private:
 	bool pressingLEFT;
 	bool pressingRIGHT;
 	Log* log;
-	time_t tiempo[25];
+    std::chrono::time_point <std::chrono::system_clock, std::chrono::milliseconds > tiempo[25];
 };

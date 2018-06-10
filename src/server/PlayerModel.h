@@ -78,7 +78,7 @@ public:
     void changeBallState(BallModel& ballModel);
 
 	// TODO: Evaluar si conviene tener una referencia a la pelota cuando el PlayerModel la tiene bajo su control
-    void pass(PlayerModel *pModel, BallModel& ballModel);
+    void pass(PlayerModel *pModel, BallModel &ballModel, double d);
 
 	Player_ID getPlayerId();
 
@@ -86,7 +86,7 @@ public:
 
     bool isColisionable=true;
 
-    void longPass(PlayerModel *pModel, BallModel &model);
+    void longPass(PlayerModel *pModel, BallModel &model, double d);
 
 	void kick(BallModel &model);
 

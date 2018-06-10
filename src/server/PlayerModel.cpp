@@ -445,12 +445,12 @@ void PlayerModel::changeBallState(BallModel& ballModel) {
 	}
 }
 
-void PlayerModel::pass(PlayerModel *pModel, BallModel& ballModel) {
+void PlayerModel::pass(PlayerModel *pModel, BallModel &ballModel, double potencia) {
 	int x2=pModel->getCenterX();
 	int y2=pModel->getCenterY();
 	int x1=ballModel.getX();
 	int y1=ballModel.getY();
-    double distance=pow(pow(abs(y2-y1),2) + pow(abs(x2-x1),2),0.5);
+    //double distance=pow(pow(abs(y2-y1),2) + pow(abs(x2-x1),2),0.5);
 	double angulo=atan2(y2-y1,x2-x1);
 	//std::cout<<std::to_string(angulo)<<std::endl;
     double priorangle=angle;
@@ -458,7 +458,7 @@ void PlayerModel::pass(PlayerModel *pModel, BallModel& ballModel) {
     setVelX(0);
     setVelY(0);
 	//std::cout<<std::to_string(angle)<<std::endl;
-	kick(ballModel,distance);
+	kick(potencia,ballModel);
     angle=priorangle;
 
 }
@@ -471,7 +471,7 @@ void PlayerModel::setAngle(int i) {
 	angle = i;
 }
 
-void PlayerModel::longPass(PlayerModel *pModel, BallModel &model) {
+void PlayerModel::longPass(PlayerModel *pModel, BallModel &model, double potencia) {
 	int x2=pModel->getCenterX();
 	int y2=pModel->getCenterY();
 	int x1=model.getX();
@@ -480,18 +480,18 @@ void PlayerModel::longPass(PlayerModel *pModel, BallModel &model) {
 	//std::cout<<std::to_string(angulo)<<std::endl;
 	double priorangle=angle;
 	angle=(angulo*180/M_PI) + 90;
-    double distance=pow(pow(abs(y2-y1),2) + pow(abs(x2-x1),2),0.5);
+    //double distance=pow(pow(abs(y2-y1),2) + pow(abs(x2-x1),2),0.5);
     //double heightAngle=
 	setVelX(0);
 	setVelY(0);
 	//std::cout<<std::to_string(angle)<<std::endl;
-    kickHigh(distance, model);
+    kickHigh(potencia, model);
 	angle=priorangle;
 
 
 }
 
-void PlayerModel::kickHigh(double distance, BallModel &ballModel) {
+void PlayerModel::kickHigh(double power, BallModel &ballModel) {
 
 	if (this->state != KICKING) {
 		this->state = KICKING;
@@ -500,7 +500,7 @@ void PlayerModel::kickHigh(double distance, BallModel &ballModel) {
 		this->kickVelY = velY;
 		setHasControlOfTheBall(false);
         ballModel.setAngle(angle);
-        ballModel.kick(distance,BallModel::HIGH);
+        ballModel.kickWithPower(power,BallModel::HIGH);
 		EventQueue::get().push(make_shared<KickEvent>(*this));
 	}
 	log->debug("PlayerModel: pateando largo");

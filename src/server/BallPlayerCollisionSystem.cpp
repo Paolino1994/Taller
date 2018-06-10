@@ -37,7 +37,7 @@ void BallPlayerCollisionSystem::process(double dt)
 		if (controller->getModel()->isColisionable) {
 			int xPlayer = controller->getModel()->getCenterX();
 			int yPlayer = controller->getModel()->getCenterY();
-			if (abs(x - xPlayer)<20 && abs(y - yPlayer)<20 && z<2) {
+			if (abs(x - xPlayer)<20 && abs(y - yPlayer)<20 && z<1) {
 				if (!controller->getModel()->getHasControlOfTheBall()) {
 					Log::get_instance()->debug("Colision, un nuevo jugador toma la pelota");
 					controller->getModel()->setHasControlOfTheBall(true);

@@ -82,7 +82,7 @@ void PlayerControllerHuman::_handleEvent( Command& command ){
 			}
 			case CommandType::KICK: {
                 if(playerModel->getHasControlOfTheBall()) {
-                    tiempo[(int)CommandType::KICK]=time(NULL);
+                    tiempo[(int)CommandType::KICK]=std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());;
 					//std::cout<<time(NULL)<<std::endl;
                     //playerModel->kick(world.getBall().getModel());
                 }
@@ -101,23 +101,19 @@ void PlayerControllerHuman::_handleEvent( Command& command ){
 				break;
 			}
 			case CommandType::PASS:{
-                if(playerModel->getHasControlOfTheBall()){
-                    PlayerController* passController=world.getPlayerToPass(this);
-                    if(passController!=this){
-                        playerModel->pass(passController->getModel(), world.getBall().getModel());
-                        this->world.swap(this);
-                    }
+                if(playerModel->getHasControlOfTheBall()) {
+                    tiempo[(int)CommandType::PASS]=std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());;
+                    //std::cout<<time(NULL)<<std::endl;
+                    //playerModel->kick(world.getBall().getModel());
                 }
 				log->debug("PlayerControllerHuman: apretando pasar");
 				break;
 			}
             case CommandType::LONG_PASS:{
-                if(playerModel->getHasControlOfTheBall()){
-                    PlayerController* passController=world.getPlayerToPassLong(this);
-                    if(passController!=this){
-                        playerModel->longPass(passController->getModel(), world.getBall().getModel());
-                        this->world.swap(this);
-                    }
+                if(playerModel->getHasControlOfTheBall()) {
+                    tiempo[(int)CommandType::LONG_PASS]=std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());;
+                    //std::cout<<time(NULL)<<std::endl;
+                    //playerModel->kick(world.getBall().getModel());
                 }
             break;
             };
@@ -153,15 +149,39 @@ void PlayerControllerHuman::_handleEvent( Command& command ){
 			log->debug("PlayerControllerHuman: soltando correr");
 		}
         else if (command.type == CommandType::KICK) {
-            time_t actualTiempo = time(NULL);
+            //time_t actualTiempo = time(NULL);
 			//std::cout<<time(NULL)<<std::endl;
 			//std::cout<<tiempo[(int)CommandType::KICK]<<std::endl;
             if(playerModel->getHasControlOfTheBall()) {
-                double potencia=difftime(actualTiempo,tiempo[(int)CommandType::KICK]);
-                //std::cout<<actualTiempo<<" "<<" "<<tiempo[(int)CommandType::KICK]<<" "<<potencia<<std::endl;
+                auto end = std::chrono::system_clock::now();
+                double potencia= (end - tiempo[(int)CommandType::KICK]).count();
                 playerModel->kick(potencia,world.getBall().getModel());
             }
             log->debug("PlayerControllerHuman: soltando patear");
+        }
+        else if (command.type == CommandType::PASS) {
+            if(playerModel->getHasControlOfTheBall()){
+                auto end = std::chrono::system_clock::now();
+                double potencia= (end - tiempo[(int)CommandType::PASS]).count();
+                PlayerController* passController=world.getPlayerToPass(this);
+                if(passController!=this){
+                    playerModel->pass(passController->getModel(), world.getBall().getModel(), potencia);
+                    this->world.swap(this);
+                }
+            }
+            log->debug("PlayerControllerHuman: soltando pasar");
+        }
+        else if (command.type == CommandType::LONG_PASS) {
+            auto end = std::chrono::system_clock::now();
+            double potencia= (end - tiempo[(int)CommandType::LONG_PASS]).count();
+            if(playerModel->getHasControlOfTheBall()){
+                PlayerController* passController=world.getPlayerToPassLong(this);
+                if(passController!=this){
+                    playerModel->longPass(passController->getModel(), world.getBall().getModel(), potencia);
+                    this->world.swap(this);
+                }
+            }
+            log->debug("PlayerControllerHuman: pasar largo");
         }
     }
 

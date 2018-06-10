@@ -149,7 +149,8 @@ void BallModel::update(double dt, int x_limit, int y_limit) {
 
 	if(z>0){
 		double currentDistance = getCurrentDistanceToOriginal();
-		if(currentDistance>=startDistance/2){
+        std::cout<<"Current "<<currentDistance<<"start "<<startDistance<<"Z "<<z<<std::endl;
+		if(currentDistance>=startDistance/1.2){
 			heigthAngle=-1;
 		}
 	}
@@ -226,7 +227,7 @@ void BallModel::kick(double distance, int type) {
     //double yVel = 750 * multiplierZ;
 	setVelX(xVel);
 	setVelY(yVel);
-    setVelZ(10);
+    setVelZ(20);
 	originalX=this->getX();
 	originalY=this->getY();
     if(type==HIGH){
@@ -266,8 +267,8 @@ void BallModel::kickWithPower(double power, int type) {
     double multiplierX=cos(angleToUse*PI/180.0);
     double multiplierY=sin(angleToUse*PI/180.0);
     //double speed=getSpeed(distance);
-    double newPower=(power+1)*300;
-    std::cout<<power<<" "<<newPower<<std::endl;
+    double newPower=(power)/270000;
+    //std::cout<<power<<" "<<newPower<<std::endl;
     if(newPower>5000){
         newPower=5000;
         std::cout<<newPower<<std::endl;
@@ -277,13 +278,13 @@ void BallModel::kickWithPower(double power, int type) {
     //double yVel = 750 * multiplierZ;
     setVelX(xVel);
     setVelY(yVel);
-    setVelZ(10);
+    setVelZ(newPower/30);
     originalX=this->getX();
     originalY=this->getY();
     if(type==HIGH){
         heigthAngle=45;
     }
-    //startDistance=distance;
+    startDistance=newPower/3;
     passType=type;
 
 
