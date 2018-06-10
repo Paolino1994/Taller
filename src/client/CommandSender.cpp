@@ -208,37 +208,23 @@ Request CommandSender::listenStart() {
 	return protocol.request();
 }
 
-bool CommandSender::teamFormation(Team team) {
-	protocol.write(Request::TEAM_FORMATION, reinterpret_cast<const char*>(&team), sizeof(team));
+bool CommandSender::checkFormation(Team team) {
+	protocol.write(Request::CHECK_TEAM_FORMATION, reinterpret_cast<const char*>(&team), sizeof(team));
 		protocol.read();
 		Request request;
 		request = protocol.request();
-		if (request == Request::TEAM_FORMATION) {
-			std::cout << "result: " << "TEAM_FORMATION" << std::endl;
+		if (request == Request::TEAM_WITH_FORMATION) {
 			return true;
 		}else{
 			return false;
 		}
 }
 
-void CommandSender::assignFormation(Team team, Formation formation) {
-	CommandSetFormation commandSetFormation = {CommandTeam::__LENGTH__, CommandFormation::__LENGTH__};
+void CommandSender::setTeamFormation(Team team, Formation formation) {
+	TeamFormation teamFormation = {Team::__LENGTH__, Formation::__LENGTH__};
 
-	if(team == Team::HOME){
-		commandSetFormation.team = CommandTeam::HOME;
-	}else{
-		commandSetFormation.team = CommandTeam::AWAY;
-	}
+	teamFormation.team = team;
+	teamFormation.formation = formation;
 
-	if(formation == Formation::FORMATION_1){
-		commandSetFormation.formation = CommandFormation::FORMATION_1;
-	}else{
-		if(formation == Formation::FORMATION_2){
-				commandSetFormation.formation = CommandFormation::FORMATION_2;
-		}else{
-			commandSetFormation.formation = CommandFormation::FORMATION_3;
-		}
-	}
-
-	protocol.write(Request::SET_FORMATION, reinterpret_cast<const char*>(&commandSetFormation), sizeof(commandSetFormation));
+	protocol.write(Request::SET_TEAM_FORMATION, reinterpret_cast<const char*>(&teamFormation), sizeof(teamFormation));
 }

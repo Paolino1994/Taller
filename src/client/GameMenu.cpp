@@ -291,14 +291,14 @@ int GameMenu::verificarCredenciales (std::string usuario, std::string pass) {
 int GameMenu::selectFormationScreen(CommandSender& commandSender, Team selectedTeam) {
     Log *log = Log::get_instance();
 
-    // vemos si para este equipo hay formacion
-    bool isFormation = commandSender.teamFormation(selectedTeam);
+    // vemos si para el equipo elegido hay formacion
+    bool existFormation = commandSender.checkFormation(selectedTeam);
 
-    if(isFormation){
-    	std::cout << "hay formacion" << std::endl;
+    if(existFormation){
+    	std::cout << "el equipo ya tiene formacion" << std::endl;
+    	log->info("el equipo seleccionado ya tiene formacion");
     	return 0;
     }
-    std::cout << "no hay formacion" << std::endl;
 
     log->info("Generando pantalla de selección de formacion");
 
@@ -406,26 +406,29 @@ int GameMenu::selectFormationScreen(CommandSender& commandSender, Team selectedT
             switch (formationPositionIndex){
                 case 0: 
                     formacionElegida = "3-2-1";
-                    formation = Formation::FORMATION_1;
+                    formation = Formation::FORMATION_3_2_1;
                     break;
                 case 1:
                     formacionElegida = "3-1-2";
-                    formation = Formation::FORMATION_2;
+                    formation = Formation::FORMATION_3_1_2;
                     break;
                 case 2 :
                     formacionElegida = "3-3-0";
-                    formation = Formation::FORMATION_3;
+                    formation = Formation::FORMATION_3_3_0;
                 break;  
                 default:
                     log->error("Hubo un error en la eleccion de la formacion, indice selccionado: " + formationPositionIndex);
                     formacionElegida = "3-2-1";
+                    formation = Formation::FORMATION_3_2_1;
                 break;
 
             }
-            log->info("se selecciono la formacion: " + formacionElegida);
+            std::cout << "formacion de equipo: "  << formacionElegida << std::endl;
+            log->info("formacion de equipo: " + formacionElegida);
+
             returnValue = 0;
             running = false;
-           	commandSender.assignFormation(selectedTeam, formation);  // ACA HAY QUE LLAMAR AL SERVIDOR PARA ASIGNAR LA FORMACION
+           	commandSender.setTeamFormation(selectedTeam, formation);
 
         }
         SDL_RenderPresent( gRenderer );

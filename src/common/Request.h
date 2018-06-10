@@ -17,9 +17,10 @@ enum class Request : u_int32_t {
 	EVENT_UPDATE,
 	LOGIN,
 	START,
-	TEAM_FORMATION,
-	TEAM_NO_FORMATION,
-	SET_FORMATION,
+	CHECK_TEAM_FORMATION,
+	SET_TEAM_FORMATION,
+	TEAM_WITH_FORMATION,
+	TEAM_WITHOUT_FORMATION
 };
 
 
@@ -47,24 +48,6 @@ enum class CommandKey : u_int32_t {
 struct Command {
 	CommandKey key;
 	CommandType type;
-};
-
-enum class CommandTeam : u_int32_t {
-	HOME = 0,
-	AWAY,
-	__LENGTH__
-};
-
-enum class CommandFormation : u_int32_t {
-	FORMATION_1 = 0, 	//3-3-0
-	FORMATION_2, 		//3-3-0
-	FORMATION_3, 		//3-1-2
-	__LENGTH__
-};
-
-struct CommandSetFormation {
-	CommandTeam team;
-	CommandFormation formation;
 };
 
 const std::string commandTypeDescription[static_cast<std::underlying_type<CommandType>::type>(CommandType::__LENGTH__)] = {

@@ -16,8 +16,8 @@ private:
 	size_t playerCount;
 
 	bool running;
-	bool isSetFormationHome;
-	bool isSetFormationAway;
+	bool existFormationHome;
+	bool existFormationAway;
 	bool server_exit_requested;
 	std::thread worker;
 
@@ -28,8 +28,8 @@ public:
 	virtual ~Game();
 
 	PlayerController* assignToTeam(Team team, User_ID userId);
-	void assignToFormation(Team team, Formation formation, User_ID userId);
-	bool teamFormation(Team team, User_ID userId);
+	void setTeamFormation(Team team, Formation formation, User_ID userId);
+	bool checkTeamFormation(Team team, User_ID userId);
 	model_data_t getModelData();
 
 	// invalida el contoller, le hacemos delete

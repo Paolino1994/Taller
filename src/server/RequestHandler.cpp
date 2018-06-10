@@ -69,40 +69,17 @@ void RequestHandler::_run()
 					protocol.set_rcv_timeout(30);
 					break;
 				}
-				case Request::TEAM_FORMATION: {
-					std::cout << "TEAM_FORMATION" << std::endl;
+				case Request::CHECK_TEAM_FORMATION: {
 					Team team = *reinterpret_cast<const Team*>(protocol.dataBuffer());
-					Log::get_instance()->info("Me llego un pedido de formación al equipo: " + static_cast<std::underlying_type<Team>::type>(team));
-					bool result = game.teamFormation(team, this->userId);
-					if(result){
-						protocol.write(Request::TEAM_FORMATION);
-					}else{
-						protocol.write(Request::TEAM_NO_FORMATION);
-					}
-					std::cout << result << std::endl;
+					Log::get_instance()->info("se comprueba si existe formación del equipo: " + static_cast<std::underlying_type<Team>::type>(team));
+					bool result = game.checkTeamFormation(team, this->userId);
+					if(result) protocol.write(Request::TEAM_WITH_FORMATION);
+						else protocol.write(Request::TEAM_WITHOUT_FORMATION);
 					break;
 				}
-				case Request::SET_FORMATION: {
-					std::cout << "SET_FORMATION" << std::endl;
-//					Formation formation = *reinterpret_cast<const Formation*>(protocol.dataBuffer());
-					CommandSetFormation setFormation = *reinterpret_cast<const CommandSetFormation*>(protocol.dataBuffer());
-					Team team;
-					Formation formation;
-
-					if(setFormation.team == CommandTeam::HOME){
-						team = Team::HOME;
-					}
-					else team = Team::AWAY;
-
-					if(setFormation.formation == CommandFormation::FORMATION_1){
-						formation = Formation::FORMATION_1;
-					}else{
-						if(setFormation.formation == CommandFormation::FORMATION_2){
-							formation = Formation::FORMATION_2;
-						}else formation = Formation::FORMATION_3;
-
-					}
-					game.assignToFormation(team, formation, this->userId);
+				case Request::SET_TEAM_FORMATION: {
+					TeamFormation teamFormation = *reinterpret_cast<const TeamFormation*>(protocol.dataBuffer());
+					game.setTeamFormation(teamFormation.team, teamFormation.formation, this->userId);
 					break;
 				}
 				default: {

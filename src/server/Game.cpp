@@ -129,8 +129,8 @@ Game::Game() :
         maxPlayers(YAML::MAX_PLAYERS),
         playerCount(0),
         running(false),
-		isSetFormationHome(false),
-		isSetFormationAway(false),
+		existFormationHome(false),
+		existFormationAway(false),
         server_exit_requested(false)
 {
     /****************************************
@@ -253,41 +253,39 @@ PlayerController * Game::assignToTeam(Team team, User_ID userId)
 }
 
 
-bool Game::teamFormation(Team team, User_ID userId)
+bool Game::checkTeamFormation(Team team, User_ID userId)
 {
-	if(team == Team::HOME  && isSetFormationHome){
-		std::cout << "HOME" << std::endl;
-		return true;
+	bool value = false;
+
+	if( (team == Team::HOME && existFormationHome) || (team == Team::AWAY && existFormationAway) ) {
+		value = true;
 	}
-	if(team == Team::AWAY  && isSetFormationAway){
-		std::cout << "AWAY" << std::endl;
-			return true;
-	}
-	std::cout << "FALSE" << std::endl;
-	return false;
+
+	return value;
 }
 
-void Game::assignToFormation(Team team, Formation formation, User_ID userId)
+void Game::setTeamFormation(Team team, Formation formation, User_ID userId)
 {
 
 	FIELD_POSITION position = FIELD_POSITION::__LENGTH__;
+
 	if(team == Team::HOME){
-		isSetFormationHome = true;
+		existFormationHome = true;
 		position = FIELD_POSITION::LEFT;
 	}else{
-		isSetFormationAway = true;
+		existFormationAway = true;
 		position = FIELD_POSITION::RIGHT;
 	}
 
 	std::string textFormation = "";
-	if(formation == Formation::FORMATION_1){
-		textFormation = "3-2-1";
-	}else{
-		if(formation == Formation::FORMATION_2){
-			textFormation = "3-1-2";
-		}else
-			textFormation = "3-3-0";
-	}
+	if(formation == Formation::FORMATION_3_2_1) textFormation = "3-2-1";
+		else{
+			if(formation == Formation::FORMATION_3_1_2) textFormation = "3-1-2";
+				else
+					textFormation = "3-3-0";
+		}
+
+	std::cout << "formacion de equipo: " << textFormation << std::endl;
 
 	this->world.changeFormation(team, position, textFormation);
 }
