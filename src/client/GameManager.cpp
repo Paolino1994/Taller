@@ -7,6 +7,8 @@ bool GameManager::initialized = false;
 GameManager::GameManager(){
     scoreHome = 0;
     scoreAway = 0;
+	time = 0;
+	period = 0;
     displayGoalText = 0;
     displayGoalKickText = 0;
 }
@@ -33,7 +35,7 @@ void GameManager::update(const game_manager_data_t & game_manager_data)
 {
 	scoreHome = game_manager_data.scoreHome;
 	scoreAway = game_manager_data.scoreAway;
-    time=game_manager_data.timeInSeconds;
+    time = game_manager_data.timeInSeconds;
     period = game_manager_data.period;
 }
 
@@ -67,6 +69,11 @@ GameManager::~GameManager() {
 
 int GameManager::getTime() {
     return time;
+}
+
+int GameManager::getPeriod()
+{
+	return this->period;
 }
 
 

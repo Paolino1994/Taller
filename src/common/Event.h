@@ -90,4 +90,18 @@ public:
 	virtual void accept(EventHandler& handler);
 };
 
+// VER: que sea KickOffEvent y que funque tambien para eventos de gol
+// --> permitiria que del lado del cliente reproduzcan sonidos en ambos casos
+class PeriodStartEvent : public Event {
+public:
+	const Team teamThatKickedOff;
 
+	PeriodStartEvent(Team teamThatKickedOff);
+	virtual ~PeriodStartEvent();
+
+	virtual EventID getId() {
+		return EventID::PERIOD_START;
+	}
+
+	virtual void accept(EventHandler& handler);
+};

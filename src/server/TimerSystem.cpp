@@ -2,6 +2,7 @@
 
 #include "common/EventQueue.h"
 #include "GameManager.h"
+#include "PlayerModel.h"
 
 
 Team TimerSystem::getNextKickOffTeam(Team previousTeam)
@@ -59,4 +60,5 @@ void TimerSystem::handle(KickEvent & e)
 	this->periodStarted = true;
 	this->periodSecondsElapsed = 0; // Ver si se quiere resetear el tiempo
 	this->unregisterFrom(EventID::KICK);
+	EventQueue::get().push(std::make_shared<PeriodStartEvent>(this->kickOffTeam));
 }

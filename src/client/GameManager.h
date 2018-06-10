@@ -37,6 +37,8 @@ public:
 
 	int getTime();
 
+	int getPeriod();
+
     void setDisplayGoalText(double value);
 
 	double getDisplayGoalText();

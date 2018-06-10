@@ -108,6 +108,11 @@ void World::update(CommandSender& commandSender) {
 			std::cout << "Server me avisa: Termino un tiempo!" << std::endl;
 			break;
 		}
+		case EventID::PERIOD_START: {
+			SoundManager::get_instance()->playSound(SoundEffect::SE_WHISTLE);
+			std::cout << "Server me avisa: Empieza un tiempo!" << std::endl;
+			break;
+		}
 		case EventID::GOAL_KICK: {
 			GameManager::get_instance()->setDisplayGoalKickText(2);
 			SoundManager::get_instance()->playSound(SoundEffect::SE_WHISTLE);

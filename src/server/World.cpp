@@ -18,6 +18,7 @@ World::World(int width, int height, std::map<const std::string, Animation> ballA
     width(width),
     height(height)
 {
+	this->registerTo(EventID::PERIOD_END);
 }
 
 World::~World()
@@ -29,6 +30,7 @@ World::~World()
 			delete controller;
 		}
 	}
+	this->unregisterFrom(EventID::PERIOD_END);
 }
 
 void World::createTeam(Team team, int defenders, int midfielders, int forwards, player_data_t playerData, std::map<const std::string, Animation>& animMapper)
@@ -449,6 +451,20 @@ void World::changeFormation(Team team, FIELD_POSITION goalSide, std::string form
 }
 
 
+void World::switchTeamSides()
+{
+	const int centerX = YAML::FIELD_CENTER_X;
+	const int centerY = YAML::FIELD_CENTER_Y;
+
+	for (std::vector<PlayerController*>& controllers : playerControllers) {
+		for (auto player : controllers) {
+			PlayerModel* playerModel = player->getModel();
+			playerModel->setInitial_x(centerX + (centerX - playerModel->getInitial_x()));
+			playerModel->setInitial_y(centerY + (centerY - playerModel->getInitial_y()));
+		}
+	}
+}
+
 void World::setSetPiecePosition(Team team, FIELD_POSITION goalSide, SET_PIECE setPiece){
 
     int mitadDeCancha_x = YAML::FIELD_CENTER_X;
@@ -540,6 +556,14 @@ void World::setZonesDistances(Team team){
                 break;
             }
         }
+}
+
+void World::handle(PeriodEndEvent & e)
+{
+	// Hacemos que cambien de lado!
+	GameManager::get_instance().switchTeamFieldPositions();
+	this->switchTeamSides();
+	this->setSetPiecePosition(SET_PIECE::KICKOFF);
 }
 
 std::vector<std::string> separarFormacion(const std::string& str, const char& ch) {

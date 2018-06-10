@@ -3,7 +3,6 @@
 #include <iostream>
 
 #include "common/EventHandler.h"
-#include "World.h"
 #include "common/GameConstants.h"
 
 class GameManager: public EventHandler
@@ -56,12 +55,13 @@ public:
 
 	void goalScored(FIELD_POSITION fieldPostion);
 
+	void switchTeamFieldPositions();
+
 
 	// Events to handle:
 	virtual void handle(KickEvent& e);
 	virtual void handle(GoalEvent& e);
 	virtual void handle(PeriodEndEvent& e);
 	virtual void handle(GoalKickEvent& e);
-
-
+	virtual void handle(PeriodStartEvent& e);
 };

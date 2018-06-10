@@ -351,6 +351,7 @@ int main( int argc, char* args[] )
 			Texto scoreAwayName(gRenderer, "res/Tehkan World Cup.ttf", 22, yamlReader.getTeamNombre(2), { 255,255,0,0 });
 			Texto scoreHome(gRenderer, "res/Tehkan World Cup.ttf", 50, "0", { 255,255,0,0 });
 			Texto scoreAway(gRenderer, "res/Tehkan World Cup.ttf", 50, "0", { 255,255,0,0 });
+			Texto periodText(gRenderer, "res/Tehkan World Cup.ttf", 22, "1er Tiempo", { 255,255,0,0 });
 			Texto tiempo(gRenderer, "res/Tehkan World Cup.ttf", 50, "0", { 255,255,0,0 });
 			Texto goalText(gRenderer, "res/Tehkan World Cup.ttf", 80, "GOAL!!!", { 255,255,0,0 });
 			Texto goalKickText(gRenderer, "res/Tehkan World Cup.ttf", 50, "GOAL KICK", { 255,255,0,0 });
@@ -359,7 +360,7 @@ int main( int argc, char* args[] )
 			** FIN CREACION TEXTURAS Y ANIMACIONES
 			**************************************/
 
-			Score score(gRenderer, &scoreHomeName, &scoreAwayName, &scoreHome, &scoreAway, &tiempo, &goalText, &goalKickText);
+			Score score(gRenderer, &scoreHomeName, &scoreAwayName, &scoreHome, &scoreAway, &periodText, &tiempo, &goalText, &goalKickText);
 			MiniMap miniMap(YAML::MINIMAP_WIDTH, YAML::MINIMAP_HEIGHT, YAML::MINIMAP_WORLD_SCALE, &miniCamera, &miniField);
 			InfoPanel infoPanel(YAML::WINDOW_WIDTH, YAML::INFO_PANEL_HEIGHT, backgroundPanel, score, miniMap);
 

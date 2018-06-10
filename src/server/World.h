@@ -15,7 +15,7 @@
 // Game / World
 // DEL LADO DEL SERVER:
 // SIN Texturas colgando
-class World
+class World: public EventHandler
 {
 private:
 	std::vector<std::shared_ptr<System>> systems;
@@ -82,9 +82,27 @@ public:
 
 	void changeFormation(Team team, FIELD_POSITION goalSide, std::string formation);
 
+	// sin importar su formacion, modifica sus initial_x/_y para implementar cambio de lado
+	// (es simetria al centro de la cancha)
+	void switchTeamSides();
+
 	void setSetPiecePosition(Team team, FIELD_POSITION goalSide, SET_PIECE setPiece);
+
+	// arma el set_piece con la posicion que le corresponde al equipo segun el arco que defienda
+	inline void setSetPiecePosition(Team team, SET_PIECE setPiece) {
+		this->setSetPiecePosition(team, GameManager::get_instance().getDefendedGoal(team), setPiece);
+	};
+
+	// arma set_pieces para ambos equipos usando el arco que defienden
+	inline void setSetPiecePosition(SET_PIECE setPiece) {
+		this->setSetPiecePosition(Team::HOME, setPiece);
+		this->setSetPiecePosition(Team::AWAY, setPiece);
+	};
 
 	void setZonesDistances(Team team);
 
+	// Events to handle
+
+	virtual void handle(PeriodEndEvent& e);
 };
 

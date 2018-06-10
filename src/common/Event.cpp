@@ -71,3 +71,17 @@ void PostHitEvent::accept(EventHandler & handler)
 {
 	handler.handle(*this);
 }
+
+PeriodStartEvent::PeriodStartEvent(Team teamThatKickedOff):
+	teamThatKickedOff(teamThatKickedOff)
+{
+}
+
+PeriodStartEvent::~PeriodStartEvent()
+{
+}
+
+void PeriodStartEvent::accept(EventHandler & handler)
+{
+	handler.handle(*this);
+}

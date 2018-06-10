@@ -2,20 +2,21 @@
 #include "../common/GameConstants.h"
 
 
-Score::Score(SDL_Renderer *renderer, Texto *homeName, Texto *awayName, Texto *homeScore, Texto *awayScore,Texto *tiempo, Texto *goalText, Texto *goalKickText):
-gRenderer(renderer),
-homeName(homeName),
-awayName(awayName),
-homeScore(homeScore),
-awayScore(awayScore),
-tiempo(tiempo),
-goalText(goalText),
-goalKickText(goalKickText)
+Score::Score(SDL_Renderer *renderer, Texto *homeName, Texto *awayName, Texto *homeScore, Texto *awayScore, Texto *periodText, Texto *tiempo, Texto *goalText, Texto *goalKickText):
+	gRenderer(renderer),
+	home(GameManager::get_instance()->getScore(Team::HOME)),
+	away(GameManager::get_instance()->getScore(Team::AWAY)),
+	period(GameManager::get_instance()->getPeriod()),
+	homeName(homeName),
+	awayName(awayName),
+	homeScore(homeScore),
+	awayScore(awayScore),
+	periodText(periodText),
+	tiempo(tiempo),
+	goalText(goalText),
+	goalKickText(goalKickText),
+	gameManager(GameManager::get_instance())
 {
-    home = 0;
-    away = 0;
-    tiempo=0;
-    gameManager = GameManager::get_instance();
 }
 
 Score::~Score()
@@ -23,6 +24,8 @@ Score::~Score()
 }
 
 void Score::displayScore(int screen_x, int screen_y){
+
+	// Scores
 
     int newScoreHome = gameManager->getScore(Team::HOME);
     int newScoreAway = gameManager->getScore(Team::AWAY);
@@ -38,14 +41,28 @@ void Score::displayScore(int screen_x, int screen_y){
         away = newScoreAway;
     }
 
-    std::string Tiempo=getStringTiempo(newTime);
-    tiempo->updateText(Tiempo, {255,255,0,0});
+	homeName->display(screen_x + 30, screen_y + 10);
+	awayName->display(screen_x + 180, screen_y + 10);
+	homeScore->display(screen_x + 30, screen_y + 60);
+	awayScore->display(screen_x + 180, screen_y + 60);
 
-    homeName->display(screen_x + 30, screen_y + 10);
-    awayName->display(screen_x + 180, screen_y + 10);
-    homeScore->display(screen_x + 30, screen_y + 60);
-    awayScore->display(screen_x + 180, screen_y + 60);
-    tiempo->display(screen_x + 550, screen_y + 60);
+	// Time
+
+	if (gameManager->getPeriod() != this->period) {
+		this->period = gameManager->getPeriod();
+		if (this->period == 1) {
+			this->periodText->updateText("1er Tiempo", { 255,255,0,0 });
+		} else if (this->period == 2) {
+			this->periodText->updateText("2do Tiempo", { 255,255,0,0 });
+		}
+	}
+
+	if (this->period != 0) {
+		std::string Tiempo = getStringTiempo(newTime);
+		tiempo->updateText(Tiempo, { 255,255,0,0 });
+		periodText->display(screen_x + 560, screen_y + 10);
+		tiempo->display(screen_x + 540, screen_y + 60);
+	}
 }
 
 void Score::displayGoal(){
