@@ -224,6 +224,10 @@ PlayerState PlayerModel::getState() {
 
 }
 
+bool PlayerModel::isSweeping() {
+    return state == SWEEPING;
+}
+
 int PlayerModel::getKickOff_x() {
     return kickOff_x;
 }

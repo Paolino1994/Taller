@@ -136,13 +136,13 @@ void BallModel::update(double dt, int x_limit, int y_limit) {
 
 	if ((x + this->getWidth()) > x_limit) { //limite de abajo
 		x = x_limit - this->getWidth();
-		velX = -velX;
+		velX = -velX * 0.1;
 		//velY = 0;
         //velZ = 0;
 	}
 	else if (this->x < 0) { // limite de arriba
 		this->x = 25;
-		velX = -velX;
+		velX = -velX * 0.1;
 		//velY = 0;
 		//velZ = 0;
 	}
