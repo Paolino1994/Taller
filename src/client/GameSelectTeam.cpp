@@ -11,7 +11,7 @@ GameSelectTeam::GameSelectTeam(SDL_Renderer *renderer):
 
             }
 
-int GameSelectTeam::getSelectedTeam(){
+Team GameSelectTeam::getSelectedTeam(){
     return selectedTeam;
 }
 
@@ -121,6 +121,7 @@ int GameSelectTeam::selectTeamScreen(CommandSender& commandSender) {
             log->info("se selecciono un equipo.");
             returnValue = 0;
             running = false;
+            selectedTeam = team;
             commandSender.assignTeam(team);
         }
         SDL_RenderPresent( gRenderer );

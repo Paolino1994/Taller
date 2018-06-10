@@ -288,8 +288,17 @@ int GameMenu::verificarCredenciales (std::string usuario, std::string pass) {
     return valor;
 }
 
-int GameMenu::selectFormationScreen(CommandSender& commandSender) {
+int GameMenu::selectFormationScreen(CommandSender& commandSender, Team selectedTeam) {
     Log *log = Log::get_instance();
+
+    // vemos si para este equipo hay formacion
+    bool isFormation = commandSender.teamFormation(selectedTeam);
+
+    if(isFormation){
+    	std::cout << "hay formacion" << std::endl;
+    	return 0;
+    }
+    std::cout << "no hay formacion" << std::endl;
 
     log->info("Generando pantalla de selección de formacion");
 
@@ -333,6 +342,7 @@ int GameMenu::selectFormationScreen(CommandSender& commandSender) {
     selectFormationPosition_X[1] = (SCREEN_WIDTH / 3) + 20;
     selectFormationPosition_X[2] = ((SCREEN_WIDTH / 3) * 2)  + 20;
     int formationPositionIndex = 0;
+    Formation formation = Formation::__LENGTH__;
 
     while ( running ) {
         SDL_Event ev;
@@ -396,12 +406,15 @@ int GameMenu::selectFormationScreen(CommandSender& commandSender) {
             switch (formationPositionIndex){
                 case 0: 
                     formacionElegida = "3-2-1";
+                    formation = Formation::FORMATION_1;
                     break;
                 case 1:
                     formacionElegida = "3-1-2";
+                    formation = Formation::FORMATION_2;
                     break;
                 case 2 :
                     formacionElegida = "3-3-0";
+                    formation = Formation::FORMATION_3;
                 break;  
                 default:
                     log->error("Hubo un error en la eleccion de la formacion, indice selccionado: " + formationPositionIndex);
@@ -412,7 +425,8 @@ int GameMenu::selectFormationScreen(CommandSender& commandSender) {
             log->info("se selecciono la formacion: " + formacionElegida);
             returnValue = 0;
             running = false;
-            //commandSender.assignTeam(team); ACA HAY QUE LLAMAR AL SERVIDOR PARA ASIGNAR LA FORMACION
+           	commandSender.assignFormation(selectedTeam, formation);  // ACA HAY QUE LLAMAR AL SERVIDOR PARA ASIGNAR LA FORMACION
+
         }
         SDL_RenderPresent( gRenderer );
     }

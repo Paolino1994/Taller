@@ -83,7 +83,5 @@ public:
 
 	void setSetPiecePosition(Team team, FIELD_POSITION goalSide, SET_PIECE setPiece);
 
-
-
 };
 

@@ -207,3 +207,38 @@ Request CommandSender::listenStart() {
 	protocol.read();
 	return protocol.request();
 }
+
+bool CommandSender::teamFormation(Team team) {
+	protocol.write(Request::TEAM_FORMATION, reinterpret_cast<const char*>(&team), sizeof(team));
+		protocol.read();
+		Request request;
+		request = protocol.request();
+		if (request == Request::TEAM_FORMATION) {
+			std::cout << "result: " << "TEAM_FORMATION" << std::endl;
+			return true;
+		}else{
+			return false;
+		}
+}
+
+void CommandSender::assignFormation(Team team, Formation formation) {
+	CommandSetFormation commandSetFormation = {CommandTeam::__LENGTH__, CommandFormation::__LENGTH__};
+
+	if(team == Team::HOME){
+		commandSetFormation.team = CommandTeam::HOME;
+	}else{
+		commandSetFormation.team = CommandTeam::AWAY;
+	}
+
+	if(formation == Formation::FORMATION_1){
+		commandSetFormation.formation = CommandFormation::FORMATION_1;
+	}else{
+		if(formation == Formation::FORMATION_2){
+				commandSetFormation.formation = CommandFormation::FORMATION_2;
+		}else{
+			commandSetFormation.formation = CommandFormation::FORMATION_3;
+		}
+	}
+
+	protocol.write(Request::SET_FORMATION, reinterpret_cast<const char*>(&commandSetFormation), sizeof(commandSetFormation));
+}

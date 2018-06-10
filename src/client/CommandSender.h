@@ -31,6 +31,8 @@ public:
 	short login(std::string credentials);
 	Request listenStart();
 	void assignTeam(Team team);
+	bool teamFormation(Team team);
+	void assignFormation(Team team, Formation formation);
 	bool updateModel();
 	model_data_t getModelData();
 	std::vector<EventID>& getEvents();

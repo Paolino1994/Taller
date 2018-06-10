@@ -13,6 +13,7 @@
 #include "TimerSystem.h"
 
 #include "GameManager.h"
+#include "common/Protocol.h"
 
 player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick) {
 	player_data_t defaultPlayer = { {
@@ -128,6 +129,8 @@ Game::Game() :
         maxPlayers(YAML::MAX_PLAYERS),
         playerCount(0),
         running(false),
+		isSetFormationHome(false),
+		isSetFormationAway(false),
         server_exit_requested(false)
 {
     /****************************************
@@ -247,6 +250,46 @@ PlayerController * Game::assignToTeam(Team team, User_ID userId)
 		GameManager::get_instance().setLastBallControlUser(controller->getUserId());
 	}
 	return controller;
+}
+
+
+bool Game::teamFormation(Team team, User_ID userId)
+{
+	if(team == Team::HOME  && isSetFormationHome){
+		std::cout << "HOME" << std::endl;
+		return true;
+	}
+	if(team == Team::AWAY  && isSetFormationAway){
+		std::cout << "AWAY" << std::endl;
+			return true;
+	}
+	std::cout << "FALSE" << std::endl;
+	return false;
+}
+
+void Game::assignToFormation(Team team, Formation formation, User_ID userId)
+{
+
+	FIELD_POSITION position = FIELD_POSITION::__LENGTH__;
+	if(team == Team::HOME){
+		isSetFormationHome = true;
+		position = FIELD_POSITION::LEFT;
+	}else{
+		isSetFormationAway = true;
+		position = FIELD_POSITION::RIGHT;
+	}
+
+	std::string textFormation = "";
+	if(formation == Formation::FORMATION_1){
+		textFormation = "3-2-1";
+	}else{
+		if(formation == Formation::FORMATION_2){
+			textFormation = "3-1-2";
+		}else
+			textFormation = "3-3-0";
+	}
+
+	this->world.changeFormation(team, position, textFormation);
 }
 
 model_data_t Game::getModelData()

@@ -229,6 +229,7 @@ int main( int argc, char* args[] )
 		}
 
         GameMenu gameMenu(gRenderer);
+        Team selectedTeam;
         if(gameState == GameState::OFFLINE) {
 			try {
 				CommandSender& commandSender = *commandSenderPtr;
@@ -237,10 +238,10 @@ int main( int argc, char* args[] )
 					// selecionar equipo
 					GameSelectTeam gameSelectTeam(gRenderer);
 					if (gameSelectTeam.selectTeamScreen(commandSender) == 0) {
+						selectedTeam = gameSelectTeam.getSelectedTeam();
 						log->info("se seleccionó correctamente el equipo");
 					}
-					ListenStart listenStart(gRenderer);
-					listenStart.listenStartScreen(commandSender);
+
 				}
 			}
 			catch (SocketException& ex){
@@ -255,7 +256,10 @@ int main( int argc, char* args[] )
         if (gameState == GameState::ONLINE) {
 
             CommandSender& commandSender = *commandSenderPtr;
-            gameMenu.selectFormationScreen(commandSender);
+            gameMenu.selectFormationScreen(commandSender, selectedTeam);
+
+            ListenStart listenStart(gRenderer);
+            listenStart.listenStartScreen(commandSender);
 
 			/****************************************
 			** INICIO CREACION TEXTURAS Y ANIMACIONES
