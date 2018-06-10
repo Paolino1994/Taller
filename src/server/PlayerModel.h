@@ -34,6 +34,8 @@ public:
 
     PlayerState getState();
 
+	bool isSweeping();
+
     double getVelX();
 
     double getVelY();
