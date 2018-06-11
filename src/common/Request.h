@@ -1,7 +1,6 @@
 #pragma once
 
 #include <arpa/inet.h>
-#include "Request.h"
 
 /*
 *	Todo tipo de dato a enviar por la red, especificarlo con los tipos fijos, por las dudas
