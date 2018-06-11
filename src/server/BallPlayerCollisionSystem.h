@@ -4,16 +4,16 @@
 #include "World.h"
 
 #define G_POINTS_RETRIEVE 100
-#define G_POINTS_HOLD 100
+#define G_POINTS_HOLD 50
 #define G_RADIUS 40
 #define D_POINTS_RETRIEVE 80
-#define D_POINTS_HOLD 80
+#define D_POINTS_HOLD 30
 #define D_RADIUS 30
 #define M_POINTS_RETRIEVE 70
-#define M_POINTS_HOLD 70
+#define M_POINTS_HOLD 30
 #define M_RADIUS 20
 #define F_POINTS_RETRIEVE 50
-#define F_POINTS_HOLD 50
+#define F_POINTS_HOLD 30
 #define F_RADIUS 10
 
 #define BALL_WITHOUT_CONTROLLER -1
