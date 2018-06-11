@@ -12,6 +12,7 @@
 #include "Texture.h"
 #include "Surface.h"
 #include "CommandSender.h"
+#include "GameManager.h"
 #include "common/Log.h"
 using namespace std;
 

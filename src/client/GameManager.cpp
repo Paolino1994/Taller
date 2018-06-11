@@ -37,6 +37,11 @@ void GameManager::update(const game_manager_data_t & game_manager_data)
 	scoreAway = game_manager_data.scoreAway;
     time = game_manager_data.timeInSeconds;
     period = game_manager_data.period;
+    goalsByUser[0] = game_manager_data.user1Goals;
+    goalsByUser[1] = game_manager_data.user2Goals;
+    goalsByUser[2] = game_manager_data.user3Goals;
+    goalsByUser[3] = game_manager_data.user4Goals;
+    
 }
 
 int GameManager::getScore(Team team){
@@ -45,6 +50,10 @@ int GameManager::getScore(Team team){
     } else {
         return scoreAway;
     }
+}
+
+int GameManager::getGoalsByUser(User_ID userId){
+    return goalsByUser[userId - 1];
 }
 
 double GameManager::getDisplayGoalText() {

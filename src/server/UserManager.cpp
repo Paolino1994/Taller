@@ -180,7 +180,7 @@ std::string UserManager::getUsernameById(User_ID userId)
 			return users[i].name;
 		}
 	}
-	return nullptr;
+	return "";
 }
 
 void UserManager::addGoal(User_ID userId) 

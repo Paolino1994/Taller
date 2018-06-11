@@ -60,7 +60,7 @@ bool PlayerKickOffSetupState::handleEvent(Command & command)
 {
 	if (this->player.isInChargeOfKickOff() && this->player.getHasControlOfTheBall()
 		&& this->player.isNearThisPoint(YAML::FIELD_CENTER_X, YAML::FIELD_CENTER_Y, kickOff_delta)) {
-		// TODO: permitir setearle la dirección para sacar del medio
+		// TODO: permitir setearle la direcciï¿½n para sacar del medio
 		// hay que jugar mucho con posicion del jugador relativa a la pelota
 		// por ahora solo dejamos que saque!
 		if (command.key == CommandKey::KEY_DOWN && command.type == CommandType::PASS) {

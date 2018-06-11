@@ -497,6 +497,8 @@ int GameMenu::selectFormationScreen(CommandSender& commandSender, Team selectedT
 void GameMenu::endGameScreen(CommandSender &commandSender)
 {
     Log *log = Log::get_instance();
+    YAMLReader& yamlReader = YAMLReader::get_instance();
+
 
     log->info("Generando pantalla de selección de goles");
 
@@ -506,39 +508,39 @@ void GameMenu::endGameScreen(CommandSender &commandSender)
 
 
     // Datos que necesito para hacer la vista
-    std::string homeName = "Local";
-    std::string awayName = "Visitante";
+    std::string homeName = yamlReader.getTeamNombre(1);
+    std::string awayName = yamlReader.getTeamNombre(2) + "   ";
 
-    std::string homeGoals = to_string(3);
-    std::string awayGoals = to_string(2);
+    std::string homeGoals = to_string(GameManager::get_instance()->getScore(Team::HOME));
+    std::string awayGoals = to_string(GameManager::get_instance()->getScore(Team::AWAY));
 
     std::string user1Name = "Usuario 1";
     std::string user2Name = "Usuario 2";
     std::string user3Name = "Usuario 3";
     std::string user4Name = "Usuario 4";
 
-    std::string user1Goals = to_string(2);
-    std::string user2Goals = to_string(1);
-    std::string user3Goals = to_string(1);
-    std::string user4Goals = to_string(1);
+    std::string user1Goals = to_string(GameManager::get_instance()->getGoalsByUser(1));
+    std::string user2Goals = to_string(GameManager::get_instance()->getGoalsByUser(2));
+    std::string user3Goals = to_string(GameManager::get_instance()->getGoalsByUser(3));
+    std::string user4Goals = to_string(GameManager::get_instance()->getGoalsByUser(4));
 
 
     // Armo los datos para la vista
-    std::string resultTitle = "Local 3 -- 2 Visitante";
+    std::string resultTitle = homeName + " " + homeGoals + " -- " + awayGoals + " " + awayName;
 
-    std::string user1 = user1Name; // Concatenar los goles al user
-    std::string user2 = user2Name;
-    std::string user3 = user3Name;
-    std::string user4 = user4Name;
+    std::string user1 = user1Name + " : " + user1Goals; // Concatenar los goles al user
+    std::string user2 = user2Name + " : " + user2Goals;
+    std::string user3 = user3Name + " : " + user3Goals;
+    std::string user4 = user4Name + " : " + user4Goals;
 
     Texto tituloTxt(gRenderer, "res/Tehkan World Cup.ttf", 36, "Resumen de Goles", {255, 255, 0, 0});
 
     Texto resultTitleTxt(gRenderer, "res/Tehkan World Cup.ttf", 28, resultTitle, {255, 255, 0, 0});
 
-    Texto user1GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 16, user1 , {255, 255, 0, 0});
-    Texto user2GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 16, user2 , {255, 255, 0, 0});
-    Texto user3GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 16, user3 , {255, 255, 0, 0});
-    Texto user4GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 16, user4 , {255, 255, 0, 0});
+    Texto user1GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 22, user1 , {255, 255, 0, 0});
+    Texto user2GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 22, user2 , {255, 255, 0, 0});
+    Texto user3GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 22, user3 , {255, 255, 0, 0});
+    Texto user4GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 22, user4 , {255, 255, 0, 0});
 
     tituloTxt.getTextureDimensions(&tituloW, &tituloH);
     resultTitleTxt.getTextureDimensions(&resultW, &resultH);

@@ -197,6 +197,11 @@ typedef struct game_manager_data {
     FIELD_POSITION homeDefends;
     FIELD_POSITION awayDefends;
     int period;
+	int user1Goals;
+	int user2Goals;
+	int user3Goals;
+	int user4Goals;
+	
 } game_manager_data_t;
 
 

@@ -56,6 +56,11 @@ void GameManager::serialize(game_manager_data_t& game_manager_data) {
 	game_manager_data.scoreAway = scoreAway;
 	game_manager_data.timeInSeconds = this->gameTimeInSeconds;
 	game_manager_data.period = this->period;
+	game_manager_data.user1Goals = goalsByUser[0];
+	game_manager_data.user2Goals = goalsByUser[1];
+	game_manager_data.user3Goals = goalsByUser[2];
+	game_manager_data.user4Goals = goalsByUser[3];
+
 }
 
 FIELD_POSITION GameManager::getKickOffSideAfterPeriodEnd()
@@ -133,9 +138,8 @@ void GameManager::setLastBallControlUser(User_ID userId){
 	lastBallControlUser = userId;
 }
 
-void GameManager::goalScored(FIELD_POSITION fieldPostion){
+void GameManager::goalScoredByUser(){
 	goalsByUser[lastBallControlUser - 1] ++;
-	UserManager::get_instance().addGoal(lastBallControlUser);
 
 	for(int i = 0 ; i < 4; i++) {
 		std::cout << "User: " << i + 1 << " Goles: " << goalsByUser[i] << std::endl;
@@ -149,7 +153,6 @@ void GameManager::switchTeamFieldPositions()
 	homeDefends = awayDefends;
 	awayDefends = temp;
 }
-
 
 GameManager::~GameManager() {
 }

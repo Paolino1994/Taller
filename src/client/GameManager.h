@@ -16,6 +16,8 @@ private:
 
     int period;
 
+	int goalsByUser[4] = {0,0,0,0};
+
     double displayGoalText;
 
     double displayGoalKickText;
@@ -38,6 +40,8 @@ public:
 	int getTime();
 
 	int getPeriod();
+
+    int getGoalsByUser(User_ID userId);
 
     void setDisplayGoalText(double value);
 

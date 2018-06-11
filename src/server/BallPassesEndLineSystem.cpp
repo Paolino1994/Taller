@@ -47,7 +47,7 @@ void BallPassesEndLineSystem::process(double dt)
 					world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), SET_PIECE::KICKOFF);
 					world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), SET_PIECE::KICKOFF);
 
-					GameManager::get_instance().goalScored(FIELD_POSITION::LEFT);
+					GameManager::get_instance().goalScoredByUser();
 					EventQueue::get().push(std::make_shared<GoalEvent>(this->lastPlayerThatKickedTheBall, goalTeam));
 				}
 				else {
@@ -75,7 +75,8 @@ void BallPassesEndLineSystem::process(double dt)
 					world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), SET_PIECE::KICKOFF);
 					world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), SET_PIECE::KICKOFF);
 
-					GameManager::get_instance().goalScored(FIELD_POSITION::RIGHT);
+
+					GameManager::get_instance().goalScoredByUser();
 					EventQueue::get().push(std::make_shared<GoalEvent>(this->lastPlayerThatKickedTheBall, goalTeam));
 				} else {
 					std::cout << "PALO" << std::endl;

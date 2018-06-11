@@ -58,10 +58,9 @@ public:
 
 	void setLastBallControlUser(User_ID userId);
 
-	void goalScored(FIELD_POSITION fieldPostion);
+	void goalScoredByUser();
 
 	void switchTeamFieldPositions();
-
 
 	// Events to handle:
 	virtual void handle(KickEvent& e);
