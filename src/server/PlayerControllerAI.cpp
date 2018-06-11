@@ -64,7 +64,9 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		int direction_y_ball = ball_y - this->playerModel->getY();
 
 		int direction_x_goto = 0;
-		int direction_y_goto = 0;
+		double direction_y_goto = 0;
+
+        if(playerModel->getRole()=='G'){
 
 
 		if (abs(ball_in_area_x) < max_distance_x) { // Si la pelota esta en la zona entonces la va a buscar
@@ -75,7 +77,7 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 			}
 		} else if (abs(direction_x_initial) > max_distance_x && (abs(direction_x_initial) > max_distance_x + margin)) { // Si el jugador esta afuera de su zona debe volver a la zona
 			direction_x_goto = (direction_x_initial > 0) ? 1 : -1;
-		} 
+		}
 		else if(abs(direction_x_initial) >= max_distance_x && abs(direction_x_initial) < max_distance_x + margin){ // Si el jugador esta en limite de su zona entonces me quedo parado
 			direction_x_goto = 0;
 		}
@@ -84,7 +86,7 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		}
 		if (teamHasBall && abs(direction_x_ball) < 100 ) {// Si se acerca mucho a la pelota y la tiene su equipo entonces se queda quieto
 			direction_x_goto = 0;
-		} 
+		}
 
 		// Lo mismo pero en Y
 		if (abs(ball_in_area_y) < max_distance_y) {
@@ -95,7 +97,7 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 			}
 		} else if (abs(direction_y_initial) > max_distance_y && (abs(direction_y_initial) > max_distance_y + margin )) {
 			direction_y_goto = (direction_y_ball >= 0) ? 1 : -1;
-		} 
+		}
 		else if(abs(direction_y_initial) >= max_distance_y && abs(direction_y_initial) < max_distance_y + 10){
 			direction_y_goto = 0;
 		}
@@ -104,7 +106,15 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		}
 		if (teamHasBall && abs(direction_y_ball) < 100) { // Si se acerca mucho a la pelota y la tiene su equipo entonces se queda quieto
 			direction_y_goto = 0;
-		} 
+		}
+        }
+		if(playerModel->getRole()=='G'){
+			direction_x_goto=0;
+			direction_y_goto*=0.5;
+            if(playerModel->getHasControlOfTheBall()==false && abs(playerModel->getX()-ball_x)<15){
+                playerModel->sweep();
+            }
+		}
 
 		this->playerModel->setVelX(direction_x_goto * this->playerModel->getMaxVelX());
 		this->returning_x = true;
