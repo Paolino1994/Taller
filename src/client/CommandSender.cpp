@@ -207,3 +207,24 @@ Request CommandSender::listenStart() {
 	protocol.read();
 	return protocol.request();
 }
+
+bool CommandSender::checkFormation(Team team) {
+	protocol.write(Request::CHECK_TEAM_FORMATION, reinterpret_cast<const char*>(&team), sizeof(team));
+		protocol.read();
+		Request request;
+		request = protocol.request();
+		if (request == Request::TEAM_WITH_FORMATION) {
+			return true;
+		}else{
+			return false;
+		}
+}
+
+void CommandSender::setTeamFormation(Team team, Formation formation) {
+	TeamFormation teamFormation = {Team::__LENGTH__, Formation::__LENGTH__};
+
+	teamFormation.team = team;
+	teamFormation.formation = formation;
+
+	protocol.write(Request::SET_TEAM_FORMATION, reinterpret_cast<const char*>(&teamFormation), sizeof(teamFormation));
+}

@@ -16,6 +16,18 @@ enum class Team : u_int32_t {
 	__LENGTH__
 };
 
+enum class Formation : u_int32_t {
+	FORMATION_3_2_1 = 0,
+	FORMATION_3_1_2,
+	FORMATION_3_3_0,
+	__LENGTH__
+};
+
+struct TeamFormation {
+	Team team;
+	Formation formation;
+};
+
 typedef struct sprite_info {
     std::string spriteid;
     std::string file_path;

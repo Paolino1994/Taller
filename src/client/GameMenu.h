@@ -25,7 +25,7 @@ public:
 
     int logginScreen(CommandSender& commandSender);
 
-    int selectFormationScreen(CommandSender& commandSender);
+    int selectFormationScreen(CommandSender& commandSender, Team selectedTeam);
 
     bool pausaMenu(SDL_Event ev);
 

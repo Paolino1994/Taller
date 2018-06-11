@@ -69,6 +69,19 @@ void RequestHandler::_run()
 					protocol.set_rcv_timeout(30);
 					break;
 				}
+				case Request::CHECK_TEAM_FORMATION: {
+					Team team = *reinterpret_cast<const Team*>(protocol.dataBuffer());
+					Log::get_instance()->info("se comprueba si existe formación del equipo: " + static_cast<std::underlying_type<Team>::type>(team));
+					bool result = game.checkTeamFormation(team, this->userId);
+					if(result) protocol.write(Request::TEAM_WITH_FORMATION);
+						else protocol.write(Request::TEAM_WITHOUT_FORMATION);
+					break;
+				}
+				case Request::SET_TEAM_FORMATION: {
+					TeamFormation teamFormation = *reinterpret_cast<const TeamFormation*>(protocol.dataBuffer());
+					game.setTeamFormation(teamFormation.team, teamFormation.formation, this->userId);
+					break;
+				}
 				default: {
 					Log::get_instance()->info("Unhandled request");
 					break;

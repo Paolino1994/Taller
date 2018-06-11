@@ -128,6 +128,8 @@ Game::Game() :
         maxPlayers(YAML::MAX_PLAYERS),
         playerCount(0),
         running(false),
+		existFormationHome(false),
+		existFormationAway(false),
         server_exit_requested(false)
 {
     /****************************************
@@ -248,6 +250,44 @@ PlayerController * Game::assignToTeam(Team team, User_ID userId)
 		GameManager::get_instance().setLastBallControlUser(controller->getUserId());
 	}
 	return controller;
+}
+
+
+bool Game::checkTeamFormation(Team team, User_ID userId)
+{
+	bool value = false;
+
+	if( (team == Team::HOME && existFormationHome) || (team == Team::AWAY && existFormationAway) ) {
+		value = true;
+	}
+
+	return value;
+}
+
+void Game::setTeamFormation(Team team, Formation formation, User_ID userId)
+{
+
+	FIELD_POSITION position = FIELD_POSITION::__LENGTH__;
+
+	if(team == Team::HOME){
+		existFormationHome = true;
+		position = FIELD_POSITION::LEFT;
+	}else{
+		existFormationAway = true;
+		position = FIELD_POSITION::RIGHT;
+	}
+
+	std::string textFormation = "";
+	if(formation == Formation::FORMATION_3_2_1) textFormation = "3-2-1";
+		else{
+			if(formation == Formation::FORMATION_3_1_2) textFormation = "3-1-2";
+				else
+					textFormation = "3-3-0";
+		}
+
+	std::cout << "formacion de equipo: " << textFormation << std::endl;
+
+	this->world.changeFormation(team, position, textFormation);
 }
 
 model_data_t Game::getModelData()
