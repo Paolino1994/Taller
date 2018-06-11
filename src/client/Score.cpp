@@ -7,6 +7,7 @@ Score::Score(SDL_Renderer *renderer, Texto *homeName, Texto *awayName, Texto *ho
 	home(GameManager::get_instance()->getScore(Team::HOME)),
 	away(GameManager::get_instance()->getScore(Team::AWAY)),
 	period(GameManager::get_instance()->getPeriod()),
+	showingCountdown(false),
 	homeName(homeName),
 	awayName(awayName),
 	homeScore(homeScore),
@@ -47,8 +48,14 @@ void Score::displayScore(int screen_x, int screen_y){
 	awayScore->display(screen_x + 180, screen_y + 60);
 
 	// Time
+	
+	if (GameManager::get_instance()->getRestartCountdownSecondsRemaining() > 0) {
+		this->showingCountdown = true;
+		periodText->updateText("Revancha en", { 255,255,0,0 });
+	}
 
 	if (gameManager->getPeriod() != this->period) {
+		this->showingCountdown = false; // si cambia de tiempo es porque esta andando;
 		this->period = gameManager->getPeriod();
 		if (this->period == 1) {
 			this->periodText->updateText("1er Tiempo", { 255,255,0,0 });
@@ -58,9 +65,19 @@ void Score::displayScore(int screen_x, int screen_y){
 	}
 
 	if (this->period != 0) {
-		std::string Tiempo = getStringTiempo(newTime);
+		std::string Tiempo;
+		int periodTextXOffset;
+		if (this->showingCountdown) {
+			Tiempo = getStringTiempo(GameManager::get_instance()->getRestartCountdownSecondsRemaining());
+			periodTextXOffset = 540;
+		}
+		else {
+			Tiempo = getStringTiempo(newTime);
+			periodTextXOffset = 560;
+		}
+
 		tiempo->updateText(Tiempo, { 255,255,0,0 });
-		periodText->display(screen_x + 560, screen_y + 10);
+		periodText->display(screen_x + periodTextXOffset, screen_y + 10);
 		tiempo->display(screen_x + 540, screen_y + 60);
 	}
 }

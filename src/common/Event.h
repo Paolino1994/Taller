@@ -105,3 +105,30 @@ public:
 
 	virtual void accept(EventHandler& handler);
 };
+
+class GameRestartEvent : public Event {
+public:
+	const Team teamToKickOff;
+
+	GameRestartEvent(Team teamToKickOff);
+	virtual ~GameRestartEvent();
+
+	virtual EventID getId() {
+		return EventID::GAME_RESTART;
+	}
+
+	virtual void accept(EventHandler& handler);
+};
+
+class GameEndEvent : public Event {
+public:
+
+	GameEndEvent();
+	virtual ~GameEndEvent();
+
+	virtual EventID getId() {
+		return EventID::GAME_END;
+	}
+
+	virtual void accept(EventHandler& handler);
+};

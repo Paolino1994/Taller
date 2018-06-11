@@ -58,4 +58,5 @@ public:
 	virtual void handle(PeriodEndEvent& e);
 	virtual void handle(GoalEvent& e);
 	virtual void handle(GoalKickEvent& e);
+	virtual void handle(GameEndEvent& e);
 };

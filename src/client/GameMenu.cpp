@@ -494,7 +494,7 @@ int GameMenu::selectFormationScreen(CommandSender& commandSender, Team selectedT
     return returnValue;
 }
 
-void GameMenu::endGameScreen(CommandSender &commandSender)
+void GameMenu::renderStatsScreen()
 {
     Log *log = Log::get_instance();
     YAMLReader& yamlReader = YAMLReader::get_instance();
@@ -504,7 +504,7 @@ void GameMenu::endGameScreen(CommandSender &commandSender)
 
     Texture background(gRenderer, "res/choose_team.jpg");
     background.setScaling(SCREEN_WIDTH, SCREEN_HEIGHT);
-    int tituloW, tituloH, resultH, resultW, userGoalsH, userGoalsW;
+    int tituloW, tituloH, resultH, resultW, userGoalsH, userGoalsW, remainingW, remainingH;
 
 
     // Datos que necesito para hacer la vista
@@ -526,6 +526,7 @@ void GameMenu::endGameScreen(CommandSender &commandSender)
 
 
     // Armo los datos para la vista
+	std::string remaining = "Revancha en " + to_string(GameManager::get_instance()->getRestartCountdownSecondsRemaining()) + "...";
     std::string resultTitle = homeName + " " + homeGoals + " -- " + awayGoals + " " + awayName;
 
     std::string user1 = user1Name + " : " + user1Goals; // Concatenar los goles al user
@@ -533,6 +534,7 @@ void GameMenu::endGameScreen(CommandSender &commandSender)
     std::string user3 = user3Name + " : " + user3Goals;
     std::string user4 = user4Name + " : " + user4Goals;
 
+	Texto remainingTxt(gRenderer, "res/Tehkan World Cup.ttf", 28, remaining, { 255, 255, 0, 0 });
     Texto tituloTxt(gRenderer, "res/Tehkan World Cup.ttf", 36, "Resumen de Goles", {255, 255, 0, 0});
 
     Texto resultTitleTxt(gRenderer, "res/Tehkan World Cup.ttf", 28, resultTitle, {255, 255, 0, 0});
@@ -542,47 +544,20 @@ void GameMenu::endGameScreen(CommandSender &commandSender)
     Texto user3GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 22, user3 , {255, 255, 0, 0});
     Texto user4GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 22, user4 , {255, 255, 0, 0});
 
+	remainingTxt.getTextureDimensions(&remainingW, &remainingH);
     tituloTxt.getTextureDimensions(&tituloW, &tituloH);
     resultTitleTxt.getTextureDimensions(&resultW, &resultH);
 
     user1GoalsTxt.getTextureDimensions(&userGoalsW, &userGoalsH);
 
-    bool running = true;
+    background.render(0, 0);
 
-    while (running)
-    {
-        SDL_Event ev;
-        while (SDL_PollEvent(&ev))
-        {
-            if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_ESCAPE)
-            {
-                running = false;
-            }
-            else if (ev.type == SDL_QUIT)
-            {
-                running = false;
-            }
-            else if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_p)
-            {
-                SoundManager::get_instance()->musicOn_off();
-            }
-            else if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_o)
-            {
-                SoundManager::get_instance()->soundEffectsOn_off();
-            }
-        }
+	remainingTxt.display((SCREEN_WIDTH / 2) - (remainingW / 2), SCREEN_HEIGHT / 10);
+    tituloTxt.display((SCREEN_WIDTH / 2) - (tituloW / 2), SCREEN_HEIGHT / 5);
+    resultTitleTxt.display((SCREEN_WIDTH / 2) - (resultW / 2), (SCREEN_HEIGHT / 3));
 
-        SDL_RenderClear(gRenderer);
-        background.render(0, 0);
-
-        tituloTxt.display((SCREEN_WIDTH / 2) - (tituloW / 2), SCREEN_HEIGHT / 5);
-        resultTitleTxt.display((SCREEN_WIDTH / 2) - (resultW / 2), (SCREEN_HEIGHT / 3));
-
-        user1GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 100);
-        user2GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 150);
-        user3GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 200);
-        user4GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 250);
-
-        SDL_RenderPresent(gRenderer);
-    }
+    user1GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 100);
+    user2GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 150);
+    user3GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 200);
+    user4GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 250);
 }

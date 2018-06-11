@@ -6,6 +6,7 @@
 
 #include "scripted/PlayerKickOffSetupState.h"
 #include "scripted/PlayerGoalKickSetupState.h"
+#include "scripted/PlayerNoActionState.h"
 #include "server/GameManager.h"
 
 void PlayerController::checkStateChange()
@@ -23,13 +24,14 @@ PlayerController::PlayerController(PlayerModel * model, PlayerView * view, Playe
 	this->registerTo(EventID::PERIOD_END);
 	this->registerTo(EventID::GOAL);
 	this->registerTo(EventID::GOAL_KICK);
-	// IMPORTANTE: desregistrarme en el destructor porque es posible el matado de controllers cuando entran/salen jugadores!
+	this->registerTo(EventID::GAME_END);
 }
 
 PlayerController::~PlayerController() {
 	this->unregisterFrom(EventID::PERIOD_END);
 	this->unregisterFrom(EventID::GOAL);
 	this->unregisterFrom(EventID::GOAL_KICK);
+	this->unregisterFrom(EventID::GAME_END);
 }
 
 PlayerController::PlayerController(PlayerModel * model, PlayerView * view):
@@ -135,6 +137,11 @@ void PlayerController::handle(GoalEvent & e)
 void PlayerController::handle(GoalKickEvent & e)
 {
 	this->setScriptedState(new PlayerGoalKickSetupState(*this->getModel(), e.team, e.goal));
+}
+
+void PlayerController::handle(GameEndEvent & e)
+{
+	this->setScriptedState(new PlayerNoActionState(*this->getModel()));
 }
 
 void PlayerController::serialize(player_view_data_t& player_view_data) {

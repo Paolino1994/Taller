@@ -85,3 +85,30 @@ void PeriodStartEvent::accept(EventHandler & handler)
 {
 	handler.handle(*this);
 }
+
+GameRestartEvent::GameRestartEvent(Team teamToKickOff):
+	teamToKickOff(teamToKickOff)
+{
+}
+
+GameRestartEvent::~GameRestartEvent()
+{
+}
+
+void GameRestartEvent::accept(EventHandler & handler)
+{
+	handler.handle(*this);
+}
+
+GameEndEvent::GameEndEvent()
+{
+}
+
+GameEndEvent::~GameEndEvent()
+{
+}
+
+void GameEndEvent::accept(EventHandler & handler)
+{
+	handler.handle(*this);
+}

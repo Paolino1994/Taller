@@ -201,7 +201,7 @@ typedef struct game_manager_data {
 	int user2Goals;
 	int user3Goals;
 	int user4Goals;
-	
+	uint32_t restartCountdownRemainingSeconds;
 } game_manager_data_t;
 
 
@@ -212,6 +212,8 @@ enum class EventID : uint32_t {
 	GOAL,
 	GOAL_KICK,
 	POSTHIT,
+	GAME_RESTART,
+	GAME_END,
 	__LENGTH__
 };
 

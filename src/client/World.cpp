@@ -124,6 +124,16 @@ void World::update(CommandSender& commandSender) {
 			std::cout << "Server me avisa: Que hay palo" << std::endl;
 			break;
 		}
+		case EventID::GAME_END: {
+			GameManager::get_instance()->setShowGoalStats(true);
+			std::cout << "Server me avisa: Termino el juego, momento de mostrar estadisticas" << std::endl;
+			break;
+		}
+		case EventID::GAME_RESTART: {
+			GameManager::get_instance()->setShowGoalStats(false);
+			std::cout << "Server me avisa: Va a reiniciar el juego, dejo de mostrar estadisticas" << std::endl;
+			break;
+		}
 		default:
 			break;
 		}

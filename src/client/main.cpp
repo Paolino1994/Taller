@@ -382,8 +382,6 @@ int main( int argc, char* args[] )
 			try {
 				CommandSender& commandSender = *commandSenderPtr;
 				renderizar(camera, world, commandSender, gameMenu, infoPanel);
-//				pongo la pantalla de fin por acá
-				gameMenu.endGameScreen(commandSender);
 			} catch (SocketException& ex) {
                 // pantalla que muestra la desconexion
 				//std::cout << "Error de conexión con el servidor. Salimos. Ver el log" << std::endl;
@@ -479,8 +477,14 @@ void renderizar(Camera& camera, World& world, CommandSender& commandSender, Game
                 }
 
                 if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
-					log->info("Se selecciono ESC, juego pausado");
-                    salirJuego = true;
+					if (GameManager::get_instance()->showGoalStats()) {
+						log->info("Se selecciono ESC, salimos de pantalla de goles");
+						GameManager::get_instance()->setShowGoalStats(false);
+					}
+					else {
+						log->info("Se selecciono ESC, juego pausado");
+						salirJuego = true;
+					}
 					break;
                 }
 
@@ -511,8 +515,13 @@ void renderizar(Camera& camera, World& world, CommandSender& commandSender, Game
 			SDL_RenderClear(gRenderer);
 
 			//Render current frame
-			camera.render(world, 0, YAML::INFO_PANEL_HEIGHT);
-			infoPanel.render(world, camera, 0, 0); // posterior al juego porque incluye textos de gol y otros
+			if (GameManager::get_instance()->showGoalStats()) { //Stats frame
+				gameMenu.renderStatsScreen();
+			}
+			else { // Game frame
+				camera.render(world, 0, YAML::INFO_PANEL_HEIGHT);
+				infoPanel.render(world, camera, 0, 0); // posterior al juego porque incluye textos de gol y otros
+			}
 
             //quit Si seleciono la tecla escape entonces pregunto si quiere salir
             if(salirJuego){
@@ -522,6 +531,7 @@ void renderizar(Camera& camera, World& world, CommandSender& commandSender, Game
                 }
                 salirJuego = false;
             }
+
             SDL_RenderPresent( gRenderer );
         }
     }

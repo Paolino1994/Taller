@@ -30,6 +30,6 @@ public:
 
     bool pausaMenu(SDL_Event ev);
 
-    void endGameScreen(CommandSender &commandSender);
+    void renderStatsScreen();
 
 };

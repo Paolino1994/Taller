@@ -7,6 +7,7 @@ GameManager::GameManager():
 	scoreAway(0),
 	teamBallControl(Team::__LENGTH__),
 	gameTimeInSeconds(0),
+	restartCountdownRemainingSeconds(0),
 	period(0),
 	homeDefends(FIELD_POSITION::LEFT),
 	awayDefends(FIELD_POSITION::RIGHT),
@@ -18,6 +19,7 @@ GameManager::GameManager():
 	this->registerTo(EventID::PERIOD_END);
 	this->registerTo(EventID::GOAL_KICK);
 	this->registerTo(EventID::PERIOD_START);
+	this->registerTo(EventID::GAME_RESTART);
 }
 
 GameManager& GameManager::get_instance() {
@@ -36,6 +38,11 @@ Team GameManager::getTeamBallControl() {
 void GameManager::setGameTime(double newGameTimeInSeconds)
 {
 	this->gameTimeInSeconds = newGameTimeInSeconds;
+}
+
+void GameManager::setRestartCountdownRemainingSeconds(double newRemainingSeconds)
+{
+	this->restartCountdownRemainingSeconds = newRemainingSeconds;
 }
 
 bool GameManager::isBallInPlay()
@@ -60,7 +67,7 @@ void GameManager::serialize(game_manager_data_t& game_manager_data) {
 	game_manager_data.user2Goals = goalsByUser[1];
 	game_manager_data.user3Goals = goalsByUser[2];
 	game_manager_data.user4Goals = goalsByUser[3];
-
+	game_manager_data.restartCountdownRemainingSeconds = this->restartCountdownRemainingSeconds;
 }
 
 FIELD_POSITION GameManager::getKickOffSideAfterPeriodEnd()
@@ -102,6 +109,9 @@ void GameManager::handle(GoalEvent & e)
 void GameManager::handle(PeriodEndEvent & e)
 {
 	this->ballInPlay = false; // esperamos el kickOff
+	if (this->period == 2) {
+		EventQueue::get().push(std::make_shared<GameEndEvent>());
+	}
 }
 
 void GameManager::handle(GoalKickEvent & e)
@@ -115,6 +125,16 @@ void GameManager::handle(PeriodStartEvent & e)
 	this->period++;
 	if (this->period > 2) {
 		this->period = 1;
+	}
+}
+
+void GameManager::handle(GameRestartEvent & e)
+{
+	this->period = 0;
+	this->scoreHome = 0;
+	this->scoreAway = 0;
+	for (size_t i = 0; i < TOTAL_MAX_PLAYERS; ++i) {
+		this->goalsByUser[i] = 0;
 	}
 }
 

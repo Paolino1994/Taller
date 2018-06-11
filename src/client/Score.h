@@ -17,6 +17,7 @@ private:
     int home;
     int away;
 	int period;
+	bool showingCountdown; // por un caso de borde uso esto
 
     Texto *homeName;
     Texto *awayName;

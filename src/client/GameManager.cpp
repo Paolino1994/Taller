@@ -11,6 +11,8 @@ GameManager::GameManager(){
 	period = 0;
     displayGoalText = 0;
     displayGoalKickText = 0;
+	showGoalStatistics = false;
+	restartCountdownSecondsRemaining = 0;
 }
 
 void GameManager::initialize() {
@@ -41,7 +43,7 @@ void GameManager::update(const game_manager_data_t & game_manager_data)
     goalsByUser[1] = game_manager_data.user2Goals;
     goalsByUser[2] = game_manager_data.user3Goals;
     goalsByUser[3] = game_manager_data.user4Goals;
-    
+	restartCountdownSecondsRemaining = game_manager_data.restartCountdownRemainingSeconds;
 }
 
 int GameManager::getScore(Team team){
@@ -66,6 +68,21 @@ void GameManager::setDisplayGoalText(double value) {
 
 double GameManager::getDisplayGoalKickText() {
     return displayGoalKickText;
+}
+
+bool GameManager::showGoalStats()
+{
+	return this->showGoalStatistics;
+}
+
+void GameManager::setShowGoalStats(bool show)
+{
+	this->showGoalStatistics = show;
+}
+
+int GameManager::getRestartCountdownSecondsRemaining()
+{
+	return this->restartCountdownSecondsRemaining;
 }
 
 void GameManager::setDisplayGoalKickText(double value) {

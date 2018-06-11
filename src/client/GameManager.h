@@ -22,6 +22,10 @@ private:
 
     double displayGoalKickText;
 
+	bool showGoalStatistics;
+
+	int restartCountdownSecondsRemaining;
+
 	GameManager();
 
 public:
@@ -50,4 +54,10 @@ public:
     void setDisplayGoalKickText(double value);
 
 	double getDisplayGoalKickText();
+
+	bool showGoalStats();
+
+	void setShowGoalStats(bool show);
+
+	int getRestartCountdownSecondsRemaining();
 };

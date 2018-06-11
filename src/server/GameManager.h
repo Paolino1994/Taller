@@ -13,6 +13,7 @@ private:
     int scoreAway;
     Team teamBallControl;
 	double gameTimeInSeconds;
+	double restartCountdownRemainingSeconds;
 	int period;
 	FIELD_POSITION homeDefends;
 	FIELD_POSITION awayDefends;
@@ -20,7 +21,8 @@ private:
 
 	User_ID lastBallControlUser;
 
-	int goalsByUser[4] = {0,0,0,0};
+	static const int TOTAL_MAX_PLAYERS = 4;
+	int goalsByUser[TOTAL_MAX_PLAYERS] = {0,0,0,0};
 
 	GameManager();
 	~GameManager();
@@ -37,6 +39,8 @@ public:
     Team getTeamBallControl();
 
 	void setGameTime(double newGameTimeInSeconds);
+
+	void setRestartCountdownRemainingSeconds(double newRemainingSeconds);
 
 	bool isBallInPlay();
 
@@ -68,4 +72,5 @@ public:
 	virtual void handle(PeriodEndEvent& e);
 	virtual void handle(GoalKickEvent& e);
 	virtual void handle(PeriodStartEvent& e);
+	virtual void handle(GameRestartEvent& e);
 };
