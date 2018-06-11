@@ -11,10 +11,10 @@
 #define D_RADIUS 30
 #define M_POINTS_RETRIEVE 70
 #define M_POINTS_HOLD 30
-#define M_RADIUS 20
+#define M_RADIUS 25
 #define F_POINTS_RETRIEVE 50
 #define F_POINTS_HOLD 30
-#define F_RADIUS 10
+#define F_RADIUS 20
 
 #define BALL_WITHOUT_CONTROLLER -1
 #define TIME_TO_NEXT_STEAL 0.3
