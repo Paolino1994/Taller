@@ -1,6 +1,7 @@
 #pragma once
 
 #include <arpa/inet.h>
+#include "Request.h"
 
 /*
 *	Todo tipo de dato a enviar por la red, especificarlo con los tipos fijos, por las dudas
@@ -15,7 +16,11 @@ enum class Request : u_int32_t {
 	GAME_MANAGER_UPDATE,
 	EVENT_UPDATE,
 	LOGIN,
-	START
+	START,
+	CHECK_TEAM_FORMATION,
+	SET_TEAM_FORMATION,
+	TEAM_WITH_FORMATION,
+	TEAM_WITHOUT_FORMATION
 };
 
 

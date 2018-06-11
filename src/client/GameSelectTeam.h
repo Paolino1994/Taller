@@ -23,14 +23,14 @@ class GameSelectTeam {
 
 private:
     SDL_Renderer *gRenderer;
-    int selectedTeam;
+    Team selectedTeam;
 
 public:
     GameSelectTeam(SDL_Renderer *renderer);
 
     int selectTeamScreen(CommandSender& commandSender);
 
-    int getSelectedTeam();
+    Team getSelectedTeam();
 
 
 };
