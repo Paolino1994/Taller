@@ -66,7 +66,6 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		int direction_x_goto = 0;
 		double direction_y_goto = 0;
 
-        if(playerModel->getRole()=='G'){
 
 
 		if (abs(ball_in_area_x) < max_distance_x) { // Si la pelota esta en la zona entonces la va a buscar
@@ -107,7 +106,7 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		if (teamHasBall && abs(direction_y_ball) < 100) { // Si se acerca mucho a la pelota y la tiene su equipo entonces se queda quieto
 			direction_y_goto = 0;
 		}
-        }
+
 		if(playerModel->getRole()=='G'){
 			direction_x_goto=0;
 			direction_y_goto*=0.5;
