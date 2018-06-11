@@ -12,10 +12,10 @@ bool TeamFactory::add_goalkeeper(Team goal, int field_length, int field_width){
 
 	switch (goal) {
 		case LEFT_GOAL:
-			model = new PlayerModel(goal, BasePlayer, field_length * 1.5 / 22, field_width * 21/ 44, field_length * 1.5 / 22, field_width * 21/ 44, 50, 50, 'G');
+			model = new PlayerModel(goal, BasePlayer, field_length * 1.5 / 22, field_width * 21/ 44, field_length * 1.5 / 22, field_width * 21/ 44, 60, 20, 'G');
 			break;
 		case RIGHT_GOAL:
-			model = new PlayerModel(goal, BasePlayer, field_length * 20.5 / 22, field_width * 21 / 44, field_length * 20.5 / 22, field_width * 21 / 44, 50, 50, 'G');
+			model = new PlayerModel(goal, BasePlayer, field_length * 20.5 / 22, field_width * 21 / 44, field_length * 20.5 / 22, field_width * 21 / 44, 60, 20, 'G');
 			break;
 		default:
 			std::stringstream msg;

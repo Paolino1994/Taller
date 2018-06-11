@@ -191,6 +191,11 @@ void PlayerModel::update(double dt, int x_limit, int y_limit){
 		this->velX = kickVelX;
 		this->velY = kickVelY;
 	}
+    if(role=='G'){
+        if(this->getX()>=this->initial_x-this->getDefence_distance_x() && this->getX()<=this->initial_x+this->getDefence_distance_x() && this->getY()<=this->initial_y+this->getDefence_distance_y() && this->getY()>=this->initial_y-this->getDefence_distance_y() ){
+            this->setAngle(270);
+        }
+    }
 }
 
 int PlayerModel::getWidth()
