@@ -514,10 +514,10 @@ void GameMenu::renderStatsScreen()
     std::string homeGoals = to_string(GameManager::get_instance()->getScore(Team::HOME));
     std::string awayGoals = to_string(GameManager::get_instance()->getScore(Team::AWAY));
 
-    std::string user1Name = "Usuario 1";
-    std::string user2Name = "Usuario 2";
-    std::string user3Name = "Usuario 3";
-    std::string user4Name = "Usuario 4";
+    std::string user1Name = "Rojo";
+    std::string user2Name = "Azul";
+    std::string user3Name = "Amarillo";
+    std::string user4Name = "Rosa";
 
     std::string user1Goals = to_string(GameManager::get_instance()->getGoalsByUser(1));
     std::string user2Goals = to_string(GameManager::get_instance()->getGoalsByUser(2));
@@ -539,10 +539,10 @@ void GameMenu::renderStatsScreen()
 
     Texto resultTitleTxt(gRenderer, "res/Tehkan World Cup.ttf", 28, resultTitle, {255, 255, 0, 0});
 
-    Texto user1GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 22, user1 , {255, 255, 0, 0});
-    Texto user2GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 22, user2 , {255, 255, 0, 0});
+    Texto user1GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 22, user1 , {255, 0, 0, 0});
+    Texto user2GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 22, user2 , {0, 0, 255, 0});
     Texto user3GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 22, user3 , {255, 255, 0, 0});
-    Texto user4GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 22, user4 , {255, 255, 0, 0});
+    Texto user4GoalsTxt(gRenderer, "res/Tehkan World Cup.ttf", 22, user4 , {246, 40, 162, 0});
 
 	remainingTxt.getTextureDimensions(&remainingW, &remainingH);
     tituloTxt.getTextureDimensions(&tituloW, &tituloH);
