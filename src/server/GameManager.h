@@ -42,7 +42,11 @@ public:
 
     void serialize(game_manager_data_t& game_manager_data);
 
+	static FIELD_POSITION getKickOffSideAfterPeriodEnd();
+
 	static Team getKickOffTeamAfterGoal(GoalEvent& e);
+
+	FIELD_POSITION getKickOffSideAfterGoal(GoalEvent& e);
 
 	FIELD_POSITION getHomeDefends();
 

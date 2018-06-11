@@ -44,7 +44,8 @@ void World::createTeam(Team team, int defenders, int midfielders, int forwards, 
 
 		for (auto controller : playerControllers[teamIndex]) {
 			pControllers.push_back(controller);
-			controller->setScriptedState(new PlayerKickOffSetupState(*controller->getModel(), Team::HOME));
+			controller->setScriptedState(new PlayerKickOffSetupState(*controller->getModel(), Team::HOME,
+				GameManager::getKickOffSideAfterPeriodEnd()));
 		}
 	}
 	else {

@@ -31,11 +31,19 @@ void PlayerKickOffSetupState::goTo(int x, int y, int delta)
 	else {
 		this->player.setVelY(0);
 	}
+	if (abs(direction_y) <= delta && abs(direction_x) <= delta) {
+		if (this->kickOffSide == FIELD_POSITION::LEFT) {
+			this->player.setAngle(270);
+		} else {
+			this->player.setAngle(90);
+		}
+	}
 }
 
-PlayerKickOffSetupState::PlayerKickOffSetupState(PlayerModel& player, Team kickOffTeam):
+PlayerKickOffSetupState::PlayerKickOffSetupState(PlayerModel& player, Team kickOffTeam, int kickOffSide):
 	player(player),
 	kickOffTeam(kickOffTeam),
+	kickOffSide(kickOffSide),
 	secondsPassed(0)
 {
 	this->registerTo(EventID::KICK); // TODO ver: probablemente nuevo evento: EventID::KICKOFF

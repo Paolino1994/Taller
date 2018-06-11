@@ -58,12 +58,25 @@ void GameManager::serialize(game_manager_data_t& game_manager_data) {
 	game_manager_data.period = this->period;
 }
 
+FIELD_POSITION GameManager::getKickOffSideAfterPeriodEnd()
+{
+	return FIELD_POSITION::LEFT;
+}
+
 Team GameManager::getKickOffTeamAfterGoal(GoalEvent & e)
 {
 	if (e.team == Team::HOME) {
 		return Team::AWAY;
 	}
 	return Team::HOME;
+}
+
+FIELD_POSITION GameManager::getKickOffSideAfterGoal(GoalEvent & e)
+{
+	if (e.team == Team::HOME) {
+		return awayDefends;;
+	}
+	return homeDefends;
 }
 
 void GameManager::handle(KickEvent & e)

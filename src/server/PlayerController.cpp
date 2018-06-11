@@ -120,14 +120,16 @@ double PlayerController::getAngle() {
 
 void PlayerController::handle(PeriodEndEvent & e)
 {
-	this->setScriptedState(new PlayerKickOffSetupState(*this->getModel(), e.teamToKickOffNextPeriod));
+	this->setScriptedState(new PlayerKickOffSetupState(*this->getModel(), e.teamToKickOffNextPeriod,
+		GameManager::getKickOffSideAfterPeriodEnd()));
 }
 
 void PlayerController::handle(GoalEvent & e)
 {
 	// TODO: mandar a un estado de festejo
 	// y, por ejemlo, ese estado aguantarlo un tiempo X y despues setearle este:
-	this->setScriptedState(new PlayerKickOffSetupState(*this->getModel(), GameManager::getKickOffTeamAfterGoal(e)));
+	this->setScriptedState(new PlayerKickOffSetupState(*this->getModel(), GameManager::getKickOffTeamAfterGoal(e),
+		GameManager::get_instance().getKickOffSideAfterGoal(e)));
 }
 
 void PlayerController::handle(GoalKickEvent & e)

@@ -30,6 +30,13 @@ void PlayerGoalKickSetupState::goTo(int x, int y, int delta)
 	else {
 		this->player.setVelY(0);
 	}
+	if (abs(direction_y) <= delta && abs(direction_x) <= delta) {
+		if (this->goal == FIELD_POSITION::LEFT) {
+			this->player.setAngle(90);
+		} else {
+			this->player.setAngle(270);
+		}
+	}
 }
 
 PlayerGoalKickSetupState::PlayerGoalKickSetupState(PlayerModel& player, Team goalKickTeam, int goal):

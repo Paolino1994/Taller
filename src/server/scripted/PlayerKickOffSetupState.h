@@ -9,13 +9,14 @@ class PlayerKickOffSetupState: public PlayerControllerScriptedState, public Even
 private:
 	PlayerModel & player;
 	Team kickOffTeam;
+	int kickOffSide;
 	double secondsPassed;
 
 	void goTo(int x, int y, int delta);
 	static const int kickOff_delta = 10;
 	static const int secondsToWaitForAutomaticKickOff = 5;
 public:
-	PlayerKickOffSetupState(PlayerModel& player, Team kickOffTeam);
+	PlayerKickOffSetupState(PlayerModel& player, Team kickOffTeam, int kickOffSide);
 	virtual ~PlayerKickOffSetupState();
 
 	virtual bool handleEvent(Command &e);
