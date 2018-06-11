@@ -514,10 +514,10 @@ void GameMenu::renderStatsScreen()
     std::string homeGoals = to_string(GameManager::get_instance()->getScore(Team::HOME));
     std::string awayGoals = to_string(GameManager::get_instance()->getScore(Team::AWAY));
 
-    std::string user1Name = "Rojo";
-    std::string user2Name = "Azul";
+    std::string user1Name = "Rojo    ";
+    std::string user2Name = "Azul    ";
     std::string user3Name = "Amarillo";
-    std::string user4Name = "Rosa";
+    std::string user4Name = "Rosa    ";
 
     std::string user1Goals = to_string(GameManager::get_instance()->getGoalsByUser(1));
     std::string user2Goals = to_string(GameManager::get_instance()->getGoalsByUser(2));
