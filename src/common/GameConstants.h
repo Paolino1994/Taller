@@ -218,7 +218,7 @@ enum class EventID : uint32_t {
 };
 
 typedef struct model_data {
-	std::vector<player_view_data_t>& playerViewData;
-	ball_view_data_t& ballViewData;
-    game_manager_data_t& gameManagerData;
+	std::vector<player_view_data_t> playerViewData;
+	ball_view_data_t ballViewData;
+    game_manager_data_t gameManagerData;
 } model_data_t;

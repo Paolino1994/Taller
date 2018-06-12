@@ -2,7 +2,6 @@
 
 #include <vector>
 
-#include "CommandSender.h"
 #include "common/GameConstants.h"
 #include "Texture.h"
 #include "Ball.h"
@@ -54,14 +53,13 @@ public:
     std::vector<Entity*>& getEntities() ;
 	std::map<Player_ID, Player>& getPlayers() ;
 
-	void update(CommandSender& commandSender);
+	void update(model_data_t& newModelData);
+	void handleEvents(std::vector<EventID>& events);
 
     
     int getWidth();
     int getHeight();
 
     double lastTime=0;
-
-    void addTime(Texto texto);
 };
 

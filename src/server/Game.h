@@ -1,15 +1,14 @@
 #pragma once
 #include <thread>
+#include <mutex>
 
 #include "World.h"
 
 class Game
 {
 private:
-	std::vector<player_view_data_t> playerViewData;
-	ball_view_data_t ballViewData;
-	game_manager_data_t gameManagerData;
 	model_data_t modelData;
+	size_t modelSnapshotNumber;
 
 	World world;
 	const size_t maxPlayers;
@@ -21,6 +20,10 @@ private:
 	bool server_exit_requested;
 	std::thread worker;
 
+	std::mutex updateMtx;
+	std::mutex serializeMtx;
+	std::mutex teamFormationMtx;
+
 	void _run();
 
 public:
@@ -30,9 +33,13 @@ public:
 	PlayerController* assignToTeam(Team team, User_ID userId);
 	bool checkTeamFormation(Team team, User_ID userId);
 	void setTeamFormation(Team team, Formation formation, User_ID userId);
-	model_data_t getModelData();
+
+	size_t getModelSnapshotNumber();
+	void copyModelData(model_data_t& modelDataReceiver);
 
 	// invalida el contoller, le hacemos delete
 	bool withdrawUser(PlayerController* playerController, User_ID userId);
+
+	void handleCommandForPlayer(PlayerController* player, Command& command);
 };
 

@@ -8,9 +8,8 @@
 
 CommandSender::CommandSender(std::string ip, unsigned short port):
 	protocol(Protocol(ip, port)),
-	playerViewData(std::vector<player_view_data_t>()),
-	ballViewData({0,0,0,QUIESCENT}),
-	gameManagerData({0,0})
+	modelData({ std::vector<player_view_data_t>() , { 0,0,0, 0, QUIESCENT, 0},{ 0,0,0, FIELD_POSITION::LEFT, FIELD_POSITION::RIGHT, 0, 0, 0, 0, 0, 0 } }),
+	events(std::vector<EventID>())
 {
 }
 
@@ -38,65 +37,60 @@ void CommandSender::assignTeam(Team team) {
 
 bool CommandSender::updateModel()
 {
+	std::unique_lock<std::mutex>(this->requestMtx);
 	Request request;
-	protocol.write(Request::PLAYER_VIEW_UPDATE); // quizas proximamente, le pasamos datos mios de que modelo tengo actualemente u otras yerbas
-	protocol.read();
 
+	protocol.write(Request::MODEL_UPDATE);
+	protocol.read();
+	request = protocol.request();
+
+	if (request == Request::WAIT) {
+		// no hay nada nuevo, esperamos
+		// std::cout << "Nada para actualizar" << std::endl;
+		return false;
+	}/* else {
+		assert(request == Request::MODEL_UPDATE);
+	}*/
+
+	protocol.write(Request::PLAYER_VIEW_UPDATE);
+	protocol.read();
 	request = protocol.request();
 
 	if (request == Request::PLAYER_VIEW_UPDATE) {
 		const player_view_data_t* player_view_data = reinterpret_cast<const player_view_data_t*>(protocol.dataBuffer());
 		size_t player_view_data_len = protocol.dataLength() / sizeof(player_view_data_t);
-		playerViewData.clear();
-		playerViewData.reserve(player_view_data_len);
+		modelData.playerViewData.clear();
+		modelData.playerViewData.reserve(player_view_data_len);
 		for (size_t i = 0; i < player_view_data_len; ++i) {
-			playerViewData.push_back(player_view_data[i]);
+			modelData.playerViewData.push_back(player_view_data[i]);
 		}
-	} /*  TODO, no siempre se actualiza
-	  else if (request == Request::WAIT){
-		this->modelUpdated = false;
-		etc....
-		return false;
-	  }
-	  
-	  */
+		// TODO: Usar
+		//modelData.playerViewData = std::vector<player_view_data_t>(player_view_data, player_view_data + player_view_data_len);
 
-	protocol.write(Request::BALL_VIEW_UPDATE); // quizas proximamente, le pasamos datos mios de que modelo tengo actualemente u otras yerbas
+	}
+
+	protocol.write(Request::BALL_VIEW_UPDATE);
 	protocol.read();
-
 	request = protocol.request();
+
 	if (request == Request::BALL_VIEW_UPDATE) {
 		const ball_view_data_t ball_view_data = *reinterpret_cast<const ball_view_data_t*>(protocol.dataBuffer());
-		ballViewData = ball_view_data;
-	}/*  TODO, no siempre se actualiza
-	  else if (request == Request::WAIT){
-		this->modelUpdated = false;
-		etc....
-		return false;
-	  }
-	  
-	  */
+		modelData.ballViewData = ball_view_data;
+	}
 
-	protocol.write(Request::GAME_MANAGER_UPDATE); // quizas proximamente, le pasamos datos mios de que modelo tengo actualemente u otras yerbas
+	protocol.write(Request::GAME_MANAGER_UPDATE);
 	protocol.read();
-
 	request = protocol.request();
+
 	if (request == Request::GAME_MANAGER_UPDATE) {
 		const game_manager_data_t game_manager_data = *reinterpret_cast<const game_manager_data_t*>(protocol.dataBuffer());
-		gameManagerData = game_manager_data;
-	}/*  TODO, no siempre se actualiza
-	  else if (request == Request::WAIT){
-		this->modelUpdated = false;
-		etc....
-		return false;
-	  }
-	  
-	  */
+		modelData.gameManagerData = game_manager_data;
+	}
 	
-	protocol.write(Request::EVENT_UPDATE); // quizas proximamente, le pasamos datos mios de que modelo tengo actualemente u otras yerbas
+	protocol.write(Request::EVENT_UPDATE);
 	protocol.read();
-
 	request = protocol.request();
+
 	if (request == Request::EVENT_UPDATE) {
 		const EventID* event_data = reinterpret_cast<const EventID*>(protocol.dataBuffer());
 		size_t event_data_len = protocol.dataLength() / sizeof(EventID);
@@ -105,15 +99,16 @@ bool CommandSender::updateModel()
 		for (size_t i = 0; i < event_data_len; ++i) {
 			events.push_back(event_data[i]);
 		}
-	}/*  TODO, no siempre se actualiza*/
+		// TODO: Usar
+		//events = std::vector<EventID>(event_data, event_data + event_data_len);
+	}
 	
 	return true;
 }
 
-model_data_t CommandSender::getModelData()
+model_data_t& CommandSender::getModelData()
 {
-	model_data_t model = { playerViewData, ballViewData, gameManagerData};
-	return model;
+	return modelData;
 }
 
 std::vector<EventID>& CommandSender::getEvents()
@@ -123,6 +118,7 @@ std::vector<EventID>& CommandSender::getEvents()
 
 void CommandSender::handleEvent(SDL_Event& e)
 {
+	std::unique_lock<std::mutex>(this->requestMtx);
 	Request request = Request::NONE;
 	Command command = {CommandKey::__LENGTH__, CommandType::__LENGTH__};
 

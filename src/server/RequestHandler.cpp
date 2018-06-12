@@ -23,30 +23,30 @@ void RequestHandler::_run()
 				}
 				case Request::COMMAND: { 
 					Command command = *reinterpret_cast<const Command*>(protocol.dataBuffer());
-					if (command.key == CommandKey::KEY_DOWN) {
-						Log::get_instance()->info("Me llego un comando del tipo KEY_DOWN");
+					game.handleCommandForPlayer(this->player, command);
+					break;
+				}
+				case Request::MODEL_UPDATE: {
+					if (this->modelSnapshotNumber == this->game.getModelSnapshotNumber()) {
+						protocol.write(Request::WAIT);
 					}
-					else if (command.key == CommandKey::KEY_UP) {
-						Log::get_instance()->info("Me llego un comando del tipo KEY_UP");
+					else {
+						protocol.write(Request::MODEL_UPDATE); // responder con el nro de snapshot?
+						this->modelSnapshotNumber = this->game.getModelSnapshotNumber();
+						this->game.copyModelData(this->modelData);
 					}
-					Log::get_instance()->info("El comando es: " + getDescription(command.type));
-					player->handleEvent(command);
 					break;
 				}
 				case Request::PLAYER_VIEW_UPDATE: {
-					model_data_t model_data = this->game.getModelData();
-					//std::cout << "Hay " << model_data.playerViewData.size() << " jugadores. Enviamos en bytes: " << sizeof(player_view_data_t) * model_data.playerViewData.size();
-					protocol.write(Request::PLAYER_VIEW_UPDATE, (const char*)model_data.playerViewData.data(), sizeof(player_view_data_t) * model_data.playerViewData.size());
+					protocol.write(Request::PLAYER_VIEW_UPDATE, (const char*)this->modelData.playerViewData.data(), sizeof(player_view_data_t) * this->modelData.playerViewData.size());
 					break;
 				}
 				case Request::BALL_VIEW_UPDATE: {
-					model_data_t model_data = this->game.getModelData();
-					protocol.write(Request::BALL_VIEW_UPDATE, (const char*)&model_data.ballViewData, sizeof(model_data.ballViewData));
+					protocol.write(Request::BALL_VIEW_UPDATE, (const char*)&this->modelData.ballViewData, sizeof(this->modelData.ballViewData));
 					break;
 				}
 				case Request::GAME_MANAGER_UPDATE: {
-					model_data_t model_data = this->game.getModelData();
-					protocol.write(Request::GAME_MANAGER_UPDATE, (const char*)&model_data.gameManagerData, sizeof(model_data.gameManagerData));
+					protocol.write(Request::GAME_MANAGER_UPDATE, (const char*)&this->modelData.gameManagerData, sizeof(this->modelData.gameManagerData));
 					break;
 				}
 				case Request::EVENT_UPDATE: {
@@ -124,6 +124,8 @@ RequestHandler::RequestHandler(Socket * socket, Game& game, User_ID userId) :
 	player(nullptr)
 {
 	this->registerToAllEvents();
+	this->game.copyModelData(this->modelData);
+	this->modelSnapshotNumber = this->game.getModelSnapshotNumber();
 }
 
 RequestHandler::~RequestHandler()

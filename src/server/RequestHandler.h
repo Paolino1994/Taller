@@ -20,6 +20,8 @@ private:
 	bool server_exit_requested;
 	std::thread worker;
 
+	model_data_t modelData;
+	size_t modelSnapshotNumber;
 	std::vector<EventID> events;
 
 	// De aca para abajo quizas manejar con state en un futuro

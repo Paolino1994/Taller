@@ -49,7 +49,7 @@ SDL_Renderer* gRenderer = NULL;
 
 std::string getLogType(char *string);
 
-void renderizar(Camera& camera, World& world, CommandSender& commandSender, GameMenu& gameMenu, InfoPanel& infoPanel);
+void renderizar(Camera& camera, World& world, CommandSender& commandSender, GameMenu& gameMenu, InfoPanel& infoPanel, bool* quit, std::unique_ptr<std::thread>& eventHandlerThreadPtr);
 
 player_data_t
 crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun, sprite_info PlayerSweep, sprite_info PlayerKick);
@@ -378,11 +378,20 @@ int main( int argc, char* args[] )
             Camera camera(world, YAML::SCREEN_WIDTH, YAML::SCREEN_HEIGHT, YAML::SCREEN_WIDTH_SCROLL_OFFSET, YAML::SCREEN_HEIGHT_SCROLL_OFFSET);
             camera.follow(world.getBall());
 
+			SDL_Event quitEvent;
+			quitEvent.type = SDL_QUIT;
+
+			bool quit = false;
+			std::unique_ptr<std::thread> eventHandlerThreadPtr(nullptr);
             log->info("Renderizo");
 			try {
 				CommandSender& commandSender = *commandSenderPtr;
-				renderizar(camera, world, commandSender, gameMenu, infoPanel);
+				renderizar(camera, world, commandSender, gameMenu, infoPanel, &quit, eventHandlerThreadPtr);
+				SDL_PushEvent(&quitEvent); // desbloque el eventHandler
+				eventHandlerThreadPtr->join();
 			} catch (SocketException& ex) {
+				SDL_PushEvent(&quitEvent); // desbloque el eventHandler
+				eventHandlerThreadPtr->join();
                 // pantalla que muestra la desconexion
 				//std::cout << "Error de conexión con el servidor. Salimos. Ver el log" << std::endl;
 				Log::get_instance()->error("Error de conexión con el servidor, causa: " + std::string(ex.what()));
@@ -432,83 +441,90 @@ player_data_t crearDefaultPlayer(sprite_info PlayerStill, sprite_info PlayerRun,
     return defaultPlayer;
 }
 
-void renderizar(Camera& camera, World& world, CommandSender& commandSender, GameMenu& gameMenu, InfoPanel& infoPanel) {
+void eventHandler(CommandSender& commandSender, bool* quit, bool* salirJuego) {
+	//Event handler
+	SDL_Event e;
 
-    if (true)
-    {
-        //Main loop flag
-        bool quit = false;
-
-        //Event handler
-        SDL_Event e;
-
-        //El tema del clock, es para actualizar en intervalos fijos
-        //Y renderizar en el resto del tiempo
-        Clock::time_point currentTime, newTime;
-        currentTime = Clock::now();
-        std::chrono::milliseconds milli;
-        const double fixed_dt = 0.005; //10 milliseconds
-        double accumulator = 0;
-        double frametime;
-        bool salirJuego = false;
-
-		Log* log = Log::get_instance();
-	
-		commandSender.set_rcv_timeout(30);
-
-        //While application is running
-        while( !quit )
-        {
-            newTime = Clock::now();
-            milli = std::chrono::duration_cast<std::chrono::milliseconds>(newTime - currentTime);
-            currentTime = newTime;
-            frametime = milli.count()/1000.0;
-
-            accumulator += frametime;
-
-            //Handle events on queue
-            while (SDL_PollEvent( &e ) != 0) //Ver si conviene limitar este while con un for con limite de ciclos aparte del PollEvent
-            {
-                //User requests quit
-                if( e.type == SDL_QUIT )
-                {
-                    quit = true;
+	try {
+		// mientras estemos jugando
+		while (!*quit) {
+			// mientras no estemos en el menu de salir juego, que tien
+			while (!*salirJuego && SDL_WaitEvent(&e) != 0) { // Wait for event
+				//User requests quit
+				if (e.type == SDL_QUIT)
+				{
+					*quit = true;
 					break;
-                }
+				}
 
-                if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+				if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
 					if (GameManager::get_instance()->showGoalStats()) {
-						log->info("Se selecciono ESC, salimos de pantalla de goles");
 						GameManager::get_instance()->setShowGoalStats(false);
 					}
 					else {
-						log->info("Se selecciono ESC, juego pausado");
-						salirJuego = true;
+						*salirJuego = true;
 					}
 					break;
-                }
+				}
 
-                if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_p) {
-                    SoundManager::get_instance()->musicOn_off();
+				if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_p) {
+					SoundManager::get_instance()->musicOn_off();
 					break;
-                }
-                
-                if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_o) {
+				}
+
+				if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_o) {
 					SoundManager::get_instance()->soundEffectsOn_off();
-                    break;
+					break;
 				}
 
 				commandSender.handleEvent(e);
-            }
-
-            //Cuando el tiempo pasado es mayor a nuestro tiempo de actualizacion
-			if (accumulator >= fixed_dt)
-			{
-				world.update(commandSender);
-				camera.update(fixed_dt);
-				infoPanel.update(accumulator); // chanchada por lo que hacemos en el contexto
-				accumulator = 0;
 			}
+		}
+	}
+	catch (SocketException& ex) {
+		// Me voy,
+		// Se supone que renderizar(..) se rompe por el mismo problema
+		// y despues se muestra la pantalla de desconexion
+	}
+}
+
+void renderizar(Camera& camera, World& world, CommandSender& commandSender, GameMenu& gameMenu, InfoPanel& infoPanel, bool* quit, std::unique_ptr<std::thread>& eventHandlerThreadPtr) {
+
+    //Event handler
+    SDL_Event e;
+
+    //El tema del clock, es para actualizar en intervalos fijos
+    //Y renderizar en el resto del tiempo
+    Clock::time_point currentTime, newTime;
+    currentTime = Clock::now();
+    std::chrono::milliseconds milli;
+    double accumulator = 0;
+    double frametime;
+    bool salirJuego = false;
+
+	//Log* log = Log::get_instance();
+	
+	commandSender.set_rcv_timeout(30);
+
+	eventHandlerThreadPtr.reset(new std::thread(&eventHandler, ref(commandSender), quit, &salirJuego));
+
+    //While application is running
+    while( !*quit )
+    {
+        newTime = Clock::now();
+        milli = std::chrono::duration_cast<std::chrono::milliseconds>(newTime - currentTime);
+        currentTime = newTime;
+        frametime = milli.count()/1000.0;
+        accumulator += frametime;
+
+		// Priorizar actualización del modelo por sobre envio de eventos
+		if (commandSender.updateModel()) {
+			// Se actualizo el modelo, sobreescribo aca y renderizo
+			world.update(commandSender.getModelData());
+			world.handleEvents(commandSender.getEvents());
+			camera.update(accumulator);
+			infoPanel.update(accumulator);
+			accumulator = 0;
 
 			//Clear screen
 			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -523,19 +539,17 @@ void renderizar(Camera& camera, World& world, CommandSender& commandSender, Game
 				infoPanel.render(world, camera, 0, 0); // posterior al juego porque incluye textos de gol y otros
 			}
 
-            //quit Si seleciono la tecla escape entonces pregunto si quiere salir
-            if(salirJuego){
-                SDL_RenderClear( gRenderer );
-                if(gameMenu.pausaMenu(e)) {
-                    quit = true;
-                }
-                salirJuego = false;
-            }
+			SDL_RenderPresent(gRenderer);
+		}
 
-            SDL_RenderPresent( gRenderer );
+        //quit Si seleciono la tecla escape entonces pregunto si quiere salir
+        if(salirJuego){
+            if(gameMenu.pausaMenu(e)) {
+                *quit = true;
+            }
+            salirJuego = false;
         }
     }
-
 }
 
 std::string getLogType(char *cadena) {

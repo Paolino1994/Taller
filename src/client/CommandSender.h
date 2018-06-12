@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <mutex>
 
 #include "SDL.h"
 #include "SoundManager.h"
@@ -13,11 +14,10 @@ class CommandSender
 {
 private:
 	Protocol protocol;
-	std::vector<player_view_data_t> playerViewData;
-	ball_view_data_t ballViewData;
-	game_manager_data_t gameManagerData;
+	model_data_t modelData;
 	std::vector<EventID> events;
 
+	std::mutex requestMtx;
 	// Quizas proximamente datos "estadisticos" del modelo
 	// int modelUpdateNumber
 	// Date/Time modelUpdateTime
@@ -34,7 +34,7 @@ public:
 	bool checkFormation(Team team);
 	void setTeamFormation(Team team, Formation formation);
 	bool updateModel();
-	model_data_t getModelData();
+	model_data_t& getModelData();
 	std::vector<EventID>& getEvents();
 	int set_rcv_timeout(time_t seconds);
 

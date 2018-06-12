@@ -3,6 +3,7 @@
 
 #include "World.h"
 #include "../common/GameConstants.h"
+#include "SoundManager.h"
 
 World::World(int width, int height, Texture* background, std::vector<Texture*>& _playerIndicators, std::map<const std::string, Animation>& ballAnimMapper, Texture* ballMiniMap,
 	std::map<const std::string, Animation>& teamAnimMapperHOME, std::map<const std::string, Animation>& teamAnimMapperAWAY, Texture* miniMapIndicatorHOME, Texture* miniMapIndicatorAWAY,
@@ -50,24 +51,11 @@ std::map<Player_ID, Player>& World::getPlayers() {
 	return players;
 }
 
-void World::update(CommandSender& commandSender) {
+void World::update(model_data_t& newModelData) {
 
-	if (!commandSender.updateModel()) {
-		return;
-	}
-
-	model_data_t modelData = commandSender.getModelData();
-    //std::cout<<"Execution Time: "<<modelData.gameManagerData.timeInSeconds<<" Seconds"<<std::endl;
-    if(modelData.gameManagerData.timeInSeconds-lastTime>0){
-        //std::cout<<"Execution Time: "<<modelData.gameManagerData.timeInSeconds<<" Seconds"<<std::endl;
-        lastTime=modelData.gameManagerData.timeInSeconds;
-    }
-	//std::cout<<"Execution Time: "<< modelData.timeInSeconds<<" Seconds"<<std::endl;
-
-
-	std::vector<player_view_data_t>& playerViewData = modelData.playerViewData;
-	ball_view_data_t& ball_view_data = modelData.ballViewData;
-	game_manager_data_t& game_manager_data = modelData.gameManagerData;
+	std::vector<player_view_data_t>& playerViewData = newModelData.playerViewData;
+	ball_view_data_t& ball_view_data = newModelData.ballViewData;
+	game_manager_data_t& game_manager_data = newModelData.gameManagerData;
 
 	for (player_view_data_t& player_view_data : playerViewData) {
 		auto existing_player = players.find(player_view_data.playerId);
@@ -84,8 +72,10 @@ void World::update(CommandSender& commandSender) {
 	ball.update(ball_view_data);
 
 	GameManager::get_instance()->update(game_manager_data);
+}
 
-	std::vector<EventID>& events = commandSender.getEvents();
+void World::handleEvents(std::vector<EventID>& events)
+{
 	for (EventID eventId : events) {
 		// TODO: hacer algo con el evento: en principio para sonidos y alguna visualizaci�n extra (tipo texto de Gol)
 		// ver si del lado del cliente tambien conviene meter patron tipo Observer para manejar eventos,
@@ -138,10 +128,7 @@ void World::update(CommandSender& commandSender) {
 			break;
 		}
 	}
-
 }
-
-
 
 int World::getWidth(){
     return width;
