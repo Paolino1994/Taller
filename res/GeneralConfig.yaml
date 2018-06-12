@@ -8,6 +8,7 @@ EquipoB:
     Formacion: "3-2-1"
 LogLevel: "info"
 MaxJugadores: "1"
+DuracionTiempo: "60"
 MovJugAtaqueX:
     Arquero: "50"
     Defensores: "300"

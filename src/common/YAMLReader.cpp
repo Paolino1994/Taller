@@ -243,6 +243,16 @@ void YAMLReader::readYamlGeneral(std::string file){
                 defensaYDefensor = 50;
             }
         }
+        if(configNode["DuracionTiempo"]){
+            int aux = std::stoi(configNode["DuracionTiempo"].as<std::string>());
+            if (aux > 0 ){
+                duracionTiempo = aux;
+            } else {
+                Log* log=Log::get_instance();
+                log->error("Valor invalido ingresado en el archivo de configutacion: DuracionTiempo " + configNode["DuracionTiempo"].as<std::string>() + " se utilizara el valor 60");
+                duracionTiempo = 60;
+            }
+        }
     }
 
 
@@ -363,6 +373,10 @@ int YAMLReader::getDefensaMediocampistaY() {
 
 int YAMLReader::getDefensaDelanteroY() {
     return defensaYDelantero;
+}
+
+int YAMLReader::getDuracionTiempo() {
+    return duracionTiempo;
 }
 
 // 0 -> Ok, -1 Password incorrecta, -2 usuario no encontrado
