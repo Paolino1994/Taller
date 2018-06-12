@@ -155,7 +155,7 @@ void PlayerControllerHuman::_handleEvent( Command& command ){
             if(playerModel->getHasControlOfTheBall()) {
                 auto end = std::chrono::system_clock::now();
                 double potencia= (end - tiempo[(int)CommandType::KICK]).count();
-                playerModel->kick(potencia,world.getBall().getModel());
+                playerModel->kickHighRegular(potencia,world.getBall().getModel());
             }
             log->debug("PlayerControllerHuman: soltando patear");
         }
@@ -167,6 +167,8 @@ void PlayerControllerHuman::_handleEvent( Command& command ){
                 if(passController!=this){
                     playerModel->pass(passController->getModel(), world.getBall().getModel(), potencia);
                     this->world.swap(this);
+                }else{
+                    playerModel->kick(potencia,world.getBall().getModel());
                 }
             }
             log->debug("PlayerControllerHuman: soltando pasar");
@@ -179,6 +181,8 @@ void PlayerControllerHuman::_handleEvent( Command& command ){
                 if(passController!=this){
                     playerModel->longPass(passController->getModel(), world.getBall().getModel(), potencia);
                     this->world.swap(this);
+                }else{
+                    playerModel->kickHigh(potencia,world.getBall().getModel());
                 }
             }
             log->debug("PlayerControllerHuman: pasar largo");

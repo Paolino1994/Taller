@@ -26,19 +26,22 @@ void BallPassesEndLineSystem::process(double dt)
 		const int goalBottomPost = YAML::GOAL[FIELD_POSITION::LEFT].y;
 		const int goalTopPost = YAML::GOAL[FIELD_POSITION::LEFT].y + YAML::GOAL[FIELD_POSITION::LEFT].h;
 		const int postWidth = YAML::POST_WIDTH;
+		const int crossbarWidth = YAML::CROSSBAR_WIDTH;
+		const int goalHeight = YAML::GOAL_HEIGTH;
 		const int rigthEndLineX = YAML::FIELD_X + YAML::FIELD_WIDTH;
 
 
 		int x = ballModel.getX();
 		int y = ballModel.getY();
+		double z = ballModel.getZ();
 		// double z = ballModel.getZ();
 
 		// condiciones de gol para FIELD_POSITION::LEFT
 		if (x < leftEndLineX)
 		{
-			if (y > goalBottomPost - postWidth && y < goalTopPost + postWidth)  // Tambien podemos poner la validacion en eje z para el travesanio
+			if (y > goalBottomPost - postWidth && y < goalTopPost + postWidth && z < goalHeight + crossbarWidth)  // Tambien podemos poner la validacion en eje z para el travesanio
 			{
-				if (y > goalBottomPost && y < goalTopPost)
+				if (y > goalBottomPost && y < goalTopPost && z < goalHeight)
 				{
 					std::cout << "GOOOL" << std::endl;
 
@@ -67,9 +70,9 @@ void BallPassesEndLineSystem::process(double dt)
 
 		// condiciones de gol para FIELD_POSITION::RIGHT
 		if (x > rigthEndLineX) {
-			if (y > goalBottomPost - postWidth && y < goalTopPost + postWidth) // Tambien podemos poner la validacion en eje z para el travesanio
+			if (y > goalBottomPost - postWidth && y < goalTopPost + postWidth && z < goalHeight + crossbarWidth) // Tambien podemos poner la validacion en eje z para el travesanio
 					{
-				if (y > goalBottomPost && y < goalTopPost) {
+				if (y > goalBottomPost && y < goalTopPost && z < goalHeight ) {
 					std::cout << "GOOOL" << std::endl;
 					Team goalTeam = (GameManager::get_instance().getHomeDefends() == FIELD_POSITION::RIGHT) ? Team::AWAY : Team::HOME;
 					world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), SET_PIECE::KICKOFF);

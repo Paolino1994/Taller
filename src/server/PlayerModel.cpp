@@ -193,7 +193,12 @@ void PlayerModel::update(double dt, int x_limit, int y_limit){
 	}
     if(role=='G'){
         if(this->getX()>=this->initial_x-this->getDefence_distance_x() && this->getX()<=this->initial_x+this->getDefence_distance_x() && this->getY()<=this->initial_y+this->getDefence_distance_y() && this->getY()>=this->initial_y-this->getDefence_distance_y() ){
-            this->setAngle(270);
+            if(x>500&&!isSweeping()){
+                this->setAngle(270);
+            }else if(x<500&&!isSweeping()){
+                this->setAngle(90);
+            }
+
         }
     }
 }
@@ -552,4 +557,19 @@ double PlayerModel::getDistanceToGoal() {
 
 bool PlayerModel::isGoalKeeper() {
 	return role == 'G';
+}
+
+void PlayerModel::kickHighRegular(double power, BallModel &model) {
+    if (this->state != KICKING) {
+        this->state = KICKING;
+        this->kickTime = 0.0;
+        this->kickVelX = velX;
+        this->kickVelY = velY;
+        setHasControlOfTheBall(false);
+        model.setAngle(angle);
+        model.kickWithPower(power,BallModel::GOAL);
+        EventQueue::get().push(make_shared<KickEvent>(*this));
+    }
+    log->debug("PlayerModel: pateando largo");
+
 }

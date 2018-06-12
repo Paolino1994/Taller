@@ -119,17 +119,20 @@ void BallModel::update(double dt, int x_limit, int y_limit) {
 	// Aplicar l�gica de movimiento y como mucho choques con fin del mundo
 	// Los otros comportamientos con la pelota los deben hacer los sistemas
 
+
 	velX*=0.995;
     velY*=0.995;
 	x += velX * dt;
 	y += velY * dt;
-	if ((y + this->getHeight()) > y_limit) { //limite de abajo
-		y = y_limit - this->getHeight();
+	if ((y + this->getHeight()) > y_limit - 50) { //limite de abajo
+    	
+        y = (y_limit - 70);
+        
 		//velX = 0;
 		velY = -velY;
 	}
-	else if (this->y < 0) { // limite de arriba
-		this->y = 25;
+	else if (this->y < 50) { // limite de arriba
+		this->y = 60;
 		//velX = 0;
 		velY = -velY;
 	}
@@ -138,18 +141,20 @@ void BallModel::update(double dt, int x_limit, int y_limit) {
 		x = x_limit - this->getWidth();
 		velX = -velX * 0.1;
 		//velY = 0;
-        //velZ = 0;
+        velZ = 0;
+        z=0;
 	}
 	else if (this->x < 0) { // limite de arriba
 		this->x = 25;
 		velX = -velX * 0.1;
 		//velY = 0;
-		//velZ = 0;
+		velZ = 0;
+        z=0;
 	}
 
 	if(z>0){
 		double currentDistance = getCurrentDistanceToOriginal();
-        std::cout<<"Current "<<currentDistance<<"start "<<startDistance<<"Z "<<z<<std::endl;
+        //std::cout<<"Current "<<currentDistance<<"start "<<startDistance<<"Z "<<z<<std::endl;
 		if(currentDistance>=startDistance/1.2){
 			heigthAngle=-1;
 		}
@@ -269,8 +274,8 @@ void BallModel::kickWithPower(double power, int type) {
     //double speed=getSpeed(distance);
     double newPower=(power)/270000;
     //std::cout<<power<<" "<<newPower<<std::endl;
-    if(newPower>5000){
-        newPower=5000;
+    if(newPower>2000){
+        newPower=2000;
         std::cout<<newPower<<std::endl;
     }
     double xVel = newPower * multiplierX;
@@ -279,9 +284,15 @@ void BallModel::kickWithPower(double power, int type) {
     setVelX(xVel);
     setVelY(yVel);
     setVelZ(newPower/30);
+    if(type==GOAL){
+        setVelZ(newPower/60);
+    }
     originalX=this->getX();
     originalY=this->getY();
     if(type==HIGH){
+        heigthAngle=45;
+    }
+    if(type==GOAL && newPower>1000){
         heigthAngle=45;
     }
     startDistance=newPower/3;
