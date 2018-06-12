@@ -217,7 +217,7 @@ Game::Game() :
 	world.setZonesDistances(Team::AWAY);
 
 	// PUEDE SER importante el orden de agregado de sistemas
-	world.addSystem(std::make_shared<TimerSystem>(1 * 10, true)); // tiempos de 1 minuto emulados a 45 min
+	world.addSystem(std::make_shared<TimerSystem>(1 * 400, true)); // tiempos de 1 minuto emulados a 45 min
     world.addSystem(std::make_shared<BallPlayerCollisionSystem>(world));
     world.addSystem(std::make_shared<BallPassesEndLineSystem>(world));
 	world.addSystem(std::make_shared<RestartSystem>(10)); //cuando termina el juego, lo reinicia en 10 segundos

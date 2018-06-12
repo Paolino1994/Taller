@@ -152,7 +152,7 @@ bool BallPlayerCollisionSystem::tries_to_recover(BallModel& ball_model, PlayerMo
 		radius *= 1.25;
 	}
 
-	return (sqrt(pow((double)(x_ball - x_player), 2) + pow((double)(y_ball - y_player), 2)) < radius && z_ball < 1);
+	return (sqrt(pow((double)(x_ball - x_player), 2) + pow((double)(y_ball - y_player), 2)) < radius && z_ball < 1.4);
 }
 
 

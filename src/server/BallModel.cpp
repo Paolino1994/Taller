@@ -141,18 +141,20 @@ void BallModel::update(double dt, int x_limit, int y_limit) {
 		x = x_limit - this->getWidth();
 		velX = -velX * 0.1;
 		//velY = 0;
-        //velZ = 0;
+        velZ = 0;
+        z=0;
 	}
 	else if (this->x < 0) { // limite de arriba
 		this->x = 25;
 		velX = -velX * 0.1;
 		//velY = 0;
-		//velZ = 0;
+		velZ = 0;
+        z=0;
 	}
 
 	if(z>0){
 		double currentDistance = getCurrentDistanceToOriginal();
-        std::cout<<"Current "<<currentDistance<<"start "<<startDistance<<"Z "<<z<<std::endl;
+        //std::cout<<"Current "<<currentDistance<<"start "<<startDistance<<"Z "<<z<<std::endl;
 		if(currentDistance>=startDistance/1.2){
 			heigthAngle=-1;
 		}
