@@ -46,5 +46,9 @@ void ListenStart::listenStartScreen(CommandSender& commandSender) {
     SDL_RenderPresent( gRenderer );
 
 	while (commandSender.listenStart() != Request::START);
+
+	// Todos conectados, pido nombres de usuarios de la sesión actual
+
+	commandSender.updateUsernames();
 }
 

@@ -85,6 +85,8 @@ public:
 	void addGoal(User_ID userId);
 
 	int getGoalsByUserId(User_ID userId);
+
+	uint32_t getUsersSize();
 };
 
 #endif

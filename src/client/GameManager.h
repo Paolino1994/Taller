@@ -17,6 +17,7 @@ private:
     int period;
 
 	int goalsByUser[4] = {0,0,0,0};
+	std::string usernames[4] = { "","","","" };
 
     double displayGoalText;
 
@@ -44,6 +45,10 @@ public:
 	int getTime();
 
 	int getPeriod();
+
+	std::string getUsername(User_ID userId);
+
+	void setUsername(User_ID userId, std::string name);
 
     int getGoalsByUser(User_ID userId);
 

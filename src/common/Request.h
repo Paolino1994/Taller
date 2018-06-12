@@ -8,6 +8,7 @@
 
 enum class Request : u_int32_t {
 	NONE = 0,
+	USER_NAMES,
 	TEAM_ASSIGN,
 	COMMAND,
 	PLAYER_VIEW_UPDATE,
