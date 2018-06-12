@@ -76,6 +76,8 @@ public:
     int getDefensaMediocampistaY();
     int getDefensaDelanteroY();
 
+    int getDuracionTiempo();
+
     // C++11 singleton
     static YAMLReader& get_instance();
     YAMLReader(YAMLReader const&) = delete;
@@ -129,6 +131,8 @@ private:
     int defensaYDefensor = 50;
     int defensaYMediocampista = 50;
     int defensaYDelantero = 50;
+
+    int duracionTiempo = 60;
 };
 
 
