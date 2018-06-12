@@ -5,7 +5,7 @@ EquipoA:
 EquipoB:
     Nombre: "UTN"
     Color: "Rojo"
-    Formacion: "3-2-1"
+    Formacion: "3-1-2"
 LogLevel: "info"
 MaxJugadores: "1"
 DuracionTiempo: "60"
