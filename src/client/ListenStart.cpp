@@ -24,6 +24,7 @@ void ListenStart::listenStartScreen(CommandSender& commandSender) {
     Texture background(gRenderer, "res/locker_room.jpg");
 
     background.render( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+    background.setScaling(YAML::WINDOW_WIDTH, YAML::WINDOW_HEIGHT);
     int tituloW, tituloH, start, startH;
 
     // TODO - cambiar por algo mas copado: como mostrar la camiseta de los 2 equipos
