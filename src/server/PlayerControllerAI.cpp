@@ -28,13 +28,17 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 	bool teamHasBall = this->playerModel->getTeam() == GameManager::get_instance().getTeamBallControl();
 	FIELD_POSITION defendedGoal = GameManager::get_instance().getDefendedGoal(this->playerModel->getTeam());
 	int positionModifierX = 0; // Esto es para que sea un poco mas fluido el movimiento y los jugadores no tengan un punto fijo de "centro" de area, si no que se adelantan o se atrasan segun tengan la pelota
-	if (teamHasBall)
-	{
-		positionModifierX = defendedGoal == FIELD_POSITION::LEFT ? 100 : -100; // Si tiene la pelota y defiende en la izquiera entonces le tengo que sumar a la posicion (para que ataque). Si defiende a la derecha le tengo que restar.
-	}
-	else
-	{
-		positionModifierX = defendedGoal == FIELD_POSITION::LEFT ? -100 : 100; // Si NO tiene la pelota y defiende en la izquiera entonces le tengo que restar a la posicion (para que defienda). Si defiende a la derecha le tengo que sumar.
+	if(!playerModel->isGoalKeeper()){
+		if (teamHasBall)
+		{
+			positionModifierX = defendedGoal == FIELD_POSITION::LEFT ? 100 : -100; // Si tiene la pelota y defiende en la izquiera entonces le tengo que sumar a la posicion (para que ataque). Si defiende a la derecha le tengo que restar.
+		}
+		else
+		{
+			positionModifierX = defendedGoal == FIELD_POSITION::LEFT ? -100 : 100; // Si NO tiene la pelota y defiende en la izquiera entonces le tengo que restar a la posicion (para que defienda). Si defiende a la derecha le tengo que sumar.
+		}
+	} else {
+		positionModifierX = 0;
 	}
 	if (UserManager::get_instance().game_started())
 	{ // FORMA CABEZA DE EVITAR QUE SE MUEVAN LOS JUGADORES ANTES DE QUE EMPIECE EL PARTIDO
@@ -70,8 +74,6 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		int direction_x_goto = 0;
 		double direction_y_goto = 0;
 
-
-
 		if (abs(ball_in_area_x) < max_distance_x)
 		{ // Si la pelota esta en la zona entonces la va a buscar
 			if (abs(direction_x_ball) > 5)
@@ -85,9 +87,12 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		}
 		else if (abs(direction_x_initial) > max_distance_x)
 		{ // Si el jugador esta afuera de su zona debe volver a la zona
-			if(abs(direction_x_initial) > max_distance_x + margin) {
+			if (abs(direction_x_initial) > max_distance_x + margin)
+			{
 				direction_x_goto = (direction_x_initial > 0) ? 1 : -1;
-			} else {
+			}
+			else
+			{
 				direction_x_goto = 0;
 			}
 		}
@@ -118,9 +123,12 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		}
 		else if (abs(direction_y_initial) > max_distance_y)
 		{
-			if(abs(direction_y_initial) > max_distance_y + margin) {
+			if (abs(direction_y_initial) > max_distance_y + margin)
+			{
 				direction_y_goto = (direction_y_initial > 0) ? 1 : -1;
-			} else {
+			}
+			else
+			{
 				direction_y_goto = 0;
 			}
 		}
@@ -137,19 +145,21 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 			direction_y_goto = 0;
 		}
 
-
 		if (playerModel->getRole() == 'G')
 		{
-			if(playerModel->getX()==playerModel->getInitial_x()){
-				direction_x_goto = 0.1;
-				direction_y_goto *= 0.5;
-			}
+			// if(playerModel->getX()==playerModel->getInitial_x()){
+			// 	direction_x_goto = 0.1;
+			// 	direction_y_goto *= 0.5;
+			// }
 
-			if (playerModel->getHasControlOfTheBall() == false && abs(playerModel->getX() - ball_x) < 15)
+			if (playerModel->getHasControlOfTheBall() == false && abs(playerModel->getX() - ball_x) < 15 && !teamHasBall)
 			{
-				if(ball_y>playerModel->getY()){
+				if (ball_y > playerModel->getY())
+				{
 					playerModel->setAngle(180);
-				}else if(ball_x<playerModel->getX()){
+				}
+				else if (ball_x < playerModel->getX())
+				{
 					playerModel->setAngle(0);
 				}
 				playerModel->sweep();
