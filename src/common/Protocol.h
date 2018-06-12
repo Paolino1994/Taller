@@ -34,6 +34,7 @@ public:
 	Request request();
 	size_t dataLength();
 	const char* dataBuffer();
+	std::string dataAsString();
 
 	void read();
 
@@ -42,7 +43,7 @@ public:
 	void write(Request request, const char* data, u_int32_t len);
 
 	// Para enviar texto
-	inline void write(Request request, const std::string& message) {
+	inline void write(Request request, const std::string message) {
 		this->write(request, message.c_str(), message.length());
 	};
 

@@ -45,6 +45,11 @@ const char * Protocol::dataBuffer()
 	return this->buffer.data();
 }
 
+std::string Protocol::dataAsString()
+{
+	return std::string(this->dataBuffer(), this->dataLength());
+}
+
 void Protocol::read()
 {
 	skt->receive((char*)&header, sizeof(header));

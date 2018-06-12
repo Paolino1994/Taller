@@ -82,6 +82,15 @@ void RequestHandler::_run()
 					game.setTeamFormation(teamFormation.team, teamFormation.formation, this->userId);
 					break;
 				}
+				case Request::USER_NAMES: {
+					// muy agarrado con alambre porque sabemos que los ids van de 1 a 4, secuencialmente
+					uint32_t usersSize = UserManager::get_instance().getUsersSize();
+					protocol.write(Request::USER_NAMES, reinterpret_cast<const char*>(&usersSize), sizeof(usersSize));
+					for (uint32_t i = 0; i < usersSize; ++i) {
+						protocol.write(Request::USER_NAMES, UserManager::get_instance().getUsernameById(i+1));
+					}
+					break;
+				}
 				default: {
 					Log::get_instance()->info("Unhandled request");
 					break;

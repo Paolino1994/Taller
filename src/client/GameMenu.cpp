@@ -514,10 +514,10 @@ void GameMenu::renderStatsScreen()
     std::string homeGoals = to_string(GameManager::get_instance()->getScore(Team::HOME));
     std::string awayGoals = to_string(GameManager::get_instance()->getScore(Team::AWAY));
 
-    std::string user1Name = "Rojo    ";
-    std::string user2Name = "Azul    ";
-    std::string user3Name = "Amarillo";
-    std::string user4Name = "Rosa    ";
+    std::string user1Name = GameManager::get_instance()->getUsername(1);
+    std::string user2Name = GameManager::get_instance()->getUsername(2);
+    std::string user3Name = GameManager::get_instance()->getUsername(3);
+    std::string user4Name = GameManager::get_instance()->getUsername(4);
 
     std::string user1Goals = to_string(GameManager::get_instance()->getGoalsByUser(1));
     std::string user2Goals = to_string(GameManager::get_instance()->getGoalsByUser(2));
@@ -556,8 +556,8 @@ void GameMenu::renderStatsScreen()
     tituloTxt.display((SCREEN_WIDTH / 2) - (tituloW / 2), SCREEN_HEIGHT / 5);
     resultTitleTxt.display((SCREEN_WIDTH / 2) - (resultW / 2), (SCREEN_HEIGHT / 3));
 
-    user1GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 100);
-    user2GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 150);
-    user3GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 200);
-    user4GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 250);
+    if (!user1Name.empty()) user1GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 100);
+	if (!user2Name.empty()) user2GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 150);
+	if (!user3Name.empty()) user3GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 200);
+	if (!user4Name.empty()) user4GoalsTxt.display((SCREEN_WIDTH / 2) - (userGoalsW / 2), (SCREEN_HEIGHT / 3) + 250);
 }

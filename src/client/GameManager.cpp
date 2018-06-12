@@ -102,4 +102,14 @@ int GameManager::getPeriod()
 	return this->period;
 }
 
+std::string GameManager::getUsername(User_ID userId)
+{
+	return this->usernames[userId - 1];
+}
+
+void GameManager::setUsername(User_ID userId, std::string name)
+{
+	this->usernames[userId - 1] = name;
+}
+
 

@@ -37,6 +37,6 @@ public:
 	model_data_t getModelData();
 	std::vector<EventID>& getEvents();
 	int set_rcv_timeout(time_t seconds);
-
+	void updateUsernames();
 };
 

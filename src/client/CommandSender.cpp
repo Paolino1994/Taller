@@ -32,6 +32,19 @@ int CommandSender::set_rcv_timeout(time_t seconds){
 	return this->protocol.set_rcv_timeout(seconds);
 }
 
+void CommandSender::updateUsernames()
+{
+	protocol.write(Request::USER_NAMES);
+	protocol.read();
+	if (protocol.request() == Request::USER_NAMES) {
+		uint32_t usersSize = *reinterpret_cast<const uint32_t*>(protocol.dataBuffer());
+		for (size_t id = 1; id <= usersSize; ++id) {
+			protocol.read();
+			GameManager::get_instance()->setUsername(id, protocol.dataAsString());
+		}
+	}
+}
+
 void CommandSender::assignTeam(Team team) {
 	protocol.write(Request::TEAM_ASSIGN, reinterpret_cast<const char*>(&team), sizeof(team));
 }

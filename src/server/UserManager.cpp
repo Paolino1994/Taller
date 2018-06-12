@@ -175,11 +175,21 @@ User_ID UserManager::getLastUserId()
 
 std::string UserManager::getUsernameById(User_ID userId)
 {
+	std::unique_lock<std::mutex> lck(this->mtx); // por si se logean/deslogean mientras miro esto
+
 	for (unsigned int i = 0; i < users.size(); i++) {
 		if (users[i].id == userId) {
 			return users[i].name;
 		}
 	}
+
+	// me fijo tambien en los deslogeados
+	for (unsigned int i = 0; i < logged_out.size(); i++) {
+		if (logged_out[i].id == userId) {
+			return logged_out[i].name;
+		}
+	}
+
 	return "";
 }
 
@@ -202,4 +212,11 @@ int UserManager::getGoalsByUserId(User_ID userId)
 		}
 	}
 	return 0;
+}
+
+uint32_t UserManager::getUsersSize()
+{
+	std::unique_lock<std::mutex> lck(this->mtx); // por si se logean/deslogean mientras miro esto
+	// De todos los usuarios (conectados y desconectados)
+	return users.size() + logged_out.size();
 }
