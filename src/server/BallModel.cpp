@@ -119,17 +119,20 @@ void BallModel::update(double dt, int x_limit, int y_limit) {
 	// Aplicar l�gica de movimiento y como mucho choques con fin del mundo
 	// Los otros comportamientos con la pelota los deben hacer los sistemas
 
+
 	velX*=0.995;
     velY*=0.995;
 	x += velX * dt;
 	y += velY * dt;
-	if ((y + this->getHeight()) > y_limit) { //limite de abajo
-		y = y_limit - this->getHeight();
+	if ((y + this->getHeight()) > y_limit - 50) { //limite de abajo
+    	
+        y = (y_limit - 70);
+        
 		//velX = 0;
 		velY = -velY;
 	}
-	else if (this->y < 0) { // limite de arriba
-		this->y = 25;
+	else if (this->y < 50) { // limite de arriba
+		this->y = 60;
 		//velX = 0;
 		velY = -velY;
 	}
