@@ -272,8 +272,8 @@ void BallModel::kickWithPower(double power, int type) {
     //double speed=getSpeed(distance);
     double newPower=(power)/270000;
     //std::cout<<power<<" "<<newPower<<std::endl;
-    if(newPower>5000){
-        newPower=5000;
+    if(newPower>2000){
+        newPower=2000;
         std::cout<<newPower<<std::endl;
     }
     double xVel = newPower * multiplierX;
@@ -282,9 +282,15 @@ void BallModel::kickWithPower(double power, int type) {
     setVelX(xVel);
     setVelY(yVel);
     setVelZ(newPower/30);
+    if(type==GOAL){
+        setVelZ(newPower/60);
+    }
     originalX=this->getX();
     originalY=this->getY();
     if(type==HIGH){
+        heigthAngle=45;
+    }
+    if(type==GOAL && newPower>1000){
         heigthAngle=45;
     }
     startDistance=newPower/3;

@@ -116,6 +116,10 @@ public:
 
 	void kick(double potencia, BallModel &ballModel);
 
+    void kickHigh(double model, BallModel &ballModel);
+
+    void kickHighRegular(double power, BallModel &model);
+
 private:
     int initial_x;
 	int initial_y;
@@ -165,9 +169,7 @@ private:
 
 	int colisionableCounter=10;
 
-    void kickHigh(double model, BallModel &ballModel);
-
-	double getAngleToGoal();
+    double getAngleToGoal();
 
 	double getDistanceToGoal();
 

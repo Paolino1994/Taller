@@ -31,14 +31,15 @@ void BallPassesEndLineSystem::process(double dt)
 
 		int x = ballModel.getX();
 		int y = ballModel.getY();
+		double z = ballModel.getZ();
 		// double z = ballModel.getZ();
 
 		// condiciones de gol para FIELD_POSITION::LEFT
 		if (x < leftEndLineX)
 		{
-			if (y > goalBottomPost - postWidth && y < goalTopPost + postWidth)  // Tambien podemos poner la validacion en eje z para el travesanio
+			if (y > goalBottomPost - postWidth && y < goalTopPost + postWidth && z<1.8)  // Tambien podemos poner la validacion en eje z para el travesanio
 			{
-				if (y > goalBottomPost && y < goalTopPost)
+				if (y > goalBottomPost && y < goalTopPost )
 				{
 					std::cout << "GOOOL" << std::endl;
 
@@ -67,9 +68,9 @@ void BallPassesEndLineSystem::process(double dt)
 
 		// condiciones de gol para FIELD_POSITION::RIGHT
 		if (x > rigthEndLineX) {
-			if (y > goalBottomPost - postWidth && y < goalTopPost + postWidth) // Tambien podemos poner la validacion en eje z para el travesanio
+			if (y > goalBottomPost - postWidth && y < goalTopPost + postWidth && z<1.8) // Tambien podemos poner la validacion en eje z para el travesanio
 					{
-				if (y > goalBottomPost && y < goalTopPost) {
+				if (y > goalBottomPost && y < goalTopPost ) {
 					std::cout << "GOOOL" << std::endl;
 					Team goalTeam = (GameManager::get_instance().getHomeDefends() == FIELD_POSITION::RIGHT) ? Team::AWAY : Team::HOME;
 					world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), SET_PIECE::KICKOFF);

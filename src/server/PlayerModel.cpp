@@ -558,3 +558,18 @@ double PlayerModel::getDistanceToGoal() {
 bool PlayerModel::isGoalKeeper() {
 	return role == 'G';
 }
+
+void PlayerModel::kickHighRegular(double power, BallModel &model) {
+    if (this->state != KICKING) {
+        this->state = KICKING;
+        this->kickTime = 0.0;
+        this->kickVelX = velX;
+        this->kickVelY = velY;
+        setHasControlOfTheBall(false);
+        model.setAngle(angle);
+        model.kickWithPower(power,BallModel::GOAL);
+        EventQueue::get().push(make_shared<KickEvent>(*this));
+    }
+    log->debug("PlayerModel: pateando largo");
+
+}
