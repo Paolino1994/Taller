@@ -70,6 +70,8 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 		int direction_x_goto = 0;
 		double direction_y_goto = 0;
 
+
+
 		if (abs(ball_in_area_x) < max_distance_x)
 		{ // Si la pelota esta en la zona entonces la va a buscar
 			if (abs(direction_x_ball) > 5)
@@ -135,12 +137,18 @@ void PlayerControllerAI::_update(double dt, int x_limit, int y_limit, int ball_x
 			direction_y_goto = 0;
 		}
 
+
 		if (playerModel->getRole() == 'G')
 		{
 			direction_x_goto = 0;
 			direction_y_goto *= 0.5;
 			if (playerModel->getHasControlOfTheBall() == false && abs(playerModel->getX() - ball_x) < 15)
 			{
+				if(ball_y>playerModel->getY()){
+					playerModel->setAngle(180);
+				}else if(ball_x<playerModel->getX()){
+					playerModel->setAngle(0);
+				}
 				playerModel->sweep();
 			}
 		}
