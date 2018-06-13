@@ -541,6 +541,9 @@ void renderizar(Camera& camera, World& world, CommandSender& commandSender, Game
 
 			SDL_RenderPresent(gRenderer);
 		}
+		else {
+			std::this_thread::sleep_for(std::chrono::milliseconds(2));
+		}
 
         //quit Si seleciono la tecla escape entonces pregunto si quiere salir
         if(salirJuego){
