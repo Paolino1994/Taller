@@ -23,6 +23,8 @@ private:
 	model_data_t modelData;
 	size_t modelSnapshotNumber;
 	std::vector<EventID> events;
+	std::vector<size_t> modelSnapshotNumberOfEvent;
+	std::mutex eventMtx;
 
 	// De aca para abajo quizas manejar con state en un futuro
 	// Ya que en un principio, va a trabajar sobre el inicio de sesion con el Game
@@ -31,6 +33,7 @@ private:
 
 	void _run();
 
+	static const long long EVENT_SNAPSHOT_DELTA = 100; // 1 segundo si fixed_dt = 0.01
 public:
 	RequestHandler(Socket* socket, Game& game, User_ID userId);
 	~RequestHandler();
