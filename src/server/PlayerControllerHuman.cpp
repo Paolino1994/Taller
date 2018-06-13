@@ -44,7 +44,6 @@ void PlayerControllerHuman::_handleEvent( Command& command ){
 
     //If a key was pressed
     if (command.key == CommandKey::KEY_DOWN) {
-		
 		switch(command.type){
 			case CommandType::GO_UP:{
 				this->pressingUP = true;

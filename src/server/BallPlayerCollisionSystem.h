@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include "System.h"
 #include "World.h"
+#include "common/EventQueue.h"
 
 #define G_POINTS_RETRIEVE 100
 #define G_POINTS_HOLD 50
@@ -24,9 +25,11 @@ class BallPlayerCollisionSystem : public System
 private:
 	World & world;
 	double last_steal_time = 0;
+	bool ballLockedByGoalKeeper = false;
 
 	bool tries_to_recover(BallModel& ball_model, PlayerModel* player_model);
 	bool recovers(char o_player_role, bool o_player_sweeping, char ball_player_role);
+	bool player_is_in_his_area(PlayerModel* player_model, int side);
 public:
 	BallPlayerCollisionSystem(World& world);
 	virtual ~BallPlayerCollisionSystem();
