@@ -128,7 +128,6 @@ void BallPlayerCollisionSystem::process(double dt)
 			priorController->swap(currentController);
 			priorController = NULL;
 			currentController = NULL;
-			ballLockedByGoalKeeper = false;
 			//controlCounter = 0;
 		}
 		i++;
@@ -139,7 +138,6 @@ void BallPlayerCollisionSystem::process(double dt)
 	if (priorController != NULL && currentController != NULL && priorController->getModel()->getTeam() == currentController->getModel()->getTeam()) {
 		////std::cout<<"ENTRE"<<priorController->getModel()->getTeam()<<currentController->getModel()->getTeam()<<std::endl;
 		priorController->swap(currentController);
-		ballLockedByGoalKeeper = false;
 		//controlCounter = 0;
 	}
 }

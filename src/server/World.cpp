@@ -387,7 +387,7 @@ void World::changeFormation(Team team, FIELD_POSITION goalSide, std::string form
     // Arquero
     direccion_x = (goalSide == FIELD_POSITION::LEFT) ? -1 : 1; // Aca seteo de que lado de la cancha lo pongo  
     playerControllers[(int)team][0]->getModel()->setInitial_x(mitadDeCancha_x + (direccion_x * 750));
-    playerControllers[(int)team][0]->getModel()->setInitial_y(longTotalCancha_y / 2);
+    playerControllers[(int)team][0]->getModel()->setInitial_y(YAML::FIELD_CENTER_Y);
     playerControllers[(int)team][0]->getModel()->setRole('G');
 
 

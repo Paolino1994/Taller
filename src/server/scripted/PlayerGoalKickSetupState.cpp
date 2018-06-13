@@ -103,7 +103,7 @@ void PlayerGoalKickSetupState::update(double dt, int x_limit, int y_limit, int b
 		}
 		else {
 			// buscar la pelota
-			goTo(ball_x, ball_y, 0);
+			goTo(ball_x, ball_y, 1);
 		}
 	}
 	else {

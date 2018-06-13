@@ -76,7 +76,7 @@ namespace YAML {
 		{0, 432, 61, 198 }
 	};
 
-	const int POST_WIDTH = 7;
+	const int POST_WIDTH = 20;
 	const int GOAL_HEIGTH = 2;
 	const int CROSSBAR_WIDTH = 1;
 
