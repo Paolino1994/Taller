@@ -66,8 +66,8 @@ namespace YAML {
 	const int FIELD_CENTER_X = 850;
 	const int FIELD_CENTER_Y = 530;
 
-	const int LEFT_GOAL_KICK_POINT_X = 216;
-	const int RIGHT_GOAL_KICK_POINT_X = 1485;
+	const int LEFT_GOAL_KICK_POINT_X = 116;
+	const int RIGHT_GOAL_KICK_POINT_X = 1585;
 
 	// Por ahora lo pensamos como un SDL_Rect //esquina superior izquierda
 	// pero puede cambiar
