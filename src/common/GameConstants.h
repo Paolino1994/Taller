@@ -80,8 +80,6 @@ namespace YAML {
 	const int GOAL_HEIGTH = 2;
 	const int CROSSBAR_WIDTH = 1;
 
-	const size_t MAX_PLAYERS = 1; 
-
     const int SCREEN_WIDTH = 800; // GAME_SCREEN_WIDTH
     const int SCREEN_HEIGHT = 600; // GAME_SCREEN_HEIGHT
 

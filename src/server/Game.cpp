@@ -128,7 +128,7 @@ Game::Game() :
         modelData({ playerViewData, ballViewData, gameManagerData}),
         modelSnapshotNumber(0),
         world(World(YAML::WORLD_WIDTH, YAML::WORLD_HEIGHT, getAnimMapperBall())),
-        maxPlayers(YAML::MAX_PLAYERS),
+        maxPlayers((size_t)YAMLReader::get_instance().getMaxJugadores()),
         playerCount(0),
         running(false),
 		existFormationHome(false),
