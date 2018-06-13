@@ -108,7 +108,7 @@ Game::Game() :
 	modelData({ std::vector<player_view_data_t>() ,{ 0,0,0, 0, QUIESCENT, 0 },{ 0,0,0, FIELD_POSITION::LEFT, FIELD_POSITION::RIGHT, 0, 0, 0, 0, 0, 0 } }),
 	modelSnapshotNumber(0),
     world(World(YAML::WORLD_WIDTH, YAML::WORLD_HEIGHT, getAnimMapperBall())),
-    maxPlayers(YAML::MAX_PLAYERS),
+    maxPlayers((size_t)YAMLReader::get_instance().getMaxJugadores()),
     playerCount(0),
     running(false),
 	existFormationHome(false),
