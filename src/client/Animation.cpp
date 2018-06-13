@@ -37,7 +37,7 @@ void Animation::reset(){
 void Animation::update(double deltatime){
     this->time += deltatime;
     this->presentFrame = static_cast<int>(time / frametime) % frames;
-    //std::cout << "Time es " << time << " y el present frame es " << presentFrame << std::endl;
+    ////std::cout << "Time es " << time << " y el present frame es " << presentFrame << std::endl;
 }
     
 //Renders corresponding animation texture at given point and time change

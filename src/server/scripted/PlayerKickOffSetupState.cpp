@@ -65,7 +65,7 @@ bool PlayerKickOffSetupState::handleEvent(Command & command)
 		// por ahora solo dejamos que saque!
 		if (command.key == CommandKey::KEY_DOWN && command.type == CommandType::PASS) {
 			// TODO: falta hacer saque real!
-			std::cout << "Sacando la bocha!" << std::endl;
+			//std::cout << "Sacando la bocha!" << std::endl;
 			EventQueue::get().push(std::make_shared<KickEvent>(this->player));
 			return true;
 		}
@@ -82,7 +82,7 @@ void PlayerKickOffSetupState::update(double dt, int x_limit, int y_limit, int ba
 	if (this->kickOffTeam == this->player.getTeam() && this->player.isInChargeOfKickOff()) {
 		if (this->player.getHasControlOfTheBall()) {
 			// llevar al mediocampo!
-			//std::cout << "Llendo al mediocampo" << std::endl;
+			////std::cout << "Llendo al mediocampo" << std::endl;
 			goTo(YAML::FIELD_CENTER_X, YAML::FIELD_CENTER_Y, 10);
 
 			// Sacar solo despues de un tiempito si no estoy controlado por un humano
@@ -91,14 +91,14 @@ void PlayerKickOffSetupState::update(double dt, int x_limit, int y_limit, int ba
 				this->secondsPassed += dt;
 				if (!this->player.getIsControlledByHuman() && this->secondsPassed >= secondsToWaitForAutomaticKickOff) {
 					// TODO: falta hacer saque real!
-					std::cout << "Sacando la bocha de forma automatica!" << std::endl;
+					//std::cout << "Sacando la bocha de forma automatica!" << std::endl;
 					EventQueue::get().push(std::make_shared<KickEvent>(this->player));
 				}
 			}
 		}
 		else {
 			// buscar la pelota
-			goTo(ball_x, ball_y, 0);
+			goTo(ball_x, ball_y, 1);
 		}
 	}
 	else {

@@ -66,7 +66,7 @@ void PlayerController::handleEvent(Command & command)
 {
 	this->checkStateChange();
 	if (this->scriptedState) {
-		std::cout << "Scripted state handleando un command!" << std::endl;
+		//std::cout << "Scripted state handleando un command!" << std::endl;
 		if (this->scriptedState->handleEvent(command)) {
 			this->_handleEvent(command);
 		}

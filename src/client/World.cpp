@@ -57,12 +57,12 @@ void World::update(CommandSender& commandSender) {
 	}
 
 	model_data_t modelData = commandSender.getModelData();
-    //std::cout<<"Execution Time: "<<modelData.gameManagerData.timeInSeconds<<" Seconds"<<std::endl;
+    ////std::cout<<"Execution Time: "<<modelData.gameManagerData.timeInSeconds<<" Seconds"<<std::endl;
     if(modelData.gameManagerData.timeInSeconds-lastTime>0){
-        //std::cout<<"Execution Time: "<<modelData.gameManagerData.timeInSeconds<<" Seconds"<<std::endl;
+        ////std::cout<<"Execution Time: "<<modelData.gameManagerData.timeInSeconds<<" Seconds"<<std::endl;
         lastTime=modelData.gameManagerData.timeInSeconds;
     }
-	//std::cout<<"Execution Time: "<< modelData.timeInSeconds<<" Seconds"<<std::endl;
+	////std::cout<<"Execution Time: "<< modelData.timeInSeconds<<" Seconds"<<std::endl;
 
 
 	std::vector<player_view_data_t>& playerViewData = modelData.playerViewData;
@@ -94,44 +94,44 @@ void World::update(CommandSender& commandSender) {
 		{
 		case EventID::KICK: {
 			SoundManager::get_instance()->playSound(SoundEffect::SE_BALL_KICK);
-			std::cout << "Server me avisa: Alguien pateo la bocha recien!" << std::endl;
+			//std::cout << "Server me avisa: Alguien pateo la bocha recien!" << std::endl;
 			break;
 		}
 		case EventID::GOAL: {
 			GameManager::get_instance()->setDisplayGoalText(3);
 			SoundManager::get_instance()->playSound(SoundEffect::SE_GOAL_CROWD);
-			std::cout << "Server me avisa: Metieron gol!" << std::endl;
+			//std::cout << "Server me avisa: Metieron gol!" << std::endl;
 			break;
 		}
 		case EventID::PERIOD_END: {
 			SoundManager::get_instance()->playSound(SoundEffect::SE_WHISTLE);
-			std::cout << "Server me avisa: Termino un tiempo!" << std::endl;
+			//std::cout << "Server me avisa: Termino un tiempo!" << std::endl;
 			break;
 		}
 		case EventID::PERIOD_START: {
 			SoundManager::get_instance()->playSound(SoundEffect::SE_WHISTLE);
-			std::cout << "Server me avisa: Empieza un tiempo!" << std::endl;
+			//std::cout << "Server me avisa: Empieza un tiempo!" << std::endl;
 			break;
 		}
 		case EventID::GOAL_KICK: {
 			GameManager::get_instance()->setDisplayGoalKickText(2);
 			SoundManager::get_instance()->playSound(SoundEffect::SE_WHISTLE);
-			std::cout << "Server me avisa: Salio por el costado, saca el arquero!" << std::endl;
+			//std::cout << "Server me avisa: Salio por el costado, saca el arquero!" << std::endl;
 			break;
 		}
 		case EventID::POSTHIT: {
 			SoundManager::get_instance()->playSound(SoundEffect::SE_POSTHIT);
-			std::cout << "Server me avisa: Que hay palo" << std::endl;
+			//std::cout << "Server me avisa: Que hay palo" << std::endl;
 			break;
 		}
 		case EventID::GAME_END: {
 			GameManager::get_instance()->setShowGoalStats(true);
-			std::cout << "Server me avisa: Termino el juego, momento de mostrar estadisticas" << std::endl;
+			//std::cout << "Server me avisa: Termino el juego, momento de mostrar estadisticas" << std::endl;
 			break;
 		}
 		case EventID::GAME_RESTART: {
 			GameManager::get_instance()->setShowGoalStats(false);
-			std::cout << "Server me avisa: Va a reiniciar el juego, dejo de mostrar estadisticas" << std::endl;
+			//std::cout << "Server me avisa: Va a reiniciar el juego, dejo de mostrar estadisticas" << std::endl;
 			break;
 		}
 		default:

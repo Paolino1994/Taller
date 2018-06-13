@@ -466,12 +466,12 @@ void PlayerModel::pass(PlayerModel *pModel, BallModel &ballModel, double potenci
 	int y1=ballModel.getY();
     //double distance=pow(pow(abs(y2-y1),2) + pow(abs(x2-x1),2),0.5);
 	double angulo=atan2(y2-y1,x2-x1);
-	//std::cout<<std::to_string(angulo)<<std::endl;
+	////std::cout<<std::to_string(angulo)<<std::endl;
     double priorangle=angle;
 	angle=(angulo*180/M_PI) + 90;
     setVelX(0);
     setVelY(0);
-	//std::cout<<std::to_string(angle)<<std::endl;
+	////std::cout<<std::to_string(angle)<<std::endl;
 	kick(potencia,ballModel);
     angle=priorangle;
 
@@ -491,14 +491,14 @@ void PlayerModel::longPass(PlayerModel *pModel, BallModel &model, double potenci
 	int x1=model.getX();
 	int y1=model.getY();
 	double angulo=atan2(y2-y1,x2-x1);
-	//std::cout<<std::to_string(angulo)<<std::endl;
+	////std::cout<<std::to_string(angulo)<<std::endl;
 	double priorangle=angle;
 	angle=(angulo*180/M_PI) + 90;
     //double distance=pow(pow(abs(y2-y1),2) + pow(abs(x2-x1),2),0.5);
     //double heightAngle=
 	setVelX(0);
 	setVelY(0);
-	//std::cout<<std::to_string(angle)<<std::endl;
+	////std::cout<<std::to_string(angle)<<std::endl;
     kickHigh(potencia, model);
 	angle=priorangle;
 

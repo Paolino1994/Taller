@@ -65,7 +65,7 @@ bool PlayerGoalKickSetupState::handleEvent(Command & command)
 		if (command.key == CommandKey::KEY_DOWN){ 
 			if(command.type == CommandType::PASS || command.type == CommandType::LONG_PASS) {
 				// TODO: falta hacer saque real!
-				std::cout << "Sacando la bocha!" << std::endl;
+				//std::cout << "Sacando la bocha!" << std::endl;
 				EventQueue::get().push(std::make_shared<KickEvent>(this->player));
 				return true;
 			}
@@ -83,7 +83,7 @@ void PlayerGoalKickSetupState::update(double dt, int x_limit, int y_limit, int b
 	if (this->goalKickTeam == this->player.getTeam() && this->player.isGoalKeeper()) {
 		if (this->player.getHasControlOfTheBall()) {
 			// llevar al mediocampo!
-			//std::cout << "Llendo al mediocampo" << std::endl;
+			////std::cout << "Llendo al mediocampo" << std::endl;
 			if (this->goal == FIELD_POSITION::LEFT) {
 				goTo(YAML::LEFT_GOAL_KICK_POINT_X, YAML::FIELD_CENTER_Y, 10);
 			} else {
@@ -96,7 +96,7 @@ void PlayerGoalKickSetupState::update(double dt, int x_limit, int y_limit, int b
 				this->secondsPassed += dt;
 				if (!this->player.getIsControlledByHuman() && this->secondsPassed >= secondsToWaitForAutomaticGoalKick) {
 					// TODO: falta hacer saque real!
-					std::cout << "Sacando la bocha de forma automatica!" << std::endl;
+					//std::cout << "Sacando la bocha de forma automatica!" << std::endl;
 					EventQueue::get().push(std::make_shared<KickEvent>(this->player));
 				}
 			}

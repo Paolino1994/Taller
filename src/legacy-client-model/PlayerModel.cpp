@@ -326,9 +326,9 @@ void PlayerModel::pass(PlayerModel *pModel, BallModel& ballModel) {
 	int x1=ballModel.getX();
 	int y1=ballModel.getY();
 	double angulo=atan2(y2-y1,x2-x1);
-	//std::cout<<std::to_string(angulo)<<std::endl;
+	////std::cout<<std::to_string(angulo)<<std::endl;
 	angle=(angulo*180/M_PI) + 90;
-	//std::cout<<std::to_string(angle)<<std::endl;
+	////std::cout<<std::to_string(angle)<<std::endl;
 	kick(ballModel);
 
 }

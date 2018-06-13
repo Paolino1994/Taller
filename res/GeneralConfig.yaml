@@ -7,7 +7,7 @@ EquipoB:
     Color: "Rojo"
     Formacion: "3-1-2"
 LogLevel: "info"
-MaxJugadores: "1"
+MaxJugadores: "2"
 DuracionTiempo: "60"
 MovJugAtaqueX:
     Arquero: "50"
@@ -20,12 +20,12 @@ MovJugDefensaX:
     Mediocampistas: "100"
     Delanteros: "75"
 MovJugAtaqueY:
-    Arquero: "50"
+    Arquero: "100"
     Defensores: "50"
     Mediocampistas: "50"
     Delanteros: "50"
 MovJugDefensaY:
-    Arquero: "50"
+    Arquero: "100"
     Defensores: "100"
     Mediocampistas: "200"
     Delanteros: "75"

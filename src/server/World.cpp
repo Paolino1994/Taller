@@ -86,12 +86,12 @@ bool World::playerIsOnRange(PlayerController* cont,PlayerController* controllerT
     int y=ball.getModel().getY();
     int xCon=cont->getModel()->getCenterX();
     int yCon=cont->getModel()->getCenterY();
-    //std::cout<<"BALL X:"<<x<<" Y:"<<y<<std::endl;
-    //std::cout<<"X:"<<xCon<<" Y:"<<yCon<<std::endl;
+    ////std::cout<<"BALL X:"<<x<<" Y:"<<y<<std::endl;
+    ////std::cout<<"X:"<<xCon<<" Y:"<<yCon<<std::endl;
     //int xRange=getRangeToChange(x,200);
     //int yRange=getRangeToChange(y,150);
     if(abs(x-xCon)<YAML::SCREEN_WIDTH/2 && abs(y-yCon)<YAML::SCREEN_HEIGHT/2){
-        //std::cout<<"vale Controllador "<<std::endl;
+        ////std::cout<<"vale Controllador "<<std::endl;
         return true;
     }
     return false;
@@ -122,11 +122,11 @@ PlayerController* World::getPlayerToPass(PlayerController * controllerToSwap){
 			break;
 		}
 		if(playerIsOnPassRange(teamControllers[index],controllerToSwap)&& teamControllers[index] != controllerToSwap && playerIsOnRange(teamControllers[index],controllerToSwap) /*&& teamControllers[index]->isControllable()*/){
-            //std::cout<<"Player "<<index<<" DistActual "<<distanciaActual<<" Distancia "<<getDistance(teamControllers[index]->getModel(),getBall().getModel())<<std::endl;
+            ////std::cout<<"Player "<<index<<" DistActual "<<distanciaActual<<" Distancia "<<getDistance(teamControllers[index]->getModel(),getBall().getModel())<<std::endl;
             if(abs(getAngle(teamControllers[index]->getModel(),getBall().getModel())-(360-ball.getModel().getAngle()))<anguloActual){
                 indexAUsar=index;
                 anguloActual=getAngle(teamControllers[index]->getModel(),getBall().getModel());
-                //std::cout<<"Angulo:"<<anguloActual<<std::endl;
+                ////std::cout<<"Angulo:"<<anguloActual<<std::endl;
             }
 		}
 		/*comparacion=!playerIsOnRange(teamControllers[index],controllerToSwap);
@@ -170,11 +170,11 @@ PlayerController* World::getPlayerToPassLong(PlayerController * controllerToSwap
             break;
         }
         if(playerIsOnPassRange(teamControllers[index],controllerToSwap)&& teamControllers[index] != controllerToSwap && !playerIsOnRange(teamControllers[index],controllerToSwap) /*&& teamControllers[index]->isControllable()*/){
-            //std::cout<<"Player "<<index<<" DistActual "<<distanciaActual<<" Distancia "<<getDistance(teamControllers[index]->getModel(),getBall().getModel())<<std::endl;
+            ////std::cout<<"Player "<<index<<" DistActual "<<distanciaActual<<" Distancia "<<getDistance(teamControllers[index]->getModel(),getBall().getModel())<<std::endl;
             if(abs(getAngle(teamControllers[index]->getModel(),getBall().getModel())-(360-ball.getModel().getAngle()))<anguloActual){
                 indexAUsar=index;
                 anguloActual=getAngle(teamControllers[index]->getModel(),getBall().getModel());
-                //std::cout<<"Angulo:"<<anguloActual<<std::endl;
+                ////std::cout<<"Angulo:"<<anguloActual<<std::endl;
             }
         }
         /*comparacion=!playerIsOnRange(teamControllers[index],controllerToSwap);
@@ -186,7 +186,7 @@ PlayerController* World::getPlayerToPassLong(PlayerController * controllerToSwap
     while(true);
     if(indexAUsar!=-1){
         return teamControllers[indexAUsar];
-        //std::cout<<indexAUsar<<std::endl;
+        ////std::cout<<indexAUsar<<std::endl;
     }else{
         return teamControllers[controllerToSwapIndex];
     }
@@ -224,7 +224,7 @@ void World::swap(PlayerController * controllerToSwap)
 	}
 
 	size_t controllerToSwapIndex = index;
-	//std::cout<<"-----------------------------------------------------"<<std::endl;
+	////std::cout<<"-----------------------------------------------------"<<std::endl;
 	index=-1;
 	do
 	{ // en el peor caso volvemos a el que estabamos controlando recien
@@ -349,13 +349,13 @@ bool World::playerIsOnPassRange(PlayerController *&controller, PlayerController 
     if(angleToPlayer<0){
         angleToPlayer=360+angleToPlayer;
     }
-    //std::cout<<"Angle: "<<ballAngle<<" AngleToPlayer "<<angleToPlayer<<std::endl;
+    ////std::cout<<"Angle: "<<ballAngle<<" AngleToPlayer "<<angleToPlayer<<std::endl;
     if (abs(angleToPlayer-ballAngle)<40){
-        //std::cout<<"Angulo Correcto"<<std::endl;
+        ////std::cout<<"Angulo Correcto"<<std::endl;
         return true;
     }
 
-    //std::cout<<"Angle: "<<ballAngle<<" X "<<x<<" xCon "<<xCon<<" Y "<<y<<" yCon "<<yCon<<std::endl;
+    ////std::cout<<"Angle: "<<ballAngle<<" X "<<x<<" xCon "<<xCon<<" Y "<<y<<" yCon "<<yCon<<std::endl;
 
     return false;
 }

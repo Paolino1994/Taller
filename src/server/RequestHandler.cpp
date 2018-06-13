@@ -36,7 +36,7 @@ void RequestHandler::_run()
 				}
 				case Request::PLAYER_VIEW_UPDATE: {
 					model_data_t model_data = this->game.getModelData();
-					//std::cout << "Hay " << model_data.playerViewData.size() << " jugadores. Enviamos en bytes: " << sizeof(player_view_data_t) * model_data.playerViewData.size();
+					////std::cout << "Hay " << model_data.playerViewData.size() << " jugadores. Enviamos en bytes: " << sizeof(player_view_data_t) * model_data.playerViewData.size();
 					protocol.write(Request::PLAYER_VIEW_UPDATE, (const char*)model_data.playerViewData.data(), sizeof(player_view_data_t) * model_data.playerViewData.size());
 					break;
 				}

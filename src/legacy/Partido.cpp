@@ -19,15 +19,15 @@ void Partido::iniciarRandom() {
 }
 
 void Partido::mostrarEquipos() {
-    std::cout << equipo1.getNombre() << std::endl;
+    //std::cout << equipo1.getNombre() << std::endl;
     std::list<Jugador> jugadoresEquipo1=equipo1.getJugadores();
     for(int i=0;i<=5;i++){
-        //std::cout << *jugadoresEquipo1[i].getNombre() << std::endl;
+        ////std::cout << *jugadoresEquipo1[i].getNombre() << std::endl;
     }
-    std::cout << equipo2.getNombre() << std::endl;
+    //std::cout << equipo2.getNombre() << std::endl;
     std::list<Jugador> jugadoresEquipo2=equipo1.getJugadores();
     for(int i=0;i<=5;i++){
-        //std::cout << *jugadoresEquipo2[i].getNombre() << std::endl;
+        ////std::cout << *jugadoresEquipo2[i].getNombre() << std::endl;
     }
 
 

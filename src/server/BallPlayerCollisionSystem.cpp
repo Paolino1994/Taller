@@ -73,7 +73,7 @@ void BallPlayerCollisionSystem::process(double dt)
 								if (i == counter) {
 									controller->getModel()->setHasControlOfTheBall(true);
 									GameManager::get_instance().setLastBallControlUser(controller->getUserId());
-									//std::cout<<"Agarro la pelota"<< "Ball VelX: "<<ballModel.getVelX()<<" Ball VelY: "<<ballModel.getVelY()<<std::endl;
+									////std::cout<<"Agarro la pelota"<< "Ball VelX: "<<ballModel.getVelX()<<" Ball VelY: "<<ballModel.getVelY()<<std::endl;
 								}
 								else {
 									controller->getModel()->setHasControlOfTheBall(false);
@@ -115,16 +115,16 @@ void BallPlayerCollisionSystem::process(double dt)
 		
 		if (!player->isControllable()) {
 			priorController = player;
-			//std::cout<<"PLAYER"<<std::to_string(i)<<std::endl;
+			////std::cout<<"PLAYER"<<std::to_string(i)<<std::endl;
 		}
 		else {
 			if (player->hasControlOfTheBall()) {
 				currentController = player;
-				//std::cout<<"New Controller"<<std::to_string(i)<<std::endl;
+				////std::cout<<"New Controller"<<std::to_string(i)<<std::endl;
 			}
 		}
 		if (priorController != NULL && currentController != NULL && priorController->getModel()->getTeam() == currentController->getModel()->getTeam()) {
-			//std::cout<<"ENTRE"<<priorController->getModel()->getTeam()<<currentController->getModel()->getTeam()<<std::endl;
+			////std::cout<<"ENTRE"<<priorController->getModel()->getTeam()<<currentController->getModel()->getTeam()<<std::endl;
 			priorController->swap(currentController);
 			priorController = NULL;
 			currentController = NULL;
@@ -134,10 +134,10 @@ void BallPlayerCollisionSystem::process(double dt)
 		i++;
 
 	}
-	//std::cout<<"ENTRE"<<priorController->getModel()->getTeam()<<currentController->getModel()->getTeam()<<std::endl;
+	////std::cout<<"ENTRE"<<priorController->getModel()->getTeam()<<currentController->getModel()->getTeam()<<std::endl;
 
 	if (priorController != NULL && currentController != NULL && priorController->getModel()->getTeam() == currentController->getModel()->getTeam()) {
-		//std::cout<<"ENTRE"<<priorController->getModel()->getTeam()<<currentController->getModel()->getTeam()<<std::endl;
+		////std::cout<<"ENTRE"<<priorController->getModel()->getTeam()<<currentController->getModel()->getTeam()<<std::endl;
 		priorController->swap(currentController);
 		ballLockedByGoalKeeper = false;
 		//controlCounter = 0;

@@ -83,7 +83,7 @@ void Game::_run()
         accumulator += frametime;
         //time_t end = time(NULL);
         /*if((double)(end-lastime)>0){
-            std::cout<<"Execution Time: "<< (double)(end-start)<<" Seconds"<<std::endl;
+            //std::cout<<"Execution Time: "<< (double)(end-start)<<" Seconds"<<std::endl;
             lastime=end;
         }*/
 
@@ -94,7 +94,7 @@ void Game::_run()
 		//world.serialize(modelData);
 
 		//int64_t sleep = (fixed_dt - accumulator) * 1000;
-		//std::cout << "Sleeping for " << sleep << " millis" << std::endl;
+		////std::cout << "Sleeping for " << sleep << " millis" << std::endl;
 		std::this_thread::sleep_for(std::chrono::milliseconds(5)); // fixed_dt en millisegundos
 
 		// Handle events on queue
@@ -106,14 +106,14 @@ void Game::_run()
 		while (accumulator >= fixed_dt)
 		{
 			//Calcula movimientos
-			//std::cout << "Model update" << std::endl;
+			////std::cout << "Model update" << std::endl;
 			world.update(fixed_dt); //Update de todos los players (y otras entidades proximamente?)
 
 			EventQueue::get().handleEvents();
 			accumulator -= fixed_dt;
 			modelData.playerViewData.clear();
             //modelData.timeInSeconds=end-start;
-			//std::cout << "Model serialize" << std::endl;
+			////std::cout << "Model serialize" << std::endl;
 			world.serialize(modelData);
 			this->modelSnapshotNumber++;
 		}
@@ -291,7 +291,7 @@ void Game::setTeamFormation(Team team, Formation formation, User_ID userId)
 					textFormation = "3-3-0";
 		}
 
-	std::cout << "formacion de equipo: " << textFormation << std::endl;
+	//std::cout << "formacion de equipo: " << textFormation << std::endl;
 
 	this->world.changeFormation(team, position, textFormation);
 }

@@ -207,7 +207,7 @@ int main( int argc, char* args[] )
 
     //Start up SDL and create window
     if ( !init_SDL() ) {
-        std::cout << "Failed to initialize!\n" << std::endl;
+        //std::cout << "Failed to initialize!\n" << std::endl;
 		log->error("Falló la inicialización del SDL");
     } else {
 	    std::unique_ptr<CommandSender> commandSenderPtr(nullptr);
@@ -218,7 +218,7 @@ int main( int argc, char* args[] )
 			commandSenderPtr = std::unique_ptr<CommandSender>(new CommandSender(server_ip, std::stoul(server_port, nullptr, 0)));
 		}
 		catch (SocketException& ex) {
-			//std::cout << "No nos pudimos conectar al servidor. Ver el log" << std::endl;
+			////std::cout << "No nos pudimos conectar al servidor. Ver el log" << std::endl;
 			Log::get_instance()->error("No nos pudimos conectar al servidor, causa: " + std::string(ex.what()));
 			GameConnectionError gameConnectionError(gRenderer);
 			gameConnectionError.connectionErrorScreen();
@@ -242,7 +242,7 @@ int main( int argc, char* args[] )
 				}
 			}
 			catch (SocketException& ex){
-				//std::cout << "Error de conexión con el servidor. Salimos. Ver el log" << std::endl;
+				////std::cout << "Error de conexión con el servidor. Salimos. Ver el log" << std::endl;
 				Log::get_instance()->error("Error de conexión con el servidor, causa: " + std::string(ex.what()));
 				GameConnectionError gameConnectionError(gRenderer);
 				gameConnectionError.connectionErrorScreen();
@@ -384,7 +384,7 @@ int main( int argc, char* args[] )
 				renderizar(camera, world, commandSender, gameMenu, infoPanel);
 			} catch (SocketException& ex) {
                 // pantalla que muestra la desconexion
-				//std::cout << "Error de conexión con el servidor. Salimos. Ver el log" << std::endl;
+				////std::cout << "Error de conexión con el servidor. Salimos. Ver el log" << std::endl;
 				Log::get_instance()->error("Error de conexión con el servidor, causa: " + std::string(ex.what()));
 				GameConnectionError gameConnectionError(gRenderer);
 				gameConnectionError.connectionErrorScreen();

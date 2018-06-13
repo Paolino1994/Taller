@@ -56,7 +56,7 @@ void BallController::changeController(int newController, std::vector<PlayerContr
     for (PlayerController* controller : playerControllers) {
         if(newController==counter){
             controller->getModel()->setHasControlOfTheBall(true);
-            //std::cout<<"Agarro la pelota"<< "Ball VelX: "<<ballModel.getVelX()<<" Ball VelY: "<<ballModel.getVelY()<<std::endl;
+            ////std::cout<<"Agarro la pelota"<< "Ball VelX: "<<ballModel.getVelX()<<" Ball VelY: "<<ballModel.getVelY()<<std::endl;
         }else{
             controller->getModel()->setHasControlOfTheBall(false);
         }

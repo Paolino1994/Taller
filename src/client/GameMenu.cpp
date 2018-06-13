@@ -337,7 +337,7 @@ int GameMenu::selectFormationScreen(CommandSender& commandSender, Team selectedT
     bool existFormation = commandSender.checkFormation(selectedTeam);
 
     if(existFormation){
-    	std::cout << "el equipo ya tiene formacion" << std::endl;
+    	//std::cout << "el equipo ya tiene formacion" << std::endl;
     	log->info("el equipo seleccionado ya tiene formacion");
     	return 0;
     }
@@ -480,7 +480,7 @@ int GameMenu::selectFormationScreen(CommandSender& commandSender, Team selectedT
                     formation = Formation::FORMATION_3_2_1;
                     break;
             	}
-            std::cout << "formacion de equipo: "  << formacionElegida << std::endl;
+            //std::cout << "formacion de equipo: "  << formacionElegida << std::endl;
             log->info("formacion de equipo: " + formacionElegida);
 
             returnValue = 0;

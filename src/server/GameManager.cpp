@@ -162,7 +162,7 @@ void GameManager::goalScoredByUser(){
 	goalsByUser[lastBallControlUser - 1] ++;
 
 	for(int i = 0 ; i < 4; i++) {
-		std::cout << "User: " << i + 1 << " Goles: " << goalsByUser[i] << std::endl;
+		//std::cout << "User: " << i + 1 << " Goles: " << goalsByUser[i] << std::endl;
 	}
 
 }

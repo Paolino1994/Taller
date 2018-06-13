@@ -51,7 +51,7 @@ void BallModel::correctPosition() {
 
     int xCor = getXCorrection();
     int yCor = getYCorrection();
-    //std::cout<<"X:"<<x<<" Correccion:"<<xCor<<std::endl;
+    ////std::cout<<"X:"<<x<<" Correccion:"<<xCor<<std::endl;
     x=x+xCor;
 
     y=y+yCor;
@@ -65,7 +65,7 @@ int BallModel::getXCorrection() {
     double initialcorrection=23.0;
 
     double multiplier=cos(angleToUse*PI/180.0);
-    //std::cout<<"Angle:"<<angleToUse<<" Multiplicador:  "<<multiplier<<std::endl;
+    ////std::cout<<"Angle:"<<angleToUse<<" Multiplicador:  "<<multiplier<<std::endl;
 
     double correction=multiplier*25;
     return initialcorrection+correction;
@@ -75,7 +75,7 @@ int BallModel::getYCorrection() {
     double initialcorrection=10.0;
 
     double multiplier=sin(angleToUse*PI/180.0);
-    //std::cout<<"Angle:"<<angleToUse<<" Multiplicador:  "<<multiplier<<std::endl;
+    ////std::cout<<"Angle:"<<angleToUse<<" Multiplicador:  "<<multiplier<<std::endl;
 
     double correction=multiplier*25;
     return initialcorrection+correction;
@@ -154,7 +154,7 @@ void BallModel::update(double dt, int x_limit, int y_limit) {
 
 	if(z>0){
 		double currentDistance = getCurrentDistanceToOriginal();
-        //std::cout<<"Current "<<currentDistance<<"start "<<startDistance<<"Z "<<z<<std::endl;
+        ////std::cout<<"Current "<<currentDistance<<"start "<<startDistance<<"Z "<<z<<std::endl;
 		if(currentDistance>=startDistance/1.2){
 			heigthAngle=-1;
 		}
@@ -174,7 +174,7 @@ void BallModel::update(double dt, int x_limit, int y_limit) {
     if(getCurrentDistanceToOriginal()==0){
         velMultiplier=0.9;
     }*/
-    //std::cout<<"startDistance "<<startDistance<<" current "<<getCurrentDistanceToOriginal()<<" multiplier "<<velMultiplier<<std::endl;
+    ////std::cout<<"startDistance "<<startDistance<<" current "<<getCurrentDistanceToOriginal()<<" multiplier "<<velMultiplier<<std::endl;
 
 
     /*if(velX>0){
@@ -196,9 +196,9 @@ void BallModel::update(double dt, int x_limit, int y_limit) {
         velX=0;
         velY=0;
     }
-    //std::cout<<"Xvel: "<<std::to_string(velX)<<" Yvel: "<<std::to_string(velY)<<" Zvel: "<<std::to_string(velZ)<<std::endl;
+    ////std::cout<<"Xvel: "<<std::to_string(velX)<<" Yvel: "<<std::to_string(velY)<<" Zvel: "<<std::to_string(velZ)<<std::endl;
 	setState();
-	//std::cout<<"Z: "<<z<<std::endl;
+	////std::cout<<"Z: "<<z<<std::endl;
 }
 
 int BallModel::getAngle() {
@@ -214,7 +214,7 @@ double BallModel::getVelY() {
 }
 
 void BallModel::setState() {
-	//std::cout<<"VELX: "<<velX<<" VelY: "<<velX<<std::endl;
+	////std::cout<<"VELX: "<<velX<<" VelY: "<<velX<<std::endl;
 	if (velX != 0 || velY != 0) {
 		state = MOVING;
 	}
@@ -273,10 +273,10 @@ void BallModel::kickWithPower(double power, int type) {
     double multiplierY=sin(angleToUse*PI/180.0);
     //double speed=getSpeed(distance);
     double newPower=(power)/270000;
-    //std::cout<<power<<" "<<newPower<<std::endl;
+    ////std::cout<<power<<" "<<newPower<<std::endl;
     if(newPower>2000){
         newPower=2000;
-        std::cout<<newPower<<std::endl;
+        //std::cout<<newPower<<std::endl;
     }
     double xVel = newPower * multiplierX;
     double yVel = newPower * multiplierY;

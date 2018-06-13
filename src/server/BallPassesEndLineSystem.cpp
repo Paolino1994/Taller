@@ -43,7 +43,7 @@ void BallPassesEndLineSystem::process(double dt)
 			{
 				if (y > goalBottomPost && y < goalTopPost && z < goalHeight)
 				{
-					std::cout << "GOOOL" << std::endl;
+					//std::cout << "GOOOL" << std::endl;
 
 					Team goalTeam = (GameManager::get_instance().getHomeDefends() == FIELD_POSITION::LEFT) ? Team::AWAY : Team::HOME;
 
@@ -52,21 +52,21 @@ void BallPassesEndLineSystem::process(double dt)
 
 					if(goalTeam == GameManager::get_instance().getTeamBallControl()) {
 						GameManager::get_instance().goalScoredByUser();
-						std::cout << "GOL DE TU EQUIPO" << std::endl;
+						//std::cout << "GOL DE TU EQUIPO" << std::endl;
 					} else {
-						std::cout << "GOL EN CONTRA" << std::endl;
+						//std::cout << "GOL EN CONTRA" << std::endl;
 					}
 
 					EventQueue::get().push(std::make_shared<GoalEvent>(this->lastPlayerThatKickedTheBall, goalTeam));
 				}
 				else {
 					EventQueue::get().push(std::make_shared<PostHitEvent>());
-					std::cout << "PALO" << std::endl;
+					//std::cout << "PALO" << std::endl;
 					ballModel.setVelX(-ballModel.getVelX()); // Hago rebotar la pelota en el palo, le cambio el angulo en x
 				}
 			}
 			else {
-				std::cout << "Salio por el costado izquierdo" << std::endl;
+				//std::cout << "Salio por el costado izquierdo" << std::endl;
 				Team goalKickTeam = (GameManager::get_instance().getHomeDefends() == FIELD_POSITION::LEFT) ? Team::HOME : Team::AWAY;
 				world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), SET_PIECE::GOALKICK);
 				world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), SET_PIECE::GOALKICK);
@@ -79,7 +79,7 @@ void BallPassesEndLineSystem::process(double dt)
 			if (y > goalBottomPost - postWidth && y < goalTopPost + postWidth && z < goalHeight + crossbarWidth) // Tambien podemos poner la validacion en eje z para el travesanio
 					{
 				if (y > goalBottomPost && y < goalTopPost && z < goalHeight ) {
-					std::cout << "GOOOL" << std::endl;
+					//std::cout << "GOOOL" << std::endl;
 					Team goalTeam = (GameManager::get_instance().getHomeDefends() == FIELD_POSITION::RIGHT) ? Team::AWAY : Team::HOME;
 					world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), SET_PIECE::KICKOFF);
 					world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), SET_PIECE::KICKOFF);
@@ -87,20 +87,20 @@ void BallPassesEndLineSystem::process(double dt)
 
 					if(goalTeam == GameManager::get_instance().getTeamBallControl()) {
 						GameManager::get_instance().goalScoredByUser();
-						std::cout << "GOL DE TU EQUIPO" << std::endl;
+						//std::cout << "GOL DE TU EQUIPO" << std::endl;
 					} else {
-						std::cout << "GOL EN CONTRA" << std::endl;
+						//std::cout << "GOL EN CONTRA" << std::endl;
 					}
 
 
 					EventQueue::get().push(std::make_shared<GoalEvent>(this->lastPlayerThatKickedTheBall, goalTeam));
 				} else {
-					std::cout << "PALO" << std::endl;
+					//std::cout << "PALO" << std::endl;
 					EventQueue::get().push(std::make_shared<PostHitEvent>());
 					ballModel.setVelX(-ballModel.getVelX()); // Hago rebotar la pelota en el palo, le cambio el angulo en x
 				}
 			} else {
-				std::cout << "Salio por el costado derecho" << std::endl;
+				//std::cout << "Salio por el costado derecho" << std::endl;
 				Team goalKickTeam = (GameManager::get_instance().getHomeDefends() == FIELD_POSITION::RIGHT) ? Team::HOME : Team::AWAY;
 				world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), SET_PIECE::GOALKICK);
 				world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), SET_PIECE::GOALKICK);

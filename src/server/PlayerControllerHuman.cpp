@@ -82,7 +82,7 @@ void PlayerControllerHuman::_handleEvent( Command& command ){
 			case CommandType::KICK: {
                 if(playerModel->getHasControlOfTheBall()) {
                     tiempo[(int)CommandType::KICK]=std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());;
-					//std::cout<<time(NULL)<<std::endl;
+					////std::cout<<time(NULL)<<std::endl;
                     //playerModel->kick(world.getBall().getModel());
                 }
 
@@ -102,7 +102,7 @@ void PlayerControllerHuman::_handleEvent( Command& command ){
 			case CommandType::PASS:{
                 if(playerModel->getHasControlOfTheBall()) {
                     tiempo[(int)CommandType::PASS]=std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());;
-                    //std::cout<<time(NULL)<<std::endl;
+                    ////std::cout<<time(NULL)<<std::endl;
                     //playerModel->kick(world.getBall().getModel());
                 }
 				log->debug("PlayerControllerHuman: apretando pasar");
@@ -111,7 +111,7 @@ void PlayerControllerHuman::_handleEvent( Command& command ){
             case CommandType::LONG_PASS:{
                 if(playerModel->getHasControlOfTheBall()) {
                     tiempo[(int)CommandType::LONG_PASS]=std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());;
-                    //std::cout<<time(NULL)<<std::endl;
+                    ////std::cout<<time(NULL)<<std::endl;
                     //playerModel->kick(world.getBall().getModel());
                 }
             break;
@@ -149,8 +149,8 @@ void PlayerControllerHuman::_handleEvent( Command& command ){
 		}
         else if (command.type == CommandType::KICK) {
             //time_t actualTiempo = time(NULL);
-			//std::cout<<time(NULL)<<std::endl;
-			//std::cout<<tiempo[(int)CommandType::KICK]<<std::endl;
+			////std::cout<<time(NULL)<<std::endl;
+			////std::cout<<tiempo[(int)CommandType::KICK]<<std::endl;
             if(playerModel->getHasControlOfTheBall()) {
                 auto end = std::chrono::system_clock::now();
                 double potencia= (end - tiempo[(int)CommandType::KICK]).count();

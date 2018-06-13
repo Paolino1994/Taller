@@ -51,7 +51,7 @@ void BallModel::correctPosition() {
 
     int xCor = getXCorrection();
     int yCor = getYCorrection();
-    //std::cout<<"X:"<<x<<" Correccion:"<<xCor<<std::endl;
+    ////std::cout<<"X:"<<x<<" Correccion:"<<xCor<<std::endl;
     x=x+xCor;
 
     y=y+yCor;
@@ -65,7 +65,7 @@ int BallModel::getXCorrection() {
     double initialcorrection=23.0;
 
     double multiplier=cos(angleToUse*PI/180.0);
-    //std::cout<<"Angle:"<<angleToUse<<" Multiplicador:  "<<multiplier<<std::endl;
+    ////std::cout<<"Angle:"<<angleToUse<<" Multiplicador:  "<<multiplier<<std::endl;
 
     double correction=multiplier*25;
     return initialcorrection+correction;
@@ -75,7 +75,7 @@ int BallModel::getYCorrection() {
     double initialcorrection=10.0;
 
     double multiplier=sin(angleToUse*PI/180.0);
-    //std::cout<<"Angle:"<<angleToUse<<" Multiplicador:  "<<multiplier<<std::endl;
+    ////std::cout<<"Angle:"<<angleToUse<<" Multiplicador:  "<<multiplier<<std::endl;
 
     double correction=multiplier*25;
     return initialcorrection+correction;
@@ -167,7 +167,7 @@ void BallModel::update(double dt, int x_limit, int y_limit, std::vector<PlayerCo
         velY=0;
     }
     setState();
-    //std::cout<<"Ball VelX: "<<getVelX()<<" Ball VelY: "<<getVelY()<<std::endl;
+    ////std::cout<<"Ball VelX: "<<getVelX()<<" Ball VelY: "<<getVelY()<<std::endl;
 
 
 }
@@ -185,7 +185,7 @@ double BallModel::getVelY() {
 }
 
 void BallModel::setState() {
-    //std::cout<<"VELX: "<<velX<<" VelY: "<<velX<<std::endl;
+    ////std::cout<<"VELX: "<<velX<<" VelY: "<<velX<<std::endl;
     if(velX!=0 || velY!=0){
         state=MOVING;
     }else{
