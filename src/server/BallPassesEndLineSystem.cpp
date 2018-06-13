@@ -50,7 +50,13 @@ void BallPassesEndLineSystem::process(double dt)
 					world.setSetPiecePosition(Team::HOME, GameManager::get_instance().getHomeDefends(), SET_PIECE::KICKOFF);
 					world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), SET_PIECE::KICKOFF);
 
-					GameManager::get_instance().goalScoredByUser();
+					if(goalTeam == GameManager::get_instance().getTeamBallControl()) {
+						GameManager::get_instance().goalScoredByUser();
+						std::cout << "GOL DE TU EQUIPO" << std::endl;
+					} else {
+						std::cout << "GOL EN CONTRA" << std::endl;
+					}
+
 					EventQueue::get().push(std::make_shared<GoalEvent>(this->lastPlayerThatKickedTheBall, goalTeam));
 				}
 				else {
@@ -79,7 +85,14 @@ void BallPassesEndLineSystem::process(double dt)
 					world.setSetPiecePosition(Team::AWAY, GameManager::get_instance().getAwayDefends(), SET_PIECE::KICKOFF);
 
 
-					GameManager::get_instance().goalScoredByUser();
+					if(goalTeam == GameManager::get_instance().getTeamBallControl()) {
+						GameManager::get_instance().goalScoredByUser();
+						std::cout << "GOL DE TU EQUIPO" << std::endl;
+					} else {
+						std::cout << "GOL EN CONTRA" << std::endl;
+					}
+
+
 					EventQueue::get().push(std::make_shared<GoalEvent>(this->lastPlayerThatKickedTheBall, goalTeam));
 				} else {
 					std::cout << "PALO" << std::endl;
