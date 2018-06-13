@@ -10,6 +10,7 @@ private:
 	ball_view_data_t ballViewData;
 	game_manager_data_t gameManagerData;
 	model_data_t modelData;
+	size_t modelSnapshotNumber;
 
 	World world;
 	const size_t maxPlayers;
@@ -31,6 +32,8 @@ public:
 	bool checkTeamFormation(Team team, User_ID userId);
 	void setTeamFormation(Team team, Formation formation, User_ID userId);
 	model_data_t getModelData();
+
+	size_t getModelSnapshotNumber();
 
 	// invalida el contoller, le hacemos delete
 	bool withdrawUser(PlayerController* playerController, User_ID userId);

@@ -115,6 +115,7 @@ void Game::_run()
             //modelData.timeInSeconds=end-start;
 			//std::cout << "Model serialize" << std::endl;
 			world.serialize(modelData);
+			this->modelSnapshotNumber++;
 		}
 	}
 
@@ -125,6 +126,7 @@ Game::Game() :
         ballViewData({ 0,0,0,0,QUIESCENT }),
         gameManagerData({0,0,0}),
         modelData({ playerViewData, ballViewData, gameManagerData}),
+        modelSnapshotNumber(0),
         world(World(YAML::WORLD_WIDTH, YAML::WORLD_HEIGHT, getAnimMapperBall())),
         maxPlayers(YAML::MAX_PLAYERS),
         playerCount(0),
@@ -297,6 +299,11 @@ void Game::setTeamFormation(Team team, Formation formation, User_ID userId)
 model_data_t Game::getModelData()
 {
 	return modelData;
+}
+
+size_t Game::getModelSnapshotNumber()
+{
+	return this->modelSnapshotNumber;
 }
 
 bool Game::withdrawUser(PlayerController * playerController, User_ID userId)
