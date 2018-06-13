@@ -2,6 +2,7 @@
 
 #include "common/Log.h"
 #include <iostream>
+#include <cmath>
 
 const std::string& getDescription(CommandType command) {
 	return commandTypeDescription[static_cast<std::underlying_type<CommandType>::type>(command)];
@@ -50,9 +51,25 @@ void RequestHandler::_run()
 					break;
 				}
 				case Request::EVENT_UPDATE: {
+					// Bloqueo mientras swapeo
+					std::unique_lock<std::mutex> eventLock(this->eventMtx);
 					std::vector<EventID> eventsToSend = std::vector<EventID>();
+					std::vector<size_t> snapshotNumberOfEvent = std::vector<size_t>();
 					eventsToSend.swap(this->events); // asi this->events queda vacio y mando los que tenia
-					protocol.write(Request::EVENT_UPDATE, (const char*)eventsToSend.data(), sizeof(EventID) * eventsToSend.size());
+					snapshotNumberOfEvent.swap(this->modelSnapshotNumberOfEvent);
+					eventLock.unlock();
+
+					size_t i = 0;
+					long long limitSnapshotNumber = (long long)this->game.getModelSnapshotNumber() - EVENT_SNAPSHOT_DELTA;
+					// min por las dudas
+					for (size_t size = std::min(eventsToSend.size(), snapshotNumberOfEvent.size()); i < size; ++i) {
+						// apenas algun evento es mayor a nuestro snapshot limite terminamos
+						if ((long long)snapshotNumberOfEvent[i] >= limitSnapshotNumber) {
+							break;
+						}
+					}
+
+					protocol.write(Request::EVENT_UPDATE, (const char*)(eventsToSend.data() + i), sizeof(EventID) * (eventsToSend.size() - i));
 					break;
 				}
 				case Request::START: {
@@ -130,6 +147,7 @@ RequestHandler::RequestHandler(Socket * socket, Game& game, User_ID userId) :
 	running(false),
 	server_exit_requested(false),
 	events(std::vector<EventID>()),
+	modelSnapshotNumberOfEvent(std::vector<size_t>()),
 	player(nullptr)
 {
 	this->registerToAllEvents();
@@ -154,5 +172,7 @@ void RequestHandler::run()
 
 void RequestHandler::handleFallback(Event & e)
 {
+	std::unique_lock<std::mutex> eventLock(this->eventMtx);
 	this->events.push_back(e.getId());
+	this->modelSnapshotNumberOfEvent.push_back(this->game.getModelSnapshotNumber());
 }
